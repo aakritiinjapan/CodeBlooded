@@ -1,0 +1,28 @@
+# Build files
+.vscode/**
+.vscode-test/**
+src/**
+out/**
+node_modules/**
+.gitignore
+.yarnrc
+webpack.config.js
+vsc-extension-quickstart.md
+**/tsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+**/test/**
+
+# Development files
+.editorconfig
+.prettierrc
+.prettierignore
+*.vsix
+
+# Documentation (keep README for marketplace)
+PUBLISHING.md

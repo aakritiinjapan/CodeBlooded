@@ -1,0 +1,107 @@
+{
+  "name": "codechroma-vscode",
+  "displayName": "CodeChroma",
+  "description": "Multi-sensory code analysis with horror-themed audio-visual feedback",
+  "version": "0.1.0",
+  "publisher": "AakritiHGupta",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aakritiinjapan/codechroma.git",
+    "directory": "packages/vscode-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/aakritiinjapan/codechroma/issues"
+  },
+  "homepage": "https://github.com/aakritiinjapan/codechroma#readme",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Linters",
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "code-analysis",
+    "complexity",
+    "audio-feedback",
+    "visualization",
+    "horror-theme"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:javascript",
+    "onLanguage:typescriptreact",
+    "onLanguage:javascriptreact"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codechroma.toggleAudio",
+        "title": "CodeChroma: Toggle Audio Feedback"
+      },
+      {
+        "command": "codechroma.showGraph",
+        "title": "CodeChroma: Show AST Graph"
+      }
+    ],
+    "configuration": {
+      "title": "CodeChroma",
+      "properties": {
+        "codechroma.audio.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable audio feedback for code complexity"
+        },
+        "codechroma.audio.volume": {
+          "type": "number",
+          "default": 0.5,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Audio volume (0-1)"
+        },
+        "codechroma.visual.animations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable horror-themed animations"
+        },
+        "codechroma.analysis.threshold": {
+          "type": "number",
+          "default": 10,
+          "description": "Complexity threshold for warnings"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "compile": "tsc -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "jest",
+    "package": "vsce package",
+    "publish": "npm run prepublish && vsce publish",
+    "prepublish": "node scripts/prepare-publish.js",
+    "clean": "rimraf dist out *.vsix"
+  },
+  "dependencies": {
+    "@codechroma/core": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vscode/vsce": "^2.22.0",
+    "eslint": "^8.47.0",
+    "rimraf": "^5.0.0",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.2.0",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
