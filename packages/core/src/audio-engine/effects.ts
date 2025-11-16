@@ -4,48 +4,54 @@
  * Implements reverb, tremolo, and distortion effects for horror-themed audio
  */
 
-import * as Tone from 'tone';
+import type * as ToneNamespace from 'tone';
 import { AudioEffect, WaveformType } from '../types';
+import { loadTone } from './tone-loader';
+
+type ToneModule = typeof ToneNamespace;
+type ToneAudioNode = ToneNamespace.ToneAudioNode;
 
 export class EffectsProcessor {
-  private reverb: Tone.Reverb | null = null;
-  private tremolo: Tone.Tremolo | null = null;
-  private distortion: Tone.Distortion | null = null;
-  private synth: Tone.Synth | null = null;
-  private polySynth: Tone.PolySynth | null = null;
+  private reverb: ToneNamespace.Reverb | null = null;
+  private tremolo: ToneNamespace.Tremolo | null = null;
+  private distortion: ToneNamespace.Distortion | null = null;
+  private synth: ToneNamespace.Synth | null = null;
+  private polySynth: ToneNamespace.PolySynth | null = null;
   private initialized = false;
+  private tone: ToneModule | null = null;
+  private toneUnavailable = false;
 
-  /**
-   * Initialize effects chain
-   */
   async initialize(): Promise<void> {
     if (this.initialized) {
       return;
     }
 
-    try {
-      // Ensure Tone.js is started
-      await Tone.start();
+    if (this.toneUnavailable) {
+      throw new Error('Tone.js is not available in this environment');
+    }
 
-      // Create effects
-      this.reverb = new Tone.Reverb({
+    const tone = await this.getTone();
+
+    try {
+      await tone.start();
+
+      this.reverb = new tone.Reverb({
         decay: 3,
         preDelay: 0.01,
         wet: 0.5,
       });
 
-      this.tremolo = new Tone.Tremolo({
+      this.tremolo = new tone.Tremolo({
         frequency: 5,
         depth: 0.5,
       }).start();
 
-      this.distortion = new Tone.Distortion({
+      this.distortion = new tone.Distortion({
         distortion: 0.4,
         wet: 0.5,
       });
 
-      // Create synth for single tones
-      this.synth = new Tone.Synth({
+      this.synth = new tone.Synth({
         oscillator: {
           type: 'sine',
         },
@@ -57,8 +63,7 @@ export class EffectsProcessor {
         },
       });
 
-      // Create polyphonic synth for chords
-      this.polySynth = new Tone.PolySynth(Tone.Synth, {
+      this.polySynth = new tone.PolySynth(tone.Synth, {
         oscillator: {
           type: 'sine',
         },
@@ -70,19 +75,21 @@ export class EffectsProcessor {
         },
       });
 
-      // Connect to destination (will be routed through effects as needed)
       this.synth.toDestination();
       this.polySynth.toDestination();
 
       this.initialized = true;
     } catch (error) {
+      this.disposeResources();
+      this.toneUnavailable = true;
       throw new Error(`Failed to initialize effects processor: ${error}`);
     }
   }
 
-  /**
-   * Play a tone with specified effects
-   */
+  isAvailable(): boolean {
+    return !this.toneUnavailable;
+  }
+
   async playWithEffects(
     frequency: number,
     waveform: WaveformType,
@@ -96,17 +103,13 @@ export class EffectsProcessor {
       throw new Error('Synth not initialized');
     }
 
-    // Disconnect from current routing
+    const tone = await this.getTone();
+
     this.synth.disconnect();
-
-    // Set waveform
     this.synth.oscillator.type = waveform as any;
+    this.synth.volume.value = tone.gainToDb(volume);
 
-    // Set volume
-    this.synth.volume.value = Tone.gainToDb(volume);
-
-    // Route through effects
-    let currentNode: Tone.ToneAudioNode = this.synth;
+    let currentNode: ToneAudioNode = this.synth;
 
     effects.forEach((effect) => {
       switch (effect.type) {
@@ -136,19 +139,12 @@ export class EffectsProcessor {
       }
     });
 
-    // Connect final node to destination
     currentNode.toDestination();
 
-    // Convert frequency to note
-    const note = Tone.Frequency(frequency, 'hz').toNote();
-
-    // Play the note
+    const note = tone.Frequency(frequency, 'hz').toNote();
     this.synth.triggerAttackRelease(note, duration / 1000);
   }
 
-  /**
-   * Play a chord with specified effects
-   */
   async playChordWithEffects(
     frequencies: number[],
     waveform: WaveformType,
@@ -162,21 +158,17 @@ export class EffectsProcessor {
       throw new Error('PolySynth not initialized');
     }
 
-    // Disconnect from current routing
-    this.polySynth.disconnect();
+    const tone = await this.getTone();
 
-    // Set waveform for all voices
+    this.polySynth.disconnect();
     this.polySynth.set({
       oscillator: {
         type: waveform as any,
       },
     });
+    this.polySynth.volume.value = tone.gainToDb(volume / frequencies.length);
 
-    // Set volume
-    this.polySynth.volume.value = Tone.gainToDb(volume / frequencies.length);
-
-    // Route through effects
-    let currentNode: Tone.ToneAudioNode = this.polySynth;
+    let currentNode: ToneAudioNode = this.polySynth;
 
     effects.forEach((effect) => {
       switch (effect.type) {
@@ -206,19 +198,12 @@ export class EffectsProcessor {
       }
     });
 
-    // Connect final node to destination
     currentNode.toDestination();
 
-    // Convert frequencies to notes
-    const notes = frequencies.map((freq) => Tone.Frequency(freq, 'hz').toNote());
-
-    // Play the chord
+    const notes = frequencies.map((freq) => tone.Frequency(freq, 'hz').toNote());
     this.polySynth.triggerAttackRelease(notes, duration / 1000);
   }
 
-  /**
-   * Stop all currently playing sounds
-   */
   stop(): void {
     if (this.synth) {
       this.synth.triggerRelease();
@@ -228,12 +213,14 @@ export class EffectsProcessor {
     }
   }
 
-  /**
-   * Dispose of all effects and synths
-   */
   dispose(): void {
     this.stop();
+    this.disposeResources();
+    this.tone = null;
+    this.toneUnavailable = false;
+  }
 
+  private disposeResources(): void {
     if (this.reverb) {
       this.reverb.dispose();
       this.reverb = null;
@@ -256,5 +243,24 @@ export class EffectsProcessor {
     }
 
     this.initialized = false;
+  }
+
+  private async getTone(): Promise<ToneModule> {
+    if (this.tone) {
+      return this.tone;
+    }
+
+    if (this.toneUnavailable) {
+      throw new Error('Tone.js is not available in this environment');
+    }
+
+    const tone = await loadTone();
+    if (!tone) {
+      this.toneUnavailable = true;
+      throw new Error('Tone.js is not available in this environment');
+    }
+
+    this.tone = tone;
+    return tone;
   }
 }

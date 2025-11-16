@@ -4,7 +4,7 @@
  * Provides Web Audio API wrapper with oscillator pooling and tone synthesis
  */
 
-import * as Tone from 'tone';
+import type * as ToneNamespace from 'tone';
 import {
   AudioMapping,
   AudioEngineConfig,
@@ -13,6 +13,37 @@ import {
   CodeChromaError,
 } from '../types';
 import { EffectsProcessor } from './effects';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+
+function tryRequire<T = unknown>(moduleId: string): T | undefined {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const runtimeRequire = eval('require') as undefined | ((id: string) => T);
+    if (typeof runtimeRequire === 'function') {
+      return runtimeRequire(moduleId);
+    }
+  } catch (error) {
+    // Ignore resolution failures; we'll report a warning when audio is requested.
+    console.warn(`CodeChroma: Optional dependency '${moduleId}' not available`, error);
+  }
+  return undefined;
+}
+import { loadTone } from './tone-loader';
+
+const execFileAsync = (() => {
+  try {
+    return promisify(execFile);
+  } catch {
+    return null;
+  }
+})();
+
+type ToneModule = typeof ToneNamespace;
+type AudioContextConstructor = typeof AudioContext;
+type WebAudioApiModule = {
+  AudioContext?: AudioContextConstructor;
+};
 
 export class AudioEngine {
   private config: AudioEngineConfig;
@@ -23,6 +54,12 @@ export class AudioEngine {
   private toneInitialized = false;
   private currentPlayback: { stop: () => void } | null = null;
   private effectsProcessor: EffectsProcessor;
+  private audioContextCtor: AudioContextConstructor | undefined;
+  private toneModule: ToneModule | null = null;
+  private toneLoadFailed = false;
+  private audioUnsupported = false;
+  private fallbackEnabled = false;
+  private initializationError: unknown = null;
 
   constructor(config?: Partial<AudioEngineConfig>) {
     this.config = {
@@ -42,32 +79,104 @@ export class AudioEngine {
       return;
     }
 
+    if (this.audioUnsupported && this.fallbackEnabled) {
+      return;
+    }
+
     try {
-      // Initialize Tone.js
-      if (!this.toneInitialized) {
-        await Tone.start();
+      const tone = await this.ensureToneModule();
+      if (tone && !this.toneInitialized) {
+        await tone.start();
         this.toneInitialized = true;
       }
+    } catch (toneError) {
+      console.warn('CodeChroma: Tone.js unavailable, continuing without advanced effects', toneError);
+    }
 
-      // Initialize Web Audio API context
-      if (!this.audioContext) {
-        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    if (this.audioUnsupported) {
+      return;
+    }
+
+    if (!this.audioContext) {
+      const AudioContextConstructor = this.getAudioContextConstructor();
+      if (!AudioContextConstructor) {
+        this.markAudioUnsupported(
+          new CodeChromaError(
+            'Web Audio API is not available in this environment',
+            ErrorCode.AUDIO_ERROR
+          )
+        );
+        return;
+      }
+
+      try {
+        this.audioContext = new AudioContextConstructor();
         this.masterGain = this.audioContext.createGain();
         this.masterGain.gain.value = this.config.volume;
         this.masterGain.connect(this.audioContext.destination);
+      } catch (contextError) {
+        this.markAudioUnsupported(contextError);
+        return;
       }
-
-      // Resume context if suspended
-      if (this.audioContext.state === 'suspended') {
-        await this.audioContext.resume();
-      }
-    } catch (error) {
-      throw new CodeChromaError(
-        'Failed to initialize audio engine',
-        ErrorCode.AUDIO_ERROR,
-        { originalError: error }
-      );
     }
+
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      try {
+        await this.audioContext.resume();
+      } catch (resumeError) {
+        this.markAudioUnsupported(resumeError);
+      }
+    }
+  }
+
+  private getAudioContextConstructor(): AudioContextConstructor | undefined {
+    if (this.audioUnsupported) {
+      return undefined;
+    }
+
+    if (this.audioContextCtor) {
+      return this.audioContextCtor;
+    }
+
+    const globalAny = globalThis as any;
+
+    if (typeof globalAny.AudioContext === 'function') {
+      this.audioContextCtor = globalAny.AudioContext;
+      return this.audioContextCtor;
+    }
+
+    if (typeof globalAny.webkitAudioContext === 'function') {
+      this.audioContextCtor = globalAny.webkitAudioContext;
+      return this.audioContextCtor;
+    }
+
+    const webAudioApi = tryRequire<WebAudioApiModule>('web-audio-api');
+    if (webAudioApi?.AudioContext) {
+      this.audioContextCtor = webAudioApi.AudioContext;
+      globalAny.AudioContext = webAudioApi.AudioContext;
+      return this.audioContextCtor;
+    }
+
+    return undefined;
+  }
+
+  private async ensureToneModule(): Promise<ToneModule | null> {
+    if (this.toneLoadFailed) {
+      return null;
+    }
+
+    if (this.toneModule) {
+      return this.toneModule;
+    }
+
+    const tone = await loadTone();
+    if (!tone) {
+      this.toneLoadFailed = true;
+      return null;
+    }
+
+    this.toneModule = tone;
+    return this.toneModule;
   }
 
   /**
@@ -172,35 +281,58 @@ export class AudioEngine {
     try {
       await this.initialize();
 
+      if (this.audioUnsupported || !this.audioContext || !this.masterGain) {
+        const fallbackPlayed = await this.playFallbackMapping(
+          mapping.frequency,
+          mapping.duration,
+          mapping.volume
+        );
+
+        if (fallbackPlayed) {
+          return;
+        }
+
+        throw new CodeChromaError(
+          'Audio context not initialized',
+          ErrorCode.AUDIO_ERROR,
+          {
+            originalError: this.initializationError,
+            mapping,
+            fallbackAttempted: this.fallbackEnabled,
+          }
+        );
+      }
+
       // Stop any current playback
       this.stop();
 
       // If effects are specified, use Tone.js effects processor
-      if (mapping.effects && mapping.effects.length > 0) {
-        await this.effectsProcessor.playWithEffects(
-          mapping.frequency,
-          mapping.waveform,
-          mapping.duration,
-          mapping.effects,
-          mapping.volume * this.config.volume
-        );
+      if (
+        mapping.effects &&
+        mapping.effects.length > 0 &&
+        this.effectsProcessor.isAvailable()
+      ) {
+        try {
+          await this.effectsProcessor.playWithEffects(
+            mapping.frequency,
+            mapping.waveform,
+            mapping.duration,
+            mapping.effects,
+            mapping.volume * this.config.volume
+          );
 
-        // Store reference for stopping
-        this.currentPlayback = {
-          stop: () => this.effectsProcessor.stop(),
-        };
+          // Store reference for stopping
+          this.currentPlayback = {
+            stop: () => this.effectsProcessor.stop(),
+          };
 
-        return;
+          return;
+        } catch (effectError) {
+          console.warn('CodeChroma: Falling back to direct oscillator playback', effectError);
+        }
       }
 
       // Otherwise use Web Audio API directly
-      if (!this.audioContext || !this.masterGain) {
-        throw new CodeChromaError(
-          'Audio context not initialized',
-          ErrorCode.AUDIO_ERROR
-        );
-      }
-
       const oscillator = this.getOscillator(mapping.frequency, mapping.waveform);
       const gainNode = oscillator.context.createGain() as GainNode;
       
@@ -267,10 +399,30 @@ export class AudioEngine {
     try {
       await this.initialize();
 
-      if (!this.audioContext || !this.masterGain) {
+      if (this.audioUnsupported || !this.audioContext || !this.masterGain) {
+        let fallbackSuccess = true;
+        const toneDuration = duration / Math.max(1, frequencies.length);
+
+        for (const frequency of frequencies) {
+          const played = await this.playFallbackMapping(
+            frequency,
+            toneDuration,
+            this.config.volume
+          );
+          fallbackSuccess = fallbackSuccess && played;
+        }
+
+        if (fallbackSuccess) {
+          return;
+        }
+
         throw new CodeChromaError(
           'Audio context not initialized',
-          ErrorCode.AUDIO_ERROR
+          ErrorCode.AUDIO_ERROR,
+          {
+            originalError: this.initializationError,
+            fallbackAttempted: this.fallbackEnabled,
+          }
         );
       }
 
@@ -380,6 +532,58 @@ export class AudioEngine {
       WaveformType.Sine,
       duration
     );
+  }
+
+  private canUseFallbackAudio(): boolean {
+    return typeof process !== 'undefined' && typeof process.platform === 'string';
+  }
+
+  private markAudioUnsupported(error: unknown): void {
+    if (!this.audioUnsupported) {
+      console.warn('CodeChroma: Web Audio unavailable, enabling fallback audio', error);
+    }
+    this.audioUnsupported = true;
+    this.initializationError = error;
+    if (!this.fallbackEnabled) {
+      this.fallbackEnabled = this.canUseFallbackAudio();
+    }
+  }
+
+  private async playFallbackMapping(
+    frequency: number,
+    durationMs: number,
+    _volume: number
+  ): Promise<boolean> {
+    if (!this.canUseFallbackAudio()) {
+      return false;
+    }
+
+    this.fallbackEnabled = true;
+
+    const duration = Math.max(1, Math.round(durationMs));
+    const clampedFrequency = Math.max(37, Math.min(32767, Math.round(frequency)));
+
+    if (typeof process === 'undefined') {
+      return false;
+    }
+
+    try {
+      if (process.platform === 'win32' && execFileAsync) {
+        await execFileAsync('powershell.exe', [
+          '-Command',
+          `[console]::Beep(${clampedFrequency},${duration})`,
+        ]);
+        return true;
+      }
+
+      // Fall back to terminal bell on other platforms
+      process.stdout?.write?.('\u0007');
+      await new Promise<void>((resolve) => setTimeout(resolve, duration));
+      return true;
+    } catch (error) {
+      console.warn('CodeChroma: Fallback audio playback failed', error);
+      return false;
+    }
   }
 
   /**

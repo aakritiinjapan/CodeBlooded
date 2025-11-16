@@ -7,6 +7,7 @@
 
 import { Connection } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { fileURLToPath } from 'url';
 import { ASTAnalyzer } from '@codechroma/core';
 import type { AnalysisResult, Language } from '@codechroma/core';
 
@@ -52,11 +53,18 @@ export class DocumentAnalyzer {
         this.connection.console.log(`Analyzing document: ${uri}`);
         
         const code = document.getText();
-        const language = this.detectLanguage(document.uri);
+        const filePath = this.getFilePath(document.uri);
+        const language = this.detectLanguage(filePath);
+
+        if (language === 'unknown') {
+          this.connection.console.warn(
+            `CodeChroma LSP: Skipping unsupported document ${uri}`
+          );
+          return;
+        }
 
         // Parse and analyze
-        const parseResult = await this.analyzer.parse(code, language);
-        const analysisResult = this.analyzer.analyze(parseResult, code, uri);
+        const analysisResult = await this.analyzer.analyzeFile(code, filePath);
 
         // Cache the result
         this.analysisCache.set(uri, analysisResult);
@@ -117,8 +125,8 @@ export class DocumentAnalyzer {
   /**
    * Detect language from file URI
    */
-  private detectLanguage(uri: string): Language {
-    const lowerUri = uri.toLowerCase();
+  private detectLanguage(resource: string): Language {
+    const lowerUri = resource.toLowerCase();
     
     if (lowerUri.endsWith('.ts') || lowerUri.endsWith('.tsx')) {
       return 'typescript' as Language;
@@ -127,5 +135,21 @@ export class DocumentAnalyzer {
     }
     
     return 'unknown' as Language;
+  }
+
+  /**
+   * Convert a document URI to a filesystem path when possible.
+   */
+  private getFilePath(uri: string): string {
+    if (uri.startsWith('file://')) {
+      try {
+        return fileURLToPath(uri);
+      } catch (error) {
+        this.connection.console.warn(
+          `CodeChroma LSP: Failed to convert URI to path (${uri}): ${error}`
+        );
+      }
+    }
+    return uri;
   }
 }

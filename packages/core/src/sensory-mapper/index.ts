@@ -197,6 +197,206 @@ export function mapToTheme(complexity: number): ThemeMapping {
 }
 
 /**
+ * Creates a combined theme mapping with both complexity and diagnostic scores
+ * @param complexity - Cyclomatic complexity value
+ * @param diagnosticScore - Horror score from diagnostics (0-100)
+ * @param diagnosticSeverity - Severity level from diagnostics
+ * @returns ThemeMapping with combined scoring
+ */
+export function mapToCombinedTheme(
+  complexity: number,
+  diagnosticScore: number,
+  diagnosticSeverity: 'none' | 'info' | 'warning' | 'error' | 'critical'
+): ThemeMapping {
+  // Calculate combined score: 70% complexity, 30% diagnostics
+  const complexityScore = Math.min(100, complexity * 5); // Scale complexity to 0-100
+  const combinedScore = complexityScore * 0.7 + diagnosticScore * 0.3;
+
+  // Use higher of the two scores for determining effects
+  const effectiveComplexity = Math.max(complexity, Math.floor(combinedScore / 5));
+
+  const baseTheme = mapToTheme(effectiveComplexity);
+
+  // Enhance with diagnostic-specific effects
+  const enhancedAudio = enhanceAudioWithDiagnostics(baseTheme.audio, diagnosticSeverity);
+  const enhancedVisual = enhanceVisualWithDiagnostics(baseTheme.visual, diagnosticSeverity, combinedScore);
+  const enhancedAnimations = enhanceAnimationsWithDiagnostics(baseTheme.animations, diagnosticSeverity);
+
+  return {
+    audio: enhancedAudio,
+    visual: enhancedVisual,
+    complexity: baseTheme.complexity,
+    animations: enhancedAnimations,
+    combinedScore,
+    diagnosticSeverity,
+  };
+}
+
+/**
+ * Enhance audio mapping with diagnostic-specific sounds
+ */
+function enhanceAudioWithDiagnostics(
+  baseAudio: AudioMapping,
+  severity: 'none' | 'info' | 'warning' | 'error' | 'critical'
+): AudioMapping {
+  const enhanced = { ...baseAudio };
+
+  switch (severity) {
+    case 'critical':
+      // Add intense distortion and reverb for critical errors
+      enhanced.effects = [
+        ...enhanced.effects,
+        { type: 'distortion', intensity: 0.9 },
+        { type: 'reverb', intensity: 0.8 },
+        { type: 'tremolo', intensity: 0.7 },
+      ];
+      enhanced.frequency = Math.max(enhanced.frequency, 1000); // Higher pitch for urgency
+      enhanced.waveform = WaveformType.Square; // Harsh sound
+      break;
+
+    case 'error':
+      // Add moderate distortion for errors
+      enhanced.effects = [
+        ...enhanced.effects,
+        { type: 'distortion', intensity: 0.6 },
+        { type: 'tremolo', intensity: 0.5 },
+      ];
+      enhanced.frequency = Math.max(enhanced.frequency, 700);
+      break;
+
+    case 'warning':
+      // Add tremolo for warnings (creates unease)
+      enhanced.effects = [
+        ...enhanced.effects,
+        { type: 'tremolo', intensity: 0.4 },
+      ];
+      break;
+
+    case 'info':
+    case 'none':
+      // No enhancement needed
+      break;
+  }
+
+  return enhanced;
+}
+
+/**
+ * Enhance visual mapping with diagnostic-specific colors
+ */
+function enhanceVisualWithDiagnostics(
+  baseVisual: VisualMapping,
+  severity: 'none' | 'info' | 'warning' | 'error' | 'critical',
+  combinedScore: number
+): VisualMapping {
+  const enhanced = { ...baseVisual };
+
+  // Override colors based on severity for immediate feedback
+  switch (severity) {
+    case 'critical':
+      // Deep blood red with pulsing effect
+      enhanced.color = '#8B0000'; // Dark red
+      enhanced.backgroundColor = '#1A0000'; // Almost black with red tint
+      enhanced.opacity = 0.95;
+      break;
+
+    case 'error':
+      // Bright crimson for errors
+      enhanced.color = '#DC143C';
+      enhanced.backgroundColor = '#1C0A0A';
+      enhanced.opacity = 0.85;
+      break;
+
+    case 'warning':
+      // Keep existing orange but ensure it's visible
+      if (combinedScore > 50) {
+        enhanced.color = '#FF8C00'; // Darker orange for high combined scores
+        enhanced.opacity = 0.8;
+      }
+      break;
+
+    case 'info':
+      // Subtle blue tint
+      enhanced.color = '#4169E1'; // Royal blue
+      enhanced.opacity = 0.5;
+      break;
+
+    case 'none':
+      // Keep base colors
+      break;
+  }
+
+  return enhanced;
+}
+
+/**
+ * Enhance animations with diagnostic-specific effects
+ */
+function enhanceAnimationsWithDiagnostics(
+  baseAnimations: Animation[],
+  severity: 'none' | 'info' | 'warning' | 'error' | 'critical'
+): Animation[] {
+  const enhanced = [...baseAnimations];
+
+  switch (severity) {
+    case 'critical':
+      // Add all horror effects
+      enhanced.push(
+        {
+          type: 'drip',
+          duration: 2000,
+          intensity: 1.0,
+        },
+        {
+          type: 'cobweb',
+          duration: 3000,
+          intensity: 0.9,
+        },
+        {
+          type: 'fog',
+          duration: 5000,
+          intensity: 0.8,
+        }
+      );
+      break;
+
+    case 'error':
+      // Add blood drip and cobweb
+      enhanced.push(
+        {
+          type: 'drip',
+          duration: 2500,
+          intensity: 0.8,
+        },
+        {
+          type: 'cobweb',
+          duration: 3000,
+          intensity: 0.7,
+        }
+      );
+      break;
+
+    case 'warning':
+      // Just cobweb for warnings
+      if (!enhanced.some(a => a.type === 'cobweb')) {
+        enhanced.push({
+          type: 'cobweb',
+          duration: 3000,
+          intensity: 0.5,
+        });
+      }
+      break;
+
+    case 'info':
+    case 'none':
+      // No additional animations
+      break;
+  }
+
+  return enhanced;
+}
+
+/**
  * Creates audio mapping for error states (tritone interval)
  * @returns AudioMapping for error state
  */
@@ -273,6 +473,17 @@ export class SensoryMapper {
    */
   mapToTheme(complexity: number): ThemeMapping {
     return mapToTheme(complexity);
+  }
+
+  /**
+   * Maps complexity and diagnostics to combined theme
+   */
+  mapToCombinedTheme(
+    complexity: number,
+    diagnosticScore: number,
+    diagnosticSeverity: 'none' | 'info' | 'warning' | 'error' | 'critical'
+  ): ThemeMapping {
+    return mapToCombinedTheme(complexity, diagnosticScore, diagnosticSeverity);
   }
 
   /**

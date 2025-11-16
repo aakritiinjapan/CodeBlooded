@@ -12,6 +12,7 @@ import {
 import { ParserRegistry } from './ParserRegistry';
 import { TypeScriptParser } from './TypeScriptParser';
 import { JavaScriptParser } from './JavaScriptParser';
+import { PythonParser } from './PythonParser';
 import { ComplexityCalculator } from './ComplexityCalculator';
 import { MetricsExtractor } from './MetricsExtractor';
 
@@ -28,6 +29,7 @@ export class ASTAnalyzer {
     // Register default parsers
     this.registry.register(new TypeScriptParser());
     this.registry.register(new JavaScriptParser());
+    this.registry.register(new PythonParser());
   }
 
   /**
@@ -67,15 +69,17 @@ export class ASTAnalyzer {
    */
   analyze(parseResult: ParseResult, code: string, filePath: string): AnalysisResult {
     try {
-      const { ast } = parseResult;
+      const { ast, language } = parseResult;
 
-      // Extract metrics
+      // For Python, use the parser's built-in analyze method
+      if (language === Language.Python) {
+        const parser = this.registry.getParser(Language.Python) as PythonParser;
+        return parser.analyze(code, filePath);
+      }
+
+      // For TypeScript/JavaScript, use the standard extraction methods
       const metrics = this.metricsExtractor.extractMetrics(code, ast);
-
-      // Extract function metrics
       const functions = this.complexityCalculator.extractFunctionMetrics(ast, code);
-
-      // Extract dependencies
       const dependencies = this.metricsExtractor.extractDependencies(ast, filePath);
 
       return {

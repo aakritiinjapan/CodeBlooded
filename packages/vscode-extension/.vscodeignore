@@ -8,8 +8,7 @@ node_modules/**
 .yarnrc
 webpack.config.js
 vsc-extension-quickstart.md
-**/tsconfig.json
-**/.eslintrc.json
+tsconfig.json
 **/*.map
 **/*.ts
 
@@ -23,6 +22,29 @@ vsc-extension-quickstart.md
 .prettierrc
 .prettierignore
 *.vsix
+scripts/**
 
 # Documentation (keep README for marketplace)
 PUBLISHING.md
+QUICK-START-PUBLISHING.md
+
+# Exclude sibling packages and parent directories
+../core/**
+../cli-analyzer/**
+../lsp-server/**
+../../.git/**
+../../.github/**
+../../.kiro/**
+../../node_modules/**
+../../samples/**
+../../.eslintrc.json
+../../.gitignore
+../../.prettierignore
+../../.prettierrc.json
+../../jest.config.js
+../../package-lock.json
+../../package.json
+../../pnpm-workspace.yaml
+../../tsconfig.json
+../../README.md
+../../LICENSE

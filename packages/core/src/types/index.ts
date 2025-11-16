@@ -6,6 +6,7 @@
 export enum Language {
   TypeScript = 'typescript',
   JavaScript = 'javascript',
+  Python = 'python',
   Unknown = 'unknown',
 }
 
@@ -61,6 +62,7 @@ export interface AnalysisResult {
   metrics: CodeMetrics;
   functions: FunctionMetric[];
   dependencies: Dependency[];
+  syntaxErrors?: string[]; // For languages with syntax-only validation (e.g., Python)
 }
 
 // Parser Plugin interface
@@ -102,6 +104,8 @@ export interface ThemeMapping {
   visual: VisualMapping;
   complexity: ComplexityLevel;
   animations: Animation[];
+  combinedScore?: number; // 0-100, combines complexity + diagnostics
+  diagnosticSeverity?: 'none' | 'info' | 'warning' | 'error' | 'critical';
 }
 
 // Visualization types

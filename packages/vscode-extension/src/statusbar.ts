@@ -62,6 +62,13 @@ export class StatusBarManager {
   }
 
   /**
+   * Set audio status (alias for updateAudioState for consistency)
+   */
+  setAudioStatus(enabled: boolean) {
+    this.updateAudioState(enabled);
+  }
+
+  /**
    * Register callback for audio toggle click
    */
   onAudioToggleClick(callback: () => void) {

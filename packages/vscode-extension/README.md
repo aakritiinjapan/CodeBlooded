@@ -2,6 +2,30 @@
 
 > Multi-sensory code analysis with horror-themed audio-visual feedback
 
+## ⚠️ IMPORTANT SAFETY WARNING ⚠️
+
+**CodeChroma contains psychological horror features including:**
+- Flashing lights and rapid visual changes
+- Jump scares with disturbing imagery  
+- Unsettling audio effects
+- Unpredictable horror events
+
+**NOT RECOMMENDED for users with:**
+- Photosensitive epilepsy or seizure disorders
+- Anxiety disorders or PTSD
+- Heart conditions sensitive to sudden stress
+- Preference for calm coding environments
+
+**SAFETY FEATURES:**
+- **Panic Button**: Press `Ctrl+Shift+Escape` (or `Cmd+Shift+Escape` on Mac) to instantly disable all horror effects
+- **Safe Mode**: Horror features are DISABLED by default - you must explicitly opt-in
+- **Accessibility**: Automatically respects "Reduce Motion" and other accessibility settings
+- **First-Run Warning**: You'll see a detailed warning before any horror features activate
+
+See [SAFETY_FEATURES.md](./SAFETY_FEATURES.md) for complete safety documentation.
+
+---
+
 Transform your coding experience with real-time complexity feedback. CodeChroma analyzes your code as you type and provides immersive audio-visual cues - from calm deep hums for clean code to harsh distorted tones and crimson warnings for complex functions.
 
 ## Features
@@ -94,12 +118,39 @@ Access commands via Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
 
 | Command | Description | Keyboard Shortcut |
 |---------|-------------|-------------------|
+| `CodeChroma: Panic Button` | **EMERGENCY**: Instantly disable all horror effects | `Ctrl+Shift+Escape` |
+| `CodeChroma: Toggle Safe Mode` | Enable/disable horror features | - |
 | `CodeChroma: Toggle Audio Feedback` | Enable/disable audio playback | - |
 | `CodeChroma: Show AST Graph` | Open interactive graph visualization | - |
 
 ## Configuration
 
 Configure CodeChroma via VS Code settings (`Ctrl+,` or `Cmd+,`):
+
+### Safety Settings
+
+```json
+{
+  "codechroma.horror.enabled": false,
+  "codechroma.horror.intensity": 50,
+  "codechroma.safety.screenSharingMode": false,
+  "codechroma.safety.respectReduceMotion": true
+}
+```
+
+- **`codechroma.horror.enabled`** (boolean, default: `false`)
+  - ⚠️ Enable psychological horror features (jumpscares, random events)
+  - **DISABLED by default for safety**
+
+- **`codechroma.horror.intensity`** (number, default: `50`)
+  - Horror intensity level (0-100)
+  - Higher values = more frequent and intense effects
+
+- **`codechroma.safety.screenSharingMode`** (boolean, default: `false`)
+  - Enable when screen sharing to auto-disable horror effects
+
+- **`codechroma.safety.respectReduceMotion`** (boolean, default: `true`)
+  - Respect system "Reduce Motion" accessibility setting
 
 ### Audio Settings
 
@@ -120,12 +171,16 @@ Configure CodeChroma via VS Code settings (`Ctrl+,` or `Cmd+,`):
 
 ```json
 {
-  "codechroma.visual.animations": true
+  "codechroma.visual.animations": true,
+  "codechroma.visual.workspaceTint": true
 }
 ```
 
 - **`codechroma.visual.animations`** (boolean, default: `true`)
   - Enable or disable horror-themed animations (cobwebs, blood drips, fog)
+
+- **`codechroma.visual.workspaceTint`** (boolean, default: `true`)
+  - Tint the entire workbench with horror palette as complexity increases
 
 ### Analysis Settings
 

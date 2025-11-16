@@ -42,6 +42,7 @@ export {
   mapToVisual,
   mapToAnimations,
   mapToTheme,
+  mapToCombinedTheme,
   mapErrorToAudio,
   mapSuccessToAudio,
   mapErrorToAnimation,

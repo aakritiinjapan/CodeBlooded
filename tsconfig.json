@@ -32,7 +32,8 @@
     "paths": {
       "@codechroma/core": ["packages/core/src"],
       "@codechroma/core/*": ["packages/core/src/*"]
-    }
+    },
+    "experimentalDecorators": true
   },
   "references": [
     { "path": "./packages/core" },
