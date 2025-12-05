@@ -13,6 +13,19 @@ import { ParserRegistry } from './ParserRegistry';
 import { TypeScriptParser } from './TypeScriptParser';
 import { JavaScriptParser } from './JavaScriptParser';
 import { PythonParser } from './PythonParser';
+import {
+  JavaParser,
+  CSharpParser,
+  GoParser,
+  RustParser,
+  CppParser,
+  CParser,
+  PHPParser,
+  RubyParser,
+  SwiftParser,
+  KotlinParser,
+  ScalaParser,
+} from './CStyleParser';
 import { ComplexityCalculator } from './ComplexityCalculator';
 import { MetricsExtractor } from './MetricsExtractor';
 
@@ -26,10 +39,23 @@ export class ASTAnalyzer {
     this.complexityCalculator = new ComplexityCalculator();
     this.metricsExtractor = new MetricsExtractor();
 
-    // Register default parsers
+    // Register default parsers (AST-based)
     this.registry.register(new TypeScriptParser());
     this.registry.register(new JavaScriptParser());
     this.registry.register(new PythonParser());
+
+    // Register heuristic-based parsers for other languages
+    this.registry.register(new JavaParser());
+    this.registry.register(new CSharpParser());
+    this.registry.register(new GoParser());
+    this.registry.register(new RustParser());
+    this.registry.register(new CppParser());
+    this.registry.register(new CParser());
+    this.registry.register(new PHPParser());
+    this.registry.register(new RubyParser());
+    this.registry.register(new SwiftParser());
+    this.registry.register(new KotlinParser());
+    this.registry.register(new ScalaParser());
   }
 
   /**
@@ -75,6 +101,21 @@ export class ASTAnalyzer {
       if (language === Language.Python) {
         const parser = this.registry.getParser(Language.Python) as PythonParser;
         return parser.analyze(code, filePath);
+      }
+
+      // For C-style languages (Java, C#, Go, Rust, C, C++, PHP, Ruby, Swift, Kotlin, Scala)
+      // Use the parser's built-in analyze method
+      const cStyleLanguages = [
+        Language.Java, Language.CSharp, Language.Go, Language.Rust,
+        Language.Cpp, Language.C, Language.PHP, Language.Ruby,
+        Language.Swift, Language.Kotlin, Language.Scala
+      ];
+      
+      if (cStyleLanguages.includes(language)) {
+        const parser = this.registry.getParser(language);
+        if ('analyze' in parser && typeof parser.analyze === 'function') {
+          return parser.analyze(code, filePath);
+        }
       }
 
       // For TypeScript/JavaScript, use the standard extraction methods

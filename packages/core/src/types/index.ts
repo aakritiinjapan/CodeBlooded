@@ -7,6 +7,17 @@ export enum Language {
   TypeScript = 'typescript',
   JavaScript = 'javascript',
   Python = 'python',
+  Java = 'java',
+  CSharp = 'csharp',
+  Go = 'go',
+  Rust = 'rust',
+  Cpp = 'cpp',
+  C = 'c',
+  PHP = 'php',
+  Ruby = 'ruby',
+  Swift = 'swift',
+  Kotlin = 'kotlin',
+  Scala = 'scala',
   Unknown = 'unknown',
 }
 

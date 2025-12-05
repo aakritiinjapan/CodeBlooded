@@ -2276,7 +2276,21 @@ function updateCombinedTheme(): void {
  * Check if language is supported
  */
 function isSupportedLanguage(languageId: string): boolean {
-  return ['typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'python'].includes(languageId);
+  const supportedLanguages = [
+    'typescript', 'javascript', 'typescriptreact', 'javascriptreact',
+    'python',
+    'java',
+    'csharp',
+    'go',
+    'rust',
+    'cpp', 'c',
+    'php',
+    'ruby',
+    'swift',
+    'kotlin',
+    'scala'
+  ];
+  return supportedLanguages.includes(languageId);
 }
 
 /**

@@ -14,9 +14,10 @@ export class ParserRegistry {
   register(plugin: ParserPlugin): void {
     this.parsers.set(plugin.language, plugin);
     
-    // Map file extensions to language
+    // Map file extensions to language (normalize to include dot)
     for (const ext of plugin.extensions) {
-      this.extensionMap.set(ext.toLowerCase(), plugin.language);
+      const normalizedExt = ext.startsWith('.') ? ext.toLowerCase() : `.${ext.toLowerCase()}`;
+      this.extensionMap.set(normalizedExt, plugin.language);
     }
   }
 

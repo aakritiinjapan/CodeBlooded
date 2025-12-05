@@ -183,7 +183,7 @@ export class ComplexityAnalysisManager implements vscode.Disposable {
     try {
       // Find all supported files
       const files = await vscode.workspace.findFiles(
-        '**/*.{ts,tsx,js,jsx,py}',
+        '**/*.{ts,tsx,js,jsx,py,java,cs,go,rs,cpp,cc,cxx,c,php,rb,swift,kt,kts,scala}',
         '**/node_modules/**',
         500 // Limit to 500 files for performance
       );
@@ -312,7 +312,21 @@ export class ComplexityAnalysisManager implements vscode.Disposable {
    * Check if a language is supported
    */
   private isSupportedLanguage(languageId: string): boolean {
-    return ['typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'python'].includes(languageId);
+    const supportedLanguages = [
+      'typescript', 'javascript', 'typescriptreact', 'javascriptreact',
+      'python',
+      'java',
+      'csharp',
+      'go',
+      'rust',
+      'cpp', 'c',
+      'php',
+      'ruby',
+      'swift',
+      'kotlin',
+      'scala'
+    ];
+    return supportedLanguages.includes(languageId);
   }
 
   /**
