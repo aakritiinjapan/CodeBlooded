@@ -62,7 +62,7 @@ export class ParserRegistry {
    * Extract file extension from path
    */
   private extractExtension(filePath: string): string {
-    const match = filePath.match(/\.([^.]+)$/);
+    const match = filePath.match(/(\.[^.]+)$/);
     return match ? match[1].toLowerCase() : '';
   }
 }

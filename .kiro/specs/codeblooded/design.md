@@ -2,7 +2,7 @@
 
 ## Overview
 
-codeblooded is a multi-sensory code analysis framework built as a TypeScript/Node.js monorepo. The architecture follows a shared-core pattern where common analysis, mapping, audio, and visualization logic resides in a core package, consumed by three client implementations: VS Code Extension, CLI Analyzer, and LSP Server. The system processes source code through an AST analysis pipeline, extracts complexity metrics, maps them to sensory outputs (audio frequencies and visual colors), and presents results through horror-themed interfaces.
+CodeBlooded is a multi-sensory code analysis framework built as a TypeScript/Node.js monorepo. The architecture follows a shared-core pattern where common analysis, mapping, audio, and visualization logic resides in a core package, consumed by three client implementations: VS Code Extension, CLI Analyzer, and LSP Server. The system processes source code through an AST analysis pipeline, extracts complexity metrics, maps them to sensory outputs (audio frequencies and visual colors), and presents results through horror-themed interfaces.
 
 ## Architecture
 
