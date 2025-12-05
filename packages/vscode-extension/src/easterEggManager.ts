@@ -1180,10 +1180,10 @@ export class EasterEggManager implements IEffectManager {
     for (const change of event.contentChanges) {
       // Only add inserted text (not deletions)
       if (change.text.length > 0) {
-        // Skip large bulk changes (>10 chars) - likely paste, auto-complete, or file operations
-        // Typing typically inserts 1-2 characters at a time (including newlines)
-        if (change.text.length > 10) {
-          console.log('[EasterEggManager] Skipping bulk change:', change.text.length, 'chars');
+        // Skip very large changes (>100 chars) - likely paste or file operations
+        // Normal typing including autocomplete suggestions are typically smaller
+        if (change.text.length > 100) {
+          console.log('[EasterEggManager] Skipping very large change:', change.text.length, 'chars');
           continue;
         }
         
@@ -1191,6 +1191,13 @@ export class EasterEggManager implements IEffectManager {
         const rangeSize = change.range.end.line - change.range.start.line;
         if (rangeSize > 5) {
           console.log('[EasterEggManager] Skipping large range change:', rangeSize, 'lines');
+          continue;
+        }
+        
+        // Skip if text contains many newlines (likely file content, not typing)
+        const newlineCount = (change.text.match(/\n/g) || []).length;
+        if (newlineCount > 3) {
+          console.log('[EasterEggManager] Skipping multi-line paste:', newlineCount, 'lines');
           continue;
         }
         
