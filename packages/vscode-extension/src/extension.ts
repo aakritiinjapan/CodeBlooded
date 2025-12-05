@@ -147,6 +147,9 @@ export function activate(context: vscode.ExtensionContext) {
       // Enable theme manager for complexity-based window coloring
       themeManager.setEnabled(true);
       
+      // Show only health score in status bar (no audio toggle in safe mode)
+      statusBarManager.showHealthOnly();
+      
       // Apply decorations for current file if any
       const editor = vscode.window.activeTextEditor;
       if (editor && isSupportedLanguage(editor.document.languageId)) {
@@ -170,6 +173,9 @@ export function activate(context: vscode.ExtensionContext) {
       // Clear window color customizations - restore VS Code defaults
       themeManager.clearColorCustomizations();
       themeManager.setEnabled(false);
+      
+      // Show all status bar items including audio toggle
+      statusBarManager.showAll();
       
       // Re-enable horror effects
       bloodDripManager.setEnabled(true);
@@ -196,6 +202,9 @@ export function activate(context: vscode.ExtensionContext) {
       console.log('[codeblooded] Starting in safe mode - enabling complexity analysis');
       await complexityAnalysisManager.enable();
       themeManager.setEnabled(true);
+      
+      // Show only health score in status bar (no audio in safe mode)
+      statusBarManager.showHealthOnly();
       
       // Apply decorations for currently active editor if any
       const editor = vscode.window.activeTextEditor;

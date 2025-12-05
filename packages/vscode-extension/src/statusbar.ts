@@ -92,6 +92,22 @@ export class StatusBarManager {
   }
 
   /**
+   * Show only health score (for safe mode - no audio features)
+   */
+  showHealthOnly() {
+    this.healthScoreItem.show();
+    this.audioStateItem.hide();
+  }
+
+  /**
+   * Show all items including audio (for horror mode)
+   */
+  showAll() {
+    this.healthScoreItem.show();
+    this.audioStateItem.show();
+  }
+
+  /**
    * Get health grade letter
    */
   private getHealthGrade(score: number): string {
