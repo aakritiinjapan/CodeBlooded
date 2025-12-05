@@ -137,6 +137,9 @@ export class EasterEggManager implements IEffectManager {
   private recentTypingBuffer: string = '';
   private recentTypingResetTimeout: NodeJS.Timeout | undefined;
   private readonly TYPING_BUFFER_RESET_MS = 3000; // Reset buffer after 3 seconds of no typing
+  
+  // Prevent double initialization
+  private initialized: boolean = false;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -221,6 +224,13 @@ export class EasterEggManager implements IEffectManager {
    * Initialize the easter egg manager
    */
   async initialize(): Promise<void> {
+    // Prevent double initialization
+    if (this.initialized) {
+      console.log('[EasterEggManager] Already initialized, skipping');
+      return;
+    }
+    this.initialized = true;
+    
     console.log('[EasterEggManager] Initializing...');
     
     // Register all easter eggs

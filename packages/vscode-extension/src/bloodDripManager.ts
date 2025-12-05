@@ -16,6 +16,7 @@ interface BloodDrop {
 export class BloodDripManager implements IEffectManager {
   private enabled: boolean = false;
   private disposed: boolean = false;
+  private initialized: boolean = false;
   private activeDecorations: BloodDrop[] = [];
   private keystrokeCounter = -1;
   private counterTimeout: NodeJS.Timeout | undefined;
@@ -39,6 +40,12 @@ export class BloodDripManager implements IEffectManager {
       console.warn('[BloodDripManager] Cannot initialize - already disposed');
       return;
     }
+    
+    if (this.initialized) {
+      console.log('[BloodDripManager] Already initialized, skipping');
+      return;
+    }
+    this.initialized = true;
 
     console.log('[BloodDripManager] Initializing...');
     
