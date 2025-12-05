@@ -52,3 +52,5 @@ QUICK-START-PUBLISHING.md
 ../../scripts/**
 ../../test.py
 ../../.vscode/**
+../../KIRO_WRITEUP.md
+../../*.md

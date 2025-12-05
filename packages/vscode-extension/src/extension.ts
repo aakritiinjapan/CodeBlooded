@@ -162,6 +162,10 @@ export function activate(context: vscode.ExtensionContext) {
       // Re-enable horror effects when exiting safe mode (entering horror mode)
       console.log('[codeblooded Debug] Re-enabling horror effects (exiting safe mode)');
       
+      // Enable horror mode in configuration
+      const config = vscode.workspace.getConfiguration('codeblooded');
+      await config.update('horror.enabled', true, vscode.ConfigurationTarget.Global);
+      
       // *** HORROR MODE: Disable complexity analysis features ***
       complexityAnalysisManager.disable();
       
