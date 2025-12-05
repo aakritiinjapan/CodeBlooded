@@ -6,6 +6,7 @@
  */
 
 import * as vscode from 'vscode';
+import { EffectLock } from './easterEggManager';
 
 export type PopupSeverity = 'none' | 'info' | 'warning' | 'error' | 'critical';
 
@@ -74,6 +75,12 @@ export class HorrorPopupManager implements vscode.Disposable {
       return;
     }
 
+    // Check if another effect is already running
+    if (EffectLock.isActive()) {
+      console.log('[HorrorPopupManager] Skipping jumpscare - another effect is running');
+      return;
+    }
+
     if (this.safetyManager && !this.safetyManager.trackFlashEvent('jumpscare')) {
       return;
     }
@@ -85,6 +92,12 @@ export class HorrorPopupManager implements vscode.Disposable {
 
     const variant = this.selectVariant();
     if (!variant) {
+      return;
+    }
+
+    // Acquire lock for the duration of the jumpscare
+    if (!EffectLock.acquire(variant.duration + 1000)) {
+      console.log('[HorrorPopupManager] Could not acquire effect lock for jumpscare');
       return;
     }
 
@@ -101,7 +114,12 @@ export class HorrorPopupManager implements vscode.Disposable {
       }
     }
 
-    await this.showVariantPopup(variant);
+    try {
+      await this.showVariantPopup(variant);
+    } finally {
+      // Release lock after popup completes
+      EffectLock.release();
+    }
   }
 
   private async showVariantPopup(variant: JumpscareVariant, errorMessage?: string): Promise<void> {
@@ -508,6 +526,12 @@ export class HorrorPopupManager implements vscode.Disposable {
       return;
     }
 
+    // Check if another effect is already running
+    if (EffectLock.isActive()) {
+      console.log('[codeblooded Horror] Skipping popup - another effect is running');
+      return;
+    }
+
     if (this.safetyManager && !this.safetyManager.trackFlashEvent(`popup-${severity}`)) {
       console.log('[codeblooded Horror] Flash frequency limit exceeded, skipping popup');
       return;
@@ -525,6 +549,13 @@ export class HorrorPopupManager implements vscode.Disposable {
     // Don't show for info or none
     if (severity === 'none' || severity === 'info') {
       console.log('[codeblooded Horror] Severity too low, skipping popup');
+      return;
+    }
+
+    // Acquire lock for the popup duration
+    const popupDuration = this.getPopupDuration(severity);
+    if (!EffectLock.acquire(popupDuration + 1000)) {
+      console.log('[codeblooded Horror] Could not acquire effect lock for popup');
       return;
     }
 
@@ -583,6 +614,9 @@ export class HorrorPopupManager implements vscode.Disposable {
     const duration = this.getPopupDuration(severity);
     setTimeout(async () => {
       console.log('[codeblooded Horror] Auto-closing popup after', duration, 'ms');
+      
+      // Release the effect lock
+      EffectLock.release();
       
       if (this.panel) {
         try {

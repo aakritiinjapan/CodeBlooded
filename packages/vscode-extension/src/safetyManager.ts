@@ -274,8 +274,11 @@ export class SafetyManager {
     const hasSeenWarning = this.context.globalState.get<boolean>('codeblooded.hasSeenHorrorWarning', false);
     
     if (hasSeenWarning) {
-      console.log('[SafetyManager] User has already seen warning');
-      return true;
+      // User has already seen the warning - check if they previously enabled horror
+      const config = vscode.workspace.getConfiguration('codeblooded');
+      const horrorEnabled = config.get<boolean>('horror.enabled', false);
+      console.log('[SafetyManager] User has already seen warning, horror.enabled =', horrorEnabled);
+      return horrorEnabled; // Return their previous choice, not always true
     }
 
     const warningMessage = `

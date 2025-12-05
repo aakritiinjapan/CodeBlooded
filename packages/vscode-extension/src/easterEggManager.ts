@@ -9,6 +9,49 @@ import * as vscode from 'vscode';
 import { IEffectManager } from './horrorEngine';
 
 /**
+ * Global Effect Lock - prevents multiple effects from running simultaneously
+ */
+export class EffectLock {
+  private static isLocked: boolean = false;
+  private static lockExpiry: number = 0;
+  private static readonly MAX_LOCK_DURATION = 10000; // 10 seconds max lock
+
+  static acquire(durationMs: number = 5000): boolean {
+    const now = Date.now();
+    
+    // Check if lock has expired
+    if (this.isLocked && now > this.lockExpiry) {
+      console.log('[EffectLock] Lock expired, releasing');
+      this.isLocked = false;
+    }
+    
+    if (this.isLocked) {
+      console.log('[EffectLock] Cannot acquire - already locked');
+      return false;
+    }
+    
+    this.isLocked = true;
+    this.lockExpiry = now + Math.min(durationMs, this.MAX_LOCK_DURATION);
+    console.log('[EffectLock] Lock acquired for', durationMs, 'ms');
+    return true;
+  }
+
+  static release(): void {
+    console.log('[EffectLock] Lock released');
+    this.isLocked = false;
+    this.lockExpiry = 0;
+  }
+
+  static isActive(): boolean {
+    const now = Date.now();
+    if (this.isLocked && now > this.lockExpiry) {
+      this.isLocked = false;
+    }
+    return this.isLocked;
+  }
+}
+
+/**
  * Easter egg trigger condition types
  */
 export enum EasterEggTriggerType {
@@ -89,6 +132,11 @@ export class EasterEggManager implements IEffectManager {
   private lastPatternTrigger: Map<string, number> = new Map();
   private readonly PATTERN_COOLDOWN = 30000; // 30 seconds cooldown for re-triggers
   private patternCheckTimeout: NodeJS.Timeout | undefined;
+  
+  // Recent typing buffer - accumulates recently typed text for pattern matching
+  private recentTypingBuffer: string = '';
+  private recentTypingResetTimeout: NodeJS.Timeout | undefined;
+  private readonly TYPING_BUFFER_RESET_MS = 3000; // Reset buffer after 3 seconds of no typing
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -1290,7 +1338,7 @@ export class EasterEggManager implements IEffectManager {
   }
 
   /**
-   * Check for code pattern triggers
+   * Check for code pattern triggers - only checks recently typed text
    */
   private checkCodePatterns(event: vscode.TextDocumentChangeEvent): void {
     if (!this.enabled) {
@@ -1298,18 +1346,40 @@ export class EasterEggManager implements IEffectManager {
       return;
     }
 
-    // Debounce: wait 1 second after user stops typing
+    // Accumulate recently typed text from content changes
+    for (const change of event.contentChanges) {
+      // Only add inserted text (not deletions)
+      if (change.text.length > 0) {
+        this.recentTypingBuffer += change.text;
+      }
+    }
+
+    // Reset the buffer timeout - buffer clears after 3 seconds of no typing
+    if (this.recentTypingResetTimeout) {
+      clearTimeout(this.recentTypingResetTimeout);
+    }
+    this.recentTypingResetTimeout = setTimeout(() => {
+      this.recentTypingBuffer = '';
+    }, this.TYPING_BUFFER_RESET_MS);
+
+    // Debounce pattern check: wait 500ms after user stops typing
     if (this.patternCheckTimeout) {
       clearTimeout(this.patternCheckTimeout);
     }
     
     this.patternCheckTimeout = setTimeout(() => {
-      this.performPatternCheck(event.document);
-    }, 1000); // 1 second debounce
+      this.performPatternCheck();
+    }, 500); // 500ms debounce (faster response)
   }
   
-  private performPatternCheck(document: vscode.TextDocument): void {
-    const text = document.getText();
+  private performPatternCheck(): void {
+    // Only check the recently typed text, not the whole document
+    const text = this.recentTypingBuffer;
+    
+    if (text.length === 0) {
+      return;
+    }
+    
     const now = Date.now();
     
     // Check all code pattern easter eggs
@@ -1317,16 +1387,35 @@ export class EasterEggManager implements IEffectManager {
       if (egg.triggerType === EasterEggTriggerType.CodePattern) {
         const pattern = egg.triggerCondition as string;
         
-        if (text.includes(pattern)) {
+        // For single-word patterns (like "blood"), use word boundary matching
+        // to avoid triggering on words like "codeblooded"
+        let matches = false;
+        if (!pattern.includes(' ') && pattern.length <= 10) {
+          // Single word pattern - use regex with word boundaries
+          const regex = new RegExp(`\\b${pattern}\\b`, 'i');
+          matches = regex.test(text);
+        } else {
+          // Multi-word pattern - use includes (exact phrase matching)
+          matches = text.includes(pattern);
+        }
+        
+        if (matches) {
           // Check cooldown for re-triggers
           const lastTrigger = this.lastPatternTrigger.get(egg.id) || 0;
           if (now - lastTrigger < this.PATTERN_COOLDOWN) {
             continue; // Skip if on cooldown
           }
           
-          console.log('[EasterEggManager] Code pattern detected:', egg.name, 'Pattern:', pattern);
+          console.log('[EasterEggManager] Code pattern detected in recent typing:', egg.name, 'Pattern:', pattern, 'Buffer:', text.substring(0, 50));
           this.lastPatternTrigger.set(egg.id, now);
+          
+          // Clear the buffer after triggering to prevent re-triggers
+          this.recentTypingBuffer = '';
+          
           this.triggerEasterEgg(egg.id);
+          
+          // Only trigger one easter egg at a time
+          break;
         }
       }
     }
@@ -1495,6 +1584,18 @@ export class EasterEggManager implements IEffectManager {
       return;
     }
 
+    // Check if another effect is running
+    if (EffectLock.isActive()) {
+      console.log('[EasterEggManager] Skipping easter egg - another effect is running:', eggId);
+      return;
+    }
+
+    // Acquire lock for 5 seconds (effects typically last 2-5 seconds)
+    if (!EffectLock.acquire(5000)) {
+      console.log('[EasterEggManager] Could not acquire effect lock for:', eggId);
+      return;
+    }
+
     // For testing, allow re-triggering even if already unlocked
     const isFirstTime = !egg.unlocked;
 
@@ -1523,6 +1624,9 @@ export class EasterEggManager implements IEffectManager {
       await egg.effect();
     } catch (error) {
       console.error('[EasterEggManager] Failed to trigger easter egg effect:', error);
+    } finally {
+      // Release lock after effect completes
+      EffectLock.release();
     }
   }
 
