@@ -114,7 +114,7 @@ codeblooded includes OPTIONAL psychological horror features that contain:
 
 🛡️ Safety Features:
 • Horror features are DISABLED by default
-• Panic Button (Ctrl+Shift+Escape) for instant disable
+• Panic Button (Ctrl+Alt+S) for instant disable
 • Respects accessibility settings
 • Your code is never permanently modified
 
@@ -139,7 +139,7 @@ Do you understand these warnings and wish to continue?
 🚨 PANIC BUTTON - Your Safety Net
 
 At ANY time, press:
-  Ctrl+Shift+Escape (Windows/Linux)
+  Ctrl+Alt+S (Windows/Linux)
   Cmd+Shift+Escape (Mac)
 
 This will INSTANTLY disable ALL horror effects.
@@ -168,7 +168,7 @@ Press OK to continue...
     const message = `
 🎚️ HORROR INTENSITY SYSTEM
 
-Control your experience with the intensity slider (0-100):
+Control your experience with the intensity value (0-100):
 
 • 0-30: Minimal Horror
   Rare events, subtle effects
@@ -244,7 +244,7 @@ To Enable Horror Features:
 5. Start coding!
 
 Essential Commands:
-• Ctrl+Shift+Escape - Panic Button
+• Ctrl+Alt+S - Panic Button
 • "codeblooded: Show Horror Controls" - View settings
 • "codeblooded: Test Horror Popup" - Preview effects
 
@@ -300,7 +300,7 @@ Enable them in settings when you're ready!
     const message = `
 🎃 codeblooded Quick Tips
 
-🚨 Panic Button: Ctrl+Shift+Escape
+🚨 Panic Button: Ctrl+Alt+S
    Instantly disables all horror effects
 
 🎚️ Intensity: Start with 30-40

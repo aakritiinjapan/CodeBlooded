@@ -208,16 +208,16 @@ export class HorrorEngine {
     // Load and validate configuration
     this.state.userConfig = this.validateConfiguration(this.loadConfiguration());
     
-    // Check if horror features should be enabled
-    if (!this.state.userConfig.enabled || this.state.isSafeMode) {
-      console.log('[HorrorEngine] Horror features disabled', {
-        enabled: this.state.userConfig.enabled,
-        safeMode: this.state.isSafeMode
-      });
-      return;
-    }
+    // Re-check safe mode from safety manager (it may have been updated)
+    this.state.isSafeMode = this.safetyManager.isSafeModeActive();
+    
+    console.log('[HorrorEngine] Configuration loaded:', {
+      enabled: this.state.userConfig.enabled,
+      safeMode: this.state.isSafeMode
+    });
     
     // Initialize all registered effect managers with error handling
+    // (do this regardless of safe mode - they need to be ready when mode changes)
     for (const [name, manager] of this.effectManagers.entries()) {
       await this.errorHandler.safeExecute(
         async () => {
@@ -231,13 +231,7 @@ export class HorrorEngine {
       );
     }
     
-    // Start the session
-    this.startSession();
-    
-    // Apply effect manager states based on configuration
-    this.updateEffectManagerStates();
-    
-    // Listen for safe mode changes
+    // Listen for safe mode changes (do this BEFORE starting session)
     this.safetyManager.onSafeModeChanged(isSafeMode => {
       this.handleSafeModeChange(isSafeMode);
     });
@@ -262,6 +256,17 @@ export class HorrorEngine {
         }
       })
     );
+    
+    // Only start session if horror is enabled and safe mode is off
+    if (this.state.userConfig.enabled && !this.state.isSafeMode) {
+      // Start the session
+      this.startSession();
+      
+      // Apply effect manager states based on configuration
+      this.updateEffectManagerStates();
+    } else {
+      console.log('[HorrorEngine] Waiting for safe mode to be disabled before starting session');
+    }
     
     console.log('[HorrorEngine] Initialization complete');
   }
@@ -791,7 +796,15 @@ export class HorrorEngine {
         manager.setEnabled(false);
       }
     } else {
-      // Re-enable effects
+      // Re-enable effects when coming out of safe mode
+      // First, ensure all effect managers are initialized
+      for (const [name, manager] of this.effectManagers.entries()) {
+        console.log(`[HorrorEngine] Initializing ${name} manager after safe mode disable`);
+        manager.initialize().catch(err => {
+          console.error(`[HorrorEngine] Failed to initialize ${name} manager:`, err);
+        });
+      }
+      
       this.startSession();
       
       // Re-enable effect managers based on configuration

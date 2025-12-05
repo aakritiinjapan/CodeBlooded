@@ -290,8 +290,8 @@ export class LocalAudioEngine implements vscode.Disposable {
   <title>Horror Audio</title>
   <style nonce="${nonce}">
     body { 
-      background: linear-gradient(135deg, #1a0000, #000000, #001a00);
-      color: #0f0; 
+      background: linear-gradient(135deg, #1a0000, #0d0000, #000000);
+      color: #c41e3a; 
       font-family: 'Courier New', monospace; 
       margin: 0;
       padding: 40px;
@@ -301,61 +301,148 @@ export class LocalAudioEngine implements vscode.Disposable {
       justify-content: center;
       min-height: 100vh;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+      pointer-events: none;
     }
     .title {
-      font-size: 32px;
-      margin-bottom: 20px;
-      text-shadow: 0 0 20px #0f0;
-      animation: glow 2s ease-in-out infinite alternate;
+      font-size: 36px;
+      margin-bottom: 10px;
+      color: #8b0000;
+      text-shadow: 0 0 20px #8b0000, 0 0 40px #660000, 0 0 60px #440000;
+      animation: bloodPulse 2s ease-in-out infinite;
+      z-index: 1;
     }
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #0f0, 0 0 20px #0f0; }
-      to { text-shadow: 0 0 20px #0f0, 0 0 30px #0f0, 0 0 40px #0f0; }
+    .subtitle {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 30px;
+      font-style: italic;
+      z-index: 1;
     }
-    .status { 
-      padding: 20px; 
-      background: rgba(0, 255, 0, 0.1); 
-      border: 2px solid #0f0;
-      margin: 20px 0;
-      border-radius: 10px;
+    @keyframes bloodPulse {
+      0%, 100% { text-shadow: 0 0 20px #8b0000, 0 0 40px #660000; transform: scale(1); }
+      50% { text-shadow: 0 0 30px #c41e3a, 0 0 60px #8b0000, 0 0 80px #660000; transform: scale(1.02); }
+    }
+    @keyframes drip {
+      0% { transform: translateY(-10px); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+    .blood-drip {
+      position: absolute;
+      top: 0;
+      width: 3px;
+      height: 20px;
+      background: linear-gradient(to bottom, #8b0000, transparent);
+      border-radius: 0 0 50% 50%;
+      animation: drip 4s linear infinite;
+    }
+    .info-box {
+      background: rgba(139, 0, 0, 0.15);
+      border: 1px solid #8b0000;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 15px 0;
+      max-width: 500px;
+      z-index: 1;
+    }
+    .info-box h3 {
+      color: #c41e3a;
+      margin: 0 0 10px 0;
       font-size: 18px;
-      max-width: 600px;
+    }
+    .info-box p {
+      color: #999;
+      margin: 5px 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .warning {
+      color: #ff6b6b;
+      font-size: 14px;
+      margin: 10px 0;
+      z-index: 1;
+    }
+    .dark-mode-note {
+      background: rgba(100, 100, 100, 0.2);
+      border: 1px dashed #666;
+      border-radius: 5px;
+      padding: 10px 15px;
+      margin: 15px 0;
+      color: #888;
+      font-size: 13px;
+      z-index: 1;
     }
     #enableBtn {
-      background: linear-gradient(45deg, #0f0, #0a0);
-      color: #000;
-      border: 3px solid #0f0;
-      padding: 30px 60px;
-      font-size: 28px;
+      background: linear-gradient(180deg, #8b0000, #5c0000);
+      color: #fff;
+      border: 2px solid #c41e3a;
+      padding: 25px 50px;
+      font-size: 24px;
       font-weight: bold;
       cursor: pointer;
       font-family: 'Courier New', monospace;
-      margin: 30px 0;
-      border-radius: 15px;
-      box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+      margin: 25px 0;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(139, 0, 0, 0.6), inset 0 0 20px rgba(0,0,0,0.3);
       transition: all 0.3s ease;
       text-transform: uppercase;
+      letter-spacing: 2px;
+      z-index: 1;
     }
     #enableBtn:hover {
-      background: linear-gradient(45deg, #0a0, #080);
-      transform: scale(1.1);
-      box-shadow: 0 0 50px rgba(0, 255, 0, 0.8);
+      background: linear-gradient(180deg, #a00000, #700000);
+      transform: scale(1.05);
+      box-shadow: 0 0 50px rgba(196, 30, 58, 0.8), inset 0 0 20px rgba(0,0,0,0.3);
     }
     #enableBtn:disabled {
-      background: #333;
-      color: #666;
+      background: #222;
+      color: #555;
       cursor: not-allowed;
-      border-color: #666;
+      border-color: #444;
       box-shadow: none;
       transform: none;
+    }
+    .status-text {
+      color: #888;
+      font-size: 14px;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <div class="title">👻 codeblooded Horror Audio 👻</div>
-  <div class="status">⚠️ Browser security requires one click to enable audio playback ⚠️</div>
-  <button id="enableBtn">🔊 CLICK HERE TO ENABLE AUDIO 🔊</button>
-  <div class="status" id="statusText">Once enabled, audio will play automatically as you code!</div>
+  <div class="blood-drip" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="blood-drip" style="left: 25%; animation-delay: 1s;"></div>
+  <div class="blood-drip" style="left: 75%; animation-delay: 2s;"></div>
+  <div class="blood-drip" style="left: 90%; animation-delay: 0.5s;"></div>
+  
+  <div class="title">☠️ THE CODE BLEEDS ☠️</div>
+  <div class="subtitle">Your IDE will never feel safe again...</div>
+  
+  <div class="info-box">
+    <h3>🩸 What Awaits You</h3>
+    <p>Phantom typing that writes itself... Screen distortions that twist reality...</p>
+    <p>Jumpscares when you least expect them... Whispers from your variables...</p>
+    <p>The deeper your code complexity, the more intense the horror.</p>
+  </div>
+  
+  <div class="warning">⚠️ Browser security requires one click to unleash the audio</div>
+  
+  <button id="enableBtn">🔊 AWAKEN THE HORROR 🔊</button>
+  
+  <div class="dark-mode-note">💡 For the best experience, use VS Code in Dark Mode</div>
+  
+  <div class="status-text" id="statusText">Once enabled, the nightmare begins automatically as you code...</div>
   <script nonce="${nonce}">
     const vscode = acquireVsCodeApi();
     
@@ -375,8 +462,8 @@ export class LocalAudioEngine implements vscode.Disposable {
     enableBtn.addEventListener('click', () => {
       userInteracted = true;
       enableBtn.disabled = true;
-      enableBtn.textContent = '✓ AUDIO ENABLED';
-      statusText.textContent = '🎵 Audio is now active! Sounds will play automatically as you code. You can minimize or close this panel - audio will continue in background.';
+      enableBtn.textContent = '☠️ THE HORROR AWAKENS ☠️';
+      statusText.textContent = '🩸 The nightmare is active... Audio will haunt you as you code. You can minimize this panel - the horror continues in the shadows.';
       vscode.postMessage({ type: 'log', message: 'User enabled audio playback' });
       
       // CRITICAL: Create popup Audio object NOW during user gesture to inherit permission
@@ -416,8 +503,8 @@ export class LocalAudioEngine implements vscode.Disposable {
 
       if (!userInteracted) {
         vscode.postMessage({ type: 'log', message: 'Waiting for user interaction...' });
-        statusText.textContent = '⚠️ Click "ENABLE AUDIO" button to hear sounds!';
-        enableBtn.style.animation = 'pulse 1s infinite';
+        statusText.textContent = '⚠️ Click the button above to unleash the audio horror!';
+        enableBtn.style.animation = 'bloodPulse 1s infinite';
         // Create audio object but don't play yet - wait for user click
         if (!ambientAudio) {
           ambientAudio = new Audio();

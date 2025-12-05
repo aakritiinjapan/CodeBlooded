@@ -1,22 +1,41 @@
-# codeblooded - Multi-Sensory Code Analysis with Optional Horror Features
+# 🩸 CodeBlooded - Your IDE Will Never Feel Safe Again
 
-Transform code complexity into an immersive sensory experience with audio-visual feedback and **optional psychological horror elements**.
+> **Are you brave enough?** Transform your coding environment into a psychological horror experience where your code complexity literally haunts you.
+
+**The deeper your code's complexity, the more intense the nightmare becomes.** Phantom keystrokes type themselves. Your variables whisper secrets. The screen warps and distorts. And when you least expect it... something appears.
+
+*This is not just an extension. This is survival horror for developers.*
 
 ---
 
-## 🚨 IMPORTANT SAFETY WARNINGS
+## 🎮 Two Ways to Experience CodeBlooded
+
+### 🌙 Safe Mode (Default)
+Perfect for those who want feedback without the frights:
+- **Color-coded complexity** highlighting (Blue → Purple → Yellow → Orange// I)
+- **Audio tones** that reflect your code quality
+- **Visual graphs** showing code structure
+- **No horror effects** - just clean, useful feedback
+
+### ☠️ Horror Mode (Opt-In)
+For the brave souls who dare to enable it:
+- **Everything in Safe Mode, PLUS...**
+- **Jumpscares** with synchronized audio
+- **Screen distortions** (VHS, glitch, chromatic aberration)
+- **Phantom typing** that writes itself
+- **Whispering variables** with creepy overlays
+- **Entity presence** - eyes watching from the gutter
+- **Progressive escalation** - it gets worse the longer you code
+
+💡 **Best experienced in Dark Mode for maximum immersion!**
+
+---
+
+## 🚨 SAFETY FIRST
 
 ### ⚠️ Photosensitivity Warning
 
 **This extension contains OPTIONAL features with flashing lights and rapid visual changes that may trigger seizures in individuals with photosensitive epilepsy.**
-
-### 🎃 Psychological Horror Content (Optional, Disabled by Default)
-
-codeblooded includes **opt-in horror features** with:
-- Jump scares with disturbing imagery
-- Screen distortion effects
-- Phantom typing events
-- Unsettling audio and visuals
 
 ### ❌ Not Recommended For
 
@@ -28,35 +47,39 @@ codeblooded includes **opt-in horror features** with:
 
 ### 🛡️ Safety Features
 
-- **🚨 Panic Button** (`Ctrl+Alt+S`): Instant disable
-- **🛡️ Safe Mode**: Horror disabled by default
+- **🚨 Panic Button** (`Ctrl+Alt+S`): Instant disable all effects
+- **🛡️ Safe Mode**: Horror disabled by default - you must opt-in
 - **♿ Accessibility**: Respects "Reduce Motion" settings
 - **📺 Screen Sharing Detection**: Auto-disables during presentations
-- **💾 Code Safety**: Your actual code is never harmed
+- **💾 Code Safety**: Your actual code is NEVER harmed
 
 ---
 
 ## 🎯 Core Features (Always Available)
 
+### Supported Languages
+- **Full Analysis**: TypeScript, JavaScript, Python
+- **Basic Support**: Java, C#, Go, Rust, C/C++, PHP, Ruby, Swift, Kotlin
+
 ### Real-Time Code Analysis
-- **AST Parsing**: Analyze TypeScript/JavaScript complexity in real-time
+- **AST Parsing**: Analyze complexity in real-time
 - **Cyclomatic Complexity**: Track code complexity metrics
 - **Visual Feedback**: Horror-themed color coding (Blue → Purple → Orange → Red)
-- **Audio Feedback**: Frequency-mapped tones (220Hz-880Hz+)
-- **Interactive Graphs**: D3.js visualizations with horror aesthetics
+- **Audio Feedback**: Frequency-mapped tones that react to your code
+- **Health Score**: Overall code quality score (0-100) in status bar
 
 ### Complexity Mapping
 
-| Complexity | Color | Frequency | Theme |
-|------------|-------|-----------|-------|
-| 1-5 (Low) | Midnight Blue | 220-330Hz | Deep hum |
-| 6-10 (Medium) | Toxic Purple | 330-523Hz | Eerie notes |
-| 11-15 (High) | Blood Orange | 523-880Hz | Sharp tones |
-| 16+ (Critical) | Crimson Red | 880Hz+ | Harsh distortion |
+| Complexity | Color | Audio | Meaning |
+|------------|-------|-------|---------|
+| 1-5 (Low) | Midnight Blue | Deep calm hum | Clean, maintainable |
+| 6-10 (Medium) | Toxic Purple | Eerie dissonance | Acceptable complexity |
+| 11-15 (High) | Blood Orange | Sharp tension | Consider refactoring |
+| 16+ (Critical) | Crimson Red | Harsh distortion | Refactor immediately! |
 
 ---
 
-## 🎃 Optional Horror Features (Opt-In Only)
+## 🎃 Horror Features (Opt-In Only)
 
 **⚠️ These features are DISABLED by default. You must explicitly enable them in settings.**
 
@@ -83,17 +106,18 @@ codeblooded includes **opt-in horror features** with:
 
 ### Phantom Typing
 - Brief character insertions (1-3 chars)
+- Messages like "help me", "run", "it sees you"
 - Automatically removed after 0.5-1.5 seconds
 - **100% safe and reversible** - your code is never harmed
 
 ### Whispering Variables
 - Variable names temporarily overlay with creepy alternatives
-- `user` → `victim`, `data` → `secrets`, etc.
+- `user` → `victim`, `data` → `secrets`, `process` → `consume`
 - Displays for 1-3 seconds then fades
 
 ### Context-Aware Triggers
 - Special effects when typing horror keywords
-- `kill`, `dead`, `error`, `fatal`, etc.
+- `kill`, `dead`, `error`, `fatal`, `blood`, etc.
 - 30% trigger chance with 20-second cooldowns
 
 ### Hidden Easter Eggs
@@ -108,8 +132,10 @@ codeblooded includes **opt-in horror features** with:
 ### Installation
 
 1. Install from VS Code Marketplace
-2. Open a TypeScript or JavaScript file
+2. Open a TypeScript, JavaScript, or Python file
 3. Start coding - audio/visual feedback activates automatically
+
+💡 **Best experienced in VS Code Dark Mode!**
 
 ### Enabling Horror Features (Optional)
 
@@ -119,7 +145,7 @@ codeblooded includes **opt-in horror features** with:
 4. Read and accept the warning dialog
 5. Learn the panic button: `Ctrl+Alt+S`
 
-**Remember**: Horror features are completely optional. codeblooded works perfectly without them!
+**Remember**: Horror features are completely optional. CodeBlooded works perfectly without them!
 
 ---
 
@@ -163,22 +189,22 @@ codeblooded includes **opt-in horror features** with:
 ## 🎮 Commands
 
 ### Essential Commands
-- `codeblooded: Toggle Audio Feedback` - Enable/disable audio
-- `codeblooded: Show AST Graph` - Open interactive visualization
-- `codeblooded: Panic Button` - **Instantly disable all horror**
-- `codeblooded: Toggle Safe Mode` - Quick horror enable/disable
-- `codeblooded: Show Horror Controls` - View all settings
+- `CodeBlooded: Toggle Audio Feedback` - Enable/disable audio
+- `CodeBlooded: Show AST Graph` - Open interactive visualization
+- `CodeBlooded: Panic Button` - **Instantly disable all horror**
+- `CodeBlooded: Toggle Safe Mode` - Quick horror enable/disable
+- `CodeBlooded: Show Horror Controls` - View all settings
 
 ### Testing Commands
-- `codeblooded: Test Audio` - Test audio system
-- `codeblooded: Test Horror Popup` - Preview jumpscare
-- `codeblooded: Test Screen Distortion` - Preview screen effects
-- `codeblooded: Emergency Restore` - Clear all phantom effects
+- `CodeBlooded: Test Audio` - Test audio system
+- `CodeBlooded: Test Horror Popup` - Preview jumpscare
+- `CodeBlooded: Test Screen Distortion` - Preview screen effects
+- `CodeBlooded: Emergency Restore` - Clear all phantom effects
 
 ### Debug Commands
-- `codeblooded: Show Debug Info` - View system state
-- `codeblooded: Show Horror Engine State` - View horror status
-- `codeblooded: Toggle Verbose Logging` - Enable detailed logs
+- `CodeBlooded: Show Debug Info` - View system state
+- `CodeBlooded: Show Horror Engine State` - View horror status
+- `CodeBlooded: Toggle Verbose Logging` - Enable detailed logs
 
 ---
 
@@ -207,45 +233,31 @@ Press `Ctrl+Alt+S` at ANY time to instantly disable all horror effects.
 
 ## 📚 Documentation
 
-- **[User Guide](https://github.com/aakritiinjapan/codeblooded/blob/main/HORROR_FEATURES_GUIDE.md)**: Complete horror features documentation
-- **[Main README](https://github.com/aakritiinjapan/codeblooded/blob/main/README.md)**: Project overview and architecture
-- **[GitHub Issues](https://github.com/aakritiinjapan/codeblooded/issues)**: Report bugs or request features
+- **[GitHub Issues](https://github.com/aakritiinjapan/CodeBlooded/issues)**: Report bugs or request features
+- **[GitHub Repository](https://github.com/aakritiinjapan/CodeBlooded)**: Full source code
 
 ---
 
 ## 🎃 Why Horror Theme?
 
-Code complexity can be scary. codeblooded embraces this with a horror aesthetic that makes quality feedback memorable and engaging. The optional psychological horror features add tension and unpredictability for developers who enjoy horror games.
+Code complexity can be scary. CodeBlooded embraces this with a horror aesthetic that makes quality feedback memorable and engaging. The optional psychological horror features add tension and unpredictability for developers who enjoy horror games.
 
-**Important**: Horror features are entirely optional entertainment. codeblooded works perfectly as a standard code analysis tool without any horror elements.
+**Important**: Horror features are entirely optional entertainment. CodeBlooded works perfectly as a standard code analysis tool without any horror elements.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions welcome! Visit our [GitHub repository](https://github.com/aakritiinjapan/codeblooded).
+Contributions welcome! Visit our [GitHub repository](https://github.com/aakritiinjapan/CodeBlooded).
 
 ---
 
 ## 📄 License
 
-MIT License - See [LICENSE](https://github.com/aakritiinjapan/codeblooded/blob/main/LICENSE)
+MIT License - See [LICENSE](https://github.com/aakritiinjapan/CodeBlooded/blob/main/LICENSE)
 
 ---
 
-## ⚠️ Final Reminder
+**Made with 🩸 by the CodeBlooded team**
 
-**Before enabling horror features**:
-1. Read all safety warnings
-2. Ensure you don't have photosensitive epilepsy or related conditions
-3. Learn the panic button: `Ctrl+Alt+S`
-4. Start with low intensity (30-40)
-5. Enable Safe Mode if you feel uncomfortable
-
-**Your safety is our priority. When in doubt, keep horror features disabled.**
-
----
-
-**Made with 🎃 by the codeblooded team**
-
-*codeblooded: Where code quality meets psychological horror*
+*CodeBlooded: Where code quality meets psychological horror*

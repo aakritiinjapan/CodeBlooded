@@ -20,7 +20,7 @@ Once triggered, easter eggs unlock permanently and are tracked in your extension
 These are triggered by typing specific text in any code file:
 
 ### 1. 🌙 Nightmare Mode
-**Trigger**: Type `const nightmare = true`
+**Trigger**: Type `const nightmare = True`
 
 **Effect**: 
 - Maximum horror intensity activated

@@ -314,7 +314,7 @@ Do you want to enable horror features?
     if (result === 'Learn More') {
       // Show additional information
       await vscode.window.showInformationMessage(
-        'codeblooded horror features are designed for entertainment. All effects are temporary and reversible. Your code is never permanently modified. Use the panic button (Ctrl+Shift+Escape) at any time to instantly disable all effects.',
+        'codeblooded horror features are designed for entertainment. All effects are temporary and reversible. Your code is never permanently modified. Use the panic button (Ctrl+Alt+S) at any time to instantly disable all effects.',
         { modal: true }
       );
       
@@ -337,7 +337,7 @@ Do you want to enable horror features?
   }
 
   /**
-   * Register the panic button command (Ctrl+Shift+Escape)
+   * Register the panic button command (Ctrl+Alt+S)
    */
   private registerPanicButton(): void {
     this.panicButtonDisposable = vscode.commands.registerCommand(
@@ -348,7 +348,7 @@ Do you want to enable horror features?
     this.context.subscriptions.push(this.panicButtonDisposable);
     
     // Register keybinding
-    console.log('[SafetyManager] Panic button registered (Ctrl+Shift+Escape)');
+    console.log('[SafetyManager] Panic button registered (Ctrl+Alt+S)');
   }
 
   /**
@@ -639,7 +639,7 @@ Do you want to enable horror features?
     
     // Show warning before exiting safe mode
     const result = await vscode.window.showWarningMessage(
-      '⚠️ Disable Safe Mode?\n\nThis will enable horror effects including jumpscares, screen distortions, and phantom events.\n\nUse Panic Button (Ctrl+Shift+Escape) to instantly re-enable safe mode.',
+      '⚠️ Disable Safe Mode?\n\nThis will enable horror effects including jumpscares, screen distortions, and phantom events.\n\nUse Panic Button (Ctrl+Alt+S) to instantly re-enable safe mode.',
       { modal: true },
       'Disable Safe Mode',
       'Cancel'

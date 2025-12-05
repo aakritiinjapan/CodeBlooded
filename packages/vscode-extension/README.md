@@ -1,10 +1,41 @@
-# codeblooded for VS Code 🎨🔊
+# 🩸 CodeBlooded for VS Code
 
-> Multi-sensory code analysis with horror-themed audio-visual feedback
+> **Are you brave enough?** Your IDE will never feel safe again.
+
+Transform your coding environment into a psychological horror experience where your code complexity literally haunts you. The deeper your code's complexity, the more intense the nightmare becomes.
+
+*Phantom keystrokes type themselves. Your variables whisper secrets. The screen warps and distorts. And when you least expect it... something appears.*
+
+💡 **Best experienced in VS Code Dark Mode for maximum immersion!**
+
+---
+
+## 🎮 Two Modes of Experience
+
+### 🌙 Safe Mode (Default)
+Perfect for those who want feedback without the frights:
+- **Color-coded complexity** highlighting (Blue → Purple → Orange → Red)
+- **Audio tones** that reflect your code quality
+- **Visual graphs** showing code structure
+- **Health Score** in status bar
+- **No horror effects** - just clean, useful feedback
+
+### ☠️ Horror Mode (Opt-In)
+For the brave souls who dare to enable `codeblooded.horror.enabled`:
+- **Everything in Safe Mode, PLUS...**
+- **Jumpscares** with synchronized audio (6 unique variants!)
+- **Screen distortions** (VHS, glitch, chromatic aberration, screen shake)
+- **Phantom typing** that writes itself ("help me", "run", "it sees you")
+- **Whispering variables** with creepy overlays
+- **Entity presence** - eyes watching from the gutter
+- **Progressive escalation** - it gets worse the longer you code
+- **Easter eggs** - discover hidden horrors
+
+---
 
 ## ⚠️ IMPORTANT SAFETY WARNING ⚠️
 
-**codeblooded contains psychological horror features including:**
+**CodeBlooded contains optional psychological horror features including:**
 - Flashing lights and rapid visual changes
 - Jump scares with disturbing imagery  
 - Unsettling audio effects
@@ -26,17 +57,15 @@ See [SAFETY_FEATURES.md](./SAFETY_FEATURES.md) for complete safety documentation
 
 ---
 
-Transform your coding experience with real-time complexity feedback. codeblooded analyzes your code as you type and provides immersive audio-visual cues - from calm deep hums for clean code to harsh distorted tones and crimson warnings for complex functions.
-
 ## Features
 
 ### 🎵 Real-Time Audio Feedback
 
-Hear your code's complexity through frequency-mapped tones:
-- **Low Complexity (1-5)**: Deep ominous hum (220-330Hz, sine wave)
-- **Medium Complexity (6-10)**: Eerie dissonant notes (330-523Hz, triangle wave)
-- **High Complexity (11-15)**: Sharp piercing tones (523-880Hz, sawtooth wave)
-- **Critical Complexity (16+)**: Harsh horror stingers (880Hz+, square wave with distortion)
+Hear your code's complexity through horror-themed audio:
+- **Low Complexity (1-5)**: Deep calm hum - all good
+- **Medium Complexity (6-10)**: Eerie dissonant notes - acceptable
+- **High Complexity (11-15)**: Sharp tension tones - consider refactoring
+- **Critical Complexity (16+)**: Harsh distorted chaos - refactor now!
 
 Audio plays automatically after you stop typing (1 second debounce).
 
@@ -46,18 +75,7 @@ Visual feedback overlays directly in your editor:
 - **Midnight Blue (#191970)**: Low complexity - all good
 - **Toxic Purple (#9400D3)**: Medium complexity - acceptable
 - **Blood Orange (#CC5500)**: High complexity - consider refactoring
-- **Crimson Red (#DC143C)**: Critical complexity - refactor immediately ☠️
-
-Functions with critical complexity get a skull emoji indicator.
-
-### 📊 Interactive AST Graph
-
-Visualize your code structure with a D3.js force-directed graph:
-- Nodes represent files, functions, and classes
-- Edges show dependencies (imports, calls, inheritance)
-- Node size reflects lines of code
-- Node color indicates complexity level
-- Horror-themed effects: cobwebs, skulls, blood drips, and animated fog
+- **Crimson Red (#DC143C)**: Critical complexity - refactor immediately
 
 ### 📈 Health Score
 
@@ -67,16 +85,14 @@ Status bar displays an overall code quality score (0-100):
 - **50-69**: Fair - refactoring recommended
 - **Below 50**: Poor - significant refactoring needed
 
-### 🎃 Horror Theme
+### 🎃 Horror Effects (When Enabled)
 
-Embrace the spooky aesthetic:
-- Cobweb overlays on high complexity nodes
-- Blood drip animations for critical code
-- Ghostly glow effects for errors
-- Skull icons replacing critical complexity indicators
-- Animated fog particles in the background
-- Tritone intervals (the "devil's interval") for errors
-- Gothic organ chords for successful refactoring
+When you enable Horror Mode, experience:
+- **Screen distortions**: VHS artifacts, glitch effects, chromatic aberration
+- **Phantom typing**: Brief messages appear and vanish
+- **Whispering variables**: Names overlay with creepy alternatives
+- **Entity presence**: Eyes appear in the editor gutter
+- **Jumpscares**: Full-screen horror with audio (you've been warned)
 
 ## Installation
 
@@ -84,12 +100,12 @@ Embrace the spooky aesthetic:
 
 1. Open VS Code
 2. Press `Ctrl+P` (Windows/Linux) or `Cmd+P` (Mac)
-3. Type: `ext install codeblooded.codeblooded-vscode`
+3. Type: `ext install AakritiHGupta.codeblooded-vscode`
 4. Press Enter
 
 ### From VSIX File
 
-1. Download the `.vsix` file from [releases](https://github.com/yourusername/codeblooded/releases)
+1. Download the `.vsix` file from [releases](https://github.com/aakritiinjapan/CodeBlooded/releases)
 2. Open VS Code
 3. Go to Extensions view (`Ctrl+Shift+X`)
 4. Click `...` menu → `Install from VSIX...`
@@ -97,19 +113,19 @@ Embrace the spooky aesthetic:
 
 ## Quick Start
 
-1. **Open a TypeScript or JavaScript file**
-   - Extension activates automatically for `.ts`, `.tsx`, `.js`, `.jsx` files
+1. **Open a supported file**
+   - Extension activates automatically for `.ts`, `.tsx`, `.js`, `.jsx`, `.py` files
 
 2. **Start coding**
    - Audio and visual feedback activates as you type
    - Decorations appear after 1 second of inactivity
 
 3. **View the AST graph**
-   - Run command: `codeblooded: Show AST Graph`
+   - Run command: `CodeBlooded: Show AST Graph`
    - Or click the graph icon in the status bar
 
 4. **Toggle audio**
-   - Run command: `codeblooded: Toggle Audio Feedback`
+   - Run command: `CodeBlooded: Toggle Audio Feedback`
    - Or click the audio icon in the status bar
 
 ## Commands
@@ -118,14 +134,14 @@ Access commands via Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
 
 | Command | Description | Keyboard Shortcut |
 |---------|-------------|-------------------|
-| `codeblooded: Panic Button` | **EMERGENCY**: Instantly disable all horror effects | `Ctrl+Alt+S` |
-| `codeblooded: Toggle Safe Mode` | Enable/disable horror features | - |
-| `codeblooded: Toggle Audio Feedback` | Enable/disable audio playback | - |
-| `codeblooded: Show AST Graph` | Open interactive graph visualization | - |
+| `CodeBlooded: Panic Button` | **EMERGENCY**: Instantly disable all horror effects | `Ctrl+Alt+S` |
+| `CodeBlooded: Toggle Safe Mode` | Enable/disable horror features | - |
+| `CodeBlooded: Toggle Audio Feedback` | Enable/disable audio playback | - |
+| `CodeBlooded: Show AST Graph` | Open interactive graph visualization | - |
 
 ## Configuration
 
-Configure codeblooded via VS Code settings (`Ctrl+,` or `Cmd+,`):
+Configure CodeBlooded via VS Code settings (`Ctrl+,` or `Cmd+,`):
 
 ### Safety Settings
 
@@ -196,7 +212,7 @@ Configure codeblooded via VS Code settings (`Ctrl+,` or `Cmd+,`):
 
 ## Status Bar
 
-codeblooded adds two status bar items:
+CodeBlooded adds two status bar items:
 
 ### Health Score Indicator
 - **Location**: Left side of status bar
@@ -208,31 +224,7 @@ codeblooded adds two status bar items:
 - **Format**: `🔊` (enabled) or `🔇` (disabled)
 - **Click**: Toggles audio on/off
 
-## Screenshots
 
-### Color-Coded Highlighting
-
-![Color-coded highlighting showing complexity levels](./images/highlighting.png)
-
-*Functions highlighted by complexity: blue (low), purple (medium), orange (high), red (critical)*
-
-### Interactive AST Graph
-
-![Interactive force-directed graph with horror theme](./images/graph.png)
-
-*D3.js visualization with cobwebs, skulls, and fog effects*
-
-### Status Bar Integration
-
-![Status bar showing health score and audio state](./images/statusbar.png)
-
-*Health score and audio toggle in VS Code status bar*
-
-### Webview Panel
-
-![Webview panel with full graph visualization](./images/webview.png)
-
-*Full-screen graph view with interactive controls*
 
 ## How It Works
 
@@ -245,7 +237,7 @@ Sensory Mapping → Audio Synthesis + Visual Decorations
 
 ### Complexity Calculation
 
-codeblooded calculates **cyclomatic complexity** by counting decision points:
+CodeBlooded calculates **cyclomatic complexity** by counting decision points:
 
 ```typescript
 function example(a, b) {
@@ -292,10 +284,16 @@ D3.js force-directed graph with custom styling:
 
 ## Supported Languages
 
+**Full Complexity Analysis:**
 - TypeScript (`.ts`, `.tsx`)
 - JavaScript (`.js`, `.jsx`)
+- Python (`.py`)
 
-Additional language support coming soon!
+**Basic Support (syntax highlighting, decorations):**
+- Java, C#, Go, Rust, C/C++, PHP, Ruby, Swift, Kotlin, Scala
+- HTML, CSS, SCSS, LESS
+
+*More languages with full AST analysis coming soon!*
 
 ## Performance
 
@@ -327,7 +325,7 @@ Additional language support coming soon!
 **Issue**: No color highlighting in editor
 
 **Solutions**:
-1. Ensure file is TypeScript or JavaScript
+1. Ensure file is TypeScript, JavaScript, or Python
 2. Check for syntax errors: Extension skips files with parse errors
 3. Wait 1 second after typing: Debounce delay before analysis
 4. Check extension is activated: Look for status bar items
@@ -354,7 +352,7 @@ Additional language support coming soon!
 
 ## Privacy
 
-codeblooded runs entirely locally. No code or data is sent to external servers.
+CodeBlooded runs entirely locally. No code or data is sent to external servers.
 
 - **No telemetry**: We don't collect usage data
 - **No network requests**: All analysis happens on your machine
@@ -366,14 +364,13 @@ codeblooded runs entirely locally. No code or data is sent to external servers.
 - Very large files (>5000 lines) may experience slower analysis
 - Graph rendering with >200 nodes can be slow
 
-See [GitHub Issues](https://github.com/yourusername/codeblooded/issues) for full list.
+See [GitHub Issues](https://github.com/aakritiinjapan/CodeBlooded/issues) for full list.
 
 ## Roadmap
 
-- [ ] Python, Java, C++ language support
+- [x] Python language support ✓
+- [ ] Java, C++ full AST analysis
 - [ ] Custom theme editor
-- [ ] Collaborative analysis sessions
-- [ ] Machine learning-based refactoring suggestions
 - [ ] Export analysis reports
 - [ ] Integration with GitHub Actions
 
@@ -383,22 +380,19 @@ Contributions welcome! See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelin
 
 ## Feedback
 
-- **Bug Reports**: [GitHub Issues](https://github.com/yourusername/codeblooded/issues)
-- **Feature Requests**: [GitHub Discussions](https://github.com/yourusername/codeblooded/discussions)
-- **Questions**: [Discord Community](https://discord.gg/codeblooded)
+- **Bug Reports**: [GitHub Issues](https://github.com/aakritiinjapan/CodeBlooded/issues)
+- **Feature Requests**: [GitHub Issues](https://github.com/aakritiinjapan/CodeBlooded/issues)
 
 ## License
 
-MIT - see [LICENSE](../../LICENSE) for details
+MIT - see [LICENSE](./LICENSE) for details
 
 ## Related
 
-- [@codeblooded/core](../core/README.md) - Core analysis engine
-- [@codeblooded/cli](../cli-analyzer/README.md) - Command-line tool
-- [@codeblooded/lsp-server](../lsp-server/README.md) - LSP server
+- [@codeblooded/core](../core/README.md) - Core complexity analysis engine
 
 ---
 
-**Made with 🎃 by the codeblooded team**
+**Made with 🩸 by the CodeBlooded team**
 
 *Embrace the horror of complex code*

@@ -584,7 +584,7 @@ export class EasterEggManager implements IEffectManager {
 
   /**
    * Register Nightmare Constant easter egg
-   * Triggered by: const nightmare = true;
+   * Triggered by: const nightmare = True;
    */
   private registerNightmareConstant(): void {
     this.registerEasterEgg({
@@ -592,7 +592,7 @@ export class EasterEggManager implements IEffectManager {
       name: 'Nightmare Mode',
       description: 'You have awakened the nightmare. Maximum horror intensity activated.',
       triggerType: EasterEggTriggerType.CodePattern,
-      triggerCondition: 'const nightmare = true',
+      triggerCondition: 'const nightmare = True',
       unlocked: false,
       effect: async () => {
         await this.triggerNightmareMode();
