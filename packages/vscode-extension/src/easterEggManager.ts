@@ -240,7 +240,13 @@ export class EasterEggManager implements IEffectManager {
     this.disposables.push(
       vscode.window.onDidChangeActiveTextEditor(editor => {
         if (editor) {
-          this.checkTimeConditions();
+          // Clear typing buffer when switching files to prevent false triggers
+          this.recentTypingBuffer = '';
+          if (this.recentTypingResetTimeout) {
+            clearTimeout(this.recentTypingResetTimeout);
+            this.recentTypingResetTimeout = undefined;
+          }
+          // Time-based easter eggs removed - no longer need to check time conditions
         }
       })
     );
@@ -327,8 +333,8 @@ export class EasterEggManager implements IEffectManager {
     // Register Nightmare Constant easter egg
     this.registerNightmareConstant();
     
-    // Register Witching Hour easter egg
-    this.registerWitchingHour();
+    // Witching Hour easter egg removed - was triggering unexpectedly on file open
+    // this.registerWitchingHour();
     
     // Register Cumulative Time Secret easter egg
     this.registerCumulativeTimeSecret();
@@ -642,72 +648,8 @@ export class EasterEggManager implements IEffectManager {
     }
   }
 
-  /**
-   * Register Witching Hour easter egg
-   * Triggered by: Opening a file at exactly midnight
-   */
-  private registerWitchingHour(): void {
-    this.registerEasterEgg({
-      id: 'witching-hour',
-      name: 'The Witching Hour',
-      description: 'You opened a file at the stroke of midnight. The veil between worlds is thin.',
-      triggerType: EasterEggTriggerType.TimeCondition,
-      triggerCondition: { hour: 0, minute: 0 },
-      unlocked: false,
-      effect: async () => {
-        await this.triggerWitchingHour();
-      }
-    });
-  }
-
-  /**
-   * Trigger witching hour effect
-   */
-  private async triggerWitchingHour(): Promise<void> {
-    console.log('[EasterEggManager] The Witching Hour has arrived!');
-    
-    try {
-      // Show ghostly overlay with clock imagery
-      const panel = vscode.window.createWebviewPanel(
-        'witchingHour',
-        'The Witching Hour',
-        vscode.ViewColumn.Active,
-        {
-          enableScripts: true,
-          retainContextWhenHidden: false
-        }
-      );
-
-      // Set HTML content with ghostly clock overlay
-      panel.webview.html = this.getWitchingHourHTML();
-
-      // Play eerie bell toll audio (using warning audio as placeholder)
-      if (this.audioEngine) {
-        try {
-          await this.audioEngine.playPopupSound('warning');
-        } catch (err) {
-          console.error('[EasterEggManager] Failed to play witching hour audio:', err);
-        }
-      }
-
-      // Apply VHS distortion effect
-      if (this.screenDistortionManager) {
-        this.screenDistortionManager.setEnabled(true);
-        await this.screenDistortionManager.applyVHS(5000);
-      }
-
-      // Auto-close after 5 seconds
-      setTimeout(() => {
-        panel.dispose();
-      }, 5000);
-
-      // Show status bar message
-      vscode.window.setStatusBarMessage('$(clock) The Witching Hour...', 10000);
-      
-    } catch (error) {
-      console.error('[EasterEggManager] Failed to trigger witching hour:', error);
-    }
-  }
+  // Witching Hour easter egg has been removed to prevent unexpected triggers on file open
+  // The time-based trigger was causing false positives when switching editors at midnight
 
   /**
    * Register Cumulative Time Secret easter egg
@@ -1204,125 +1146,7 @@ export class EasterEggManager implements IEffectManager {
 </html>`;
   }
 
-  /**
-   * Get HTML for witching hour overlay
-   */
-  private getWitchingHourHTML(): string {
-    return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: rgba(0, 0, 0, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .witching-hour-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      animation: fadeIn 1s ease-out;
-    }
-
-    .clock {
-      font-size: 200px;
-      color: rgba(255, 255, 255, 0.8);
-      text-shadow: 
-        0 0 30px rgba(255, 255, 255, 0.8),
-        0 0 60px rgba(200, 200, 255, 0.6);
-      animation: clockPulse 2s infinite;
-      font-family: 'Courier New', monospace;
-    }
-
-    .message {
-      margin-top: 40px;
-      font-size: 36px;
-      color: rgba(255, 255, 255, 0.7);
-      text-align: center;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 4px;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-      animation: messageFade 3s ease-in-out infinite;
-    }
-
-    .ghost-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(
-        circle at 50% 50%,
-        rgba(200, 200, 255, 0.1) 0%,
-        transparent 70%
-      );
-      animation: ghostPulse 4s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes clockPulse {
-      0%, 100% { 
-        transform: scale(1);
-        opacity: 0.8;
-      }
-      50% { 
-        transform: scale(1.05);
-        opacity: 1;
-      }
-    }
-
-    @keyframes messageFade {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.9; }
-    }
-
-    @keyframes ghostPulse {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.6; }
-    }
-  </style>
-</head>
-<body>
-  <div class="witching-hour-overlay">
-    <div class="ghost-overlay"></div>
-    <div class="clock">🕛</div>
-    <div class="message">THE WITCHING HOUR</div>
-  </div>
-  <script>
-    setTimeout(() => {
-      document.body.style.opacity = '0';
-      document.body.style.transition = 'opacity 1s';
-    }, 4000);
-  </script>
-</body>
-</html>`;
-  }
+  // getWitchingHourHTML() removed - witching hour easter egg has been disabled
 
   /**
    * Register an easter egg
@@ -1346,11 +1170,36 @@ export class EasterEggManager implements IEffectManager {
       return;
     }
 
+    // Only monitor active editor to prevent cross-file buffer pollution
+    const activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor || activeEditor.document !== event.document) {
+      return;
+    }
+
     // Accumulate recently typed text from content changes
     for (const change of event.contentChanges) {
       // Only add inserted text (not deletions)
       if (change.text.length > 0) {
+        // Skip large bulk changes (>10 chars) - likely paste, auto-complete, or file operations
+        // Typing typically inserts 1-2 characters at a time (including newlines)
+        if (change.text.length > 10) {
+          console.log('[EasterEggManager] Skipping bulk change:', change.text.length, 'chars');
+          continue;
+        }
+        
+        // Skip if change covers a large range (document reload/format)
+        const rangeSize = change.range.end.line - change.range.start.line;
+        if (rangeSize > 5) {
+          console.log('[EasterEggManager] Skipping large range change:', rangeSize, 'lines');
+          continue;
+        }
+        
         this.recentTypingBuffer += change.text;
+        
+        // Limit buffer size to prevent memory issues
+        if (this.recentTypingBuffer.length > 200) {
+          this.recentTypingBuffer = this.recentTypingBuffer.slice(-100);
+        }
       }
     }
 
@@ -1379,6 +1228,9 @@ export class EasterEggManager implements IEffectManager {
     if (text.length === 0) {
       return;
     }
+    
+    // Debug: Log what we're checking
+    console.log('[EasterEggManager] performPatternCheck - buffer contents:', JSON.stringify(text.substring(0, 50)));
     
     const now = Date.now();
     
@@ -1421,28 +1273,7 @@ export class EasterEggManager implements IEffectManager {
     }
   }
 
-  /**
-   * Check for time-based conditions
-   */
-  private checkTimeConditions(): void {
-    if (!this.enabled) {
-      return;
-    }
-
-    const now = new Date();
-    
-    // Check all time condition easter eggs
-    for (const egg of this.easterEggs.values()) {
-      if (egg.triggerType === EasterEggTriggerType.TimeCondition && !egg.unlocked) {
-        const condition = egg.triggerCondition as { hour: number; minute: number };
-        
-        if (now.getHours() === condition.hour && now.getMinutes() === condition.minute) {
-          console.log('[EasterEggManager] Time condition met:', egg.name);
-          this.triggerEasterEgg(egg.id);
-        }
-      }
-    }
-  }
+  // Time-based easter eggs have been removed - checkTimeConditions() no longer needed
 
   /**
    * Start coding time tracker

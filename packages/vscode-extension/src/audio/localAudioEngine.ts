@@ -294,15 +294,17 @@ export class LocalAudioEngine implements vscode.Disposable {
       color: #c41e3a; 
       font-family: 'Courier New', monospace; 
       margin: 0;
-      padding: 40px;
+      padding: 40px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       min-height: 100vh;
       text-align: center;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      box-sizing: border-box;
     }
     body::before {
       content: '';
