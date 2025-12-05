@@ -133,8 +133,7 @@ export function analyzeMatrix(matrix: number[][]): any {
         result.diagonalSum += value;
       }
     }
-  }
-  
+  }  
   return result;
 }
 

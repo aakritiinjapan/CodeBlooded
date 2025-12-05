@@ -1729,6 +1729,16 @@ export function deactivate() {
  * Toggle audio feedback on/off
  */
 function toggleAudio(context: vscode.ExtensionContext) {
+  // Check if we're in safe mode - audio toggle shouldn't work in safe mode
+  const config = vscode.workspace.getConfiguration('codeblooded');
+  const safeMode = config.get<boolean>('horror.safeMode', true);
+  const horrorEnabled = config.get<boolean>('horror.enabled', false);
+  
+  if (safeMode || !horrorEnabled) {
+    vscode.window.showWarningMessage('codeblooded: Audio is only available when horror mode is enabled');
+    return;
+  }
+
   audioEnabled = !audioEnabled;
 
   if (audioEnabled) {
@@ -1804,15 +1814,22 @@ function loadConfiguration(context: vscode.ExtensionContext) {
   const threshold = config.get<number>('analysis.threshold', 10);
   context.globalState.update('codeblooded.threshold', threshold);
 
-  // Update audio engine state
-  if (audioEnabled) {
+  // Check if we're in safe mode - audio should be disabled in safe mode
+  const safeMode = config.get<boolean>('horror.safeMode', true);
+  const horrorEnabled = config.get<boolean>('horror.enabled', false);
+  const horrorModeActive = horrorEnabled && !safeMode;
+
+  // Update audio engine state - only enable audio if horror mode is active
+  if (audioEnabled && horrorModeActive) {
     audioEngine.enable();
   } else {
     audioEngine.disable();
   }
 
-  // Update status bar
-  statusBarManager.updateAudioState(audioEnabled);
+  // Update status bar - only show audio toggle if horror mode is active
+  if (horrorModeActive) {
+    statusBarManager.updateAudioState(audioEnabled);
+  }
 
   // Listen for configuration changes
   context.subscriptions.push(
