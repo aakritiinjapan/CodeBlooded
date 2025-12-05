@@ -48,3 +48,7 @@ QUICK-START-PUBLISHING.md
 ../../tsconfig.json
 ../../README.md
 ../../LICENSE
+../../EASTER_EGGS.md
+../../scripts/**
+../../test.py
+../../.vscode/**

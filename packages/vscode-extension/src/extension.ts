@@ -111,8 +111,9 @@ export function activate(context: vscode.ExtensionContext) {
       // Stop ALL horror effects when entering safe mode
       console.log('[codeblooded Debug] Disabling all horror effects for safe mode');
       
-      // Stop all audio
+      // Stop all audio and dispose audio panel
       audioEngine.stopAll();
+      audioEngine.dispose();
       
       // Disable blood drip effect
       bloodDripManager.setEnabled(false);
@@ -186,6 +187,15 @@ export function activate(context: vscode.ExtensionContext) {
       screenDistortionManager.setEnabled(true);
       timeDilationManager.setEnabled(true);
       contextTriggerManager.setEnabled(true);
+      
+      // Re-initialize audio engine for horror mode
+      try {
+        await audioEngine.initialize();
+        statusBarManager.setAudioStatus(true);
+        console.log('[codeblooded Debug] Audio engine re-initialized for horror mode');
+      } catch (err) {
+        console.error('[codeblooded Debug] Audio engine re-initialization failed:', err);
+      }
       
       console.log('[codeblooded Debug] Horror mode active - complexity features disabled');
     }
@@ -361,6 +371,17 @@ export function activate(context: vscode.ExtensionContext) {
       horrorEngine.onIntensityChanged(intensity => {
         entityPresenceManager.updateIntensity(intensity);
       });
+      
+      // Initialize audio engine for horror mode
+      try {
+        await audioEngine.initialize();
+        console.log('[codeblooded Debug] Audio engine initialized for horror mode');
+        statusBarManager.setAudioStatus(true);
+        statusBarManager.showAll(); // Show both health and audio toggle
+      } catch (err) {
+        console.warn('[codeblooded Debug] Audio engine initialization failed:', err);
+        statusBarManager.setAudioStatus(false);
+      }
       
     console.log('[codeblooded] Horror features fully initialized');
   };
@@ -545,15 +566,24 @@ export function activate(context: vscode.ExtensionContext) {
     updateCombinedTheme();
   });
 
-  // Initialize audio engine asynchronously to avoid blocking startup
-  audioEngine.initialize().then(() => {
-    console.log('[codeblooded Debug] Audio engine ready');
-    statusBarManager.setAudioStatus(true);
-  }).catch(err => {
-    console.warn('[codeblooded Debug] Audio engine initialization failed, continuing with visual-only mode:', err);
-    statusBarManager.setAudioStatus(false);
-    vscode.window.showWarningMessage('codeblooded: Audio engine initialization failed. Visual feedback only.');
-  });
+  // Only initialize audio engine if horror mode is active
+  // Audio panel should NOT appear in safe mode
+  const initConfig = vscode.workspace.getConfiguration('codeblooded');
+  const initHorrorEnabled = initConfig.get<boolean>('horror.enabled', false);
+  const initSafeMode = initConfig.get<boolean>('horror.safeMode', true);
+  
+  if (initHorrorEnabled && !initSafeMode) {
+    audioEngine.initialize().then(() => {
+      console.log('[codeblooded Debug] Audio engine ready');
+      statusBarManager.setAudioStatus(true);
+    }).catch(err => {
+      console.warn('[codeblooded Debug] Audio engine initialization failed, continuing with visual-only mode:', err);
+      statusBarManager.setAudioStatus(false);
+      vscode.window.showWarningMessage('codeblooded: Audio engine initialization failed. Visual feedback only.');
+    });
+  } else {
+    console.log('[codeblooded Debug] Skipping audio initialization - safe mode is active');
+  }
 
   // Register commands
   const toggleAudioCommand = vscode.commands.registerCommand('codeblooded.toggleAudio', () => {
