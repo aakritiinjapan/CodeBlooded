@@ -272,13 +272,24 @@ export class SafetyManager {
    */
   async showFirstRunWarning(): Promise<boolean> {
     const hasSeenWarning = this.context.globalState.get<boolean>('codeblooded.hasSeenHorrorWarning', false);
+    const config = vscode.workspace.getConfiguration('codeblooded');
+    const horrorEnabled = config.get<boolean>('horror.enabled', false);
+    const safeMode = config.get<boolean>('horror.safeMode', true);
     
-    if (hasSeenWarning) {
-      // User has already seen the warning - check if they previously enabled horror
-      const config = vscode.workspace.getConfiguration('codeblooded');
-      const horrorEnabled = config.get<boolean>('horror.enabled', false);
+    // Show warning if they haven't seen it, OR if they're in the default unconfigured state
+    // (both safeMode=true and horrorEnabled=false means fresh install or reset)
+    const isDefaultState = safeMode && !horrorEnabled;
+    
+    if (hasSeenWarning && !isDefaultState) {
+      // User has already seen the warning and has configured settings
       console.log('[SafetyManager] User has already seen warning, horror.enabled =', horrorEnabled);
-      return horrorEnabled; // Return their previous choice, not always true
+      return horrorEnabled; // Return their previous choice
+    }
+    
+    // If in default state, clear the flag to show warning again
+    if (isDefaultState && hasSeenWarning) {
+      console.log('[SafetyManager] Extension in default state - showing warning again');
+      await this.context.globalState.update('codeblooded.hasSeenHorrorWarning', false);
     }
 
     const warningMessage = `

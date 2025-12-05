@@ -2,7 +2,7 @@
 
 > **Are you brave enough?** Transform your coding environment into a psychological horror experience where your code complexity literally haunts you.
 
-**The deeper your code's complexity, the more intense the nightmare becomes.** Phantom keystrokes type themselves. Your variables whisper secrets. The screen warps and distorts. And when you least expect it... something appears.
+**The deeper your code's complexity, the more intense the nightmare becomes.** Phantom keystrokes type themselves. Your variables whisper secrets. The screen warps and distorts. And when you least expect it... boom.
 
 *This is not just an extension. This is survival horror for developers.*
 

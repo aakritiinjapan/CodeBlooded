@@ -4,7 +4,7 @@
 
 Transform your coding environment into a psychological horror experience where your code complexity literally haunts you. The deeper your code's complexity, the more intense the nightmare becomes.
 
-*Phantom keystrokes type themselves. Your variables whisper secrets. The screen warps and distorts. And when you least expect it... something appears.*
+*Phantom keystrokes type themselves. Your variables whisper secrets. The screen warps and distorts. And when you least expect it... boom.*
 
 💡 **Best experienced in VS Code Dark Mode for maximum immersion!**
 
