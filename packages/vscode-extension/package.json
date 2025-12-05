@@ -2,7 +2,7 @@
   "name": "codeblooded-vscode",
   "displayName": "codeblooded - Kiroween",
   "description": "⚠️ Multi-sensory code analysis with OPTIONAL psychological horror features (jumpscares, screen effects). Photosensitivity warning! Panic button: Ctrl+Alt+S",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publisher": "AakritiHGupta",
   "repository": {
     "type": "git",
