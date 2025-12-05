@@ -390,39 +390,38 @@ export function activate(context: vscode.ExtensionContext) {
     console.log('[codeblooded] Horror features fully initialized');
   };
 
-  // Show first-run warning for horror features
-  safetyManager.showFirstRunWarning().then(async accepted => {
-    if (accepted) {
-      console.log('[codeblooded] Horror features enabled by user');
-      
-      // Enable horror features and disable safe mode
-      const config = vscode.workspace.getConfiguration('codeblooded');
-      await config.update('horror.enabled', true, vscode.ConfigurationTarget.Global);
-      await config.update('horror.safeMode', false, vscode.ConfigurationTarget.Global);
-      console.log('[codeblooded] Set horror.enabled=true, safeMode=false');
-      
-      // Initialize all horror features
-      await initializeHorrorFeatures();
-      
-      // Show confirmation that horror features are active
-      vscode.window.showInformationMessage(
-        '👁️ codeblooded: Horror features activated! Intensity will escalate over time. Use Ctrl+Alt+S for panic button.',
-        { modal: false }
-      );
-    } else {
-      console.log('[codeblooded] User chose to stay in safe mode');
-    }
-  });
-  
-  // Also check if horror is already enabled and initialize if so
+  // Single initialization flow - handles both first-run and returning users
   (async () => {
     const config = vscode.workspace.getConfiguration('codeblooded');
     const horrorEnabled = config.get<boolean>('horror.enabled', false);
     const safeMode = config.get<boolean>('horror.safeMode', true);
     
+    // Check if horror is already enabled from a previous session
     if (horrorEnabled && !safeMode) {
       console.log('[codeblooded] Horror already enabled from previous session, initializing...');
       await initializeHorrorFeatures();
+    } else {
+      // Show first-run warning for new users or those in safe mode
+      const accepted = await safetyManager.showFirstRunWarning();
+      if (accepted) {
+        console.log('[codeblooded] Horror features enabled by user');
+        
+        // Enable horror features and disable safe mode
+        await config.update('horror.enabled', true, vscode.ConfigurationTarget.Global);
+        await config.update('horror.safeMode', false, vscode.ConfigurationTarget.Global);
+        console.log('[codeblooded] Set horror.enabled=true, safeMode=false');
+        
+        // Initialize all horror features
+        await initializeHorrorFeatures();
+        
+        // Show confirmation that horror features are active
+        vscode.window.showInformationMessage(
+          '👁️ codeblooded: Horror features activated! Intensity will escalate over time. Use Ctrl+Alt+S for panic button.',
+          { modal: false }
+        );
+      } else {
+        console.log('[codeblooded] User chose to stay in safe mode');
+      }
     }
   })();
 

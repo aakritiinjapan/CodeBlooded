@@ -145,7 +145,7 @@ Use the buttons below to quickly adjust settings.
    */
   async resetHorrorSettings(): Promise<void> {
     const result = await vscode.window.showWarningMessage(
-      'Reset all codeblooded horror settings to defaults?',
+      'Reset all codeblooded horror settings to defaults?\n\nThis will also clear all saved state (tutorial, warnings, etc.)',
       { modal: true },
       'Reset All Settings',
       'Cancel'
@@ -157,7 +157,7 @@ Use the buttons below to quickly adjust settings.
 
     const config = vscode.workspace.getConfiguration('codeblooded');
     
-    // Reset all horror-related settings
+    // Reset all horror-related settings in VS Code configuration
     for (const [key, value] of Object.entries(DEFAULT_CONFIG)) {
       try {
         await config.update(key, value, vscode.ConfigurationTarget.Global);
@@ -166,11 +166,32 @@ Use the buttons below to quickly adjust settings.
       }
     }
 
+    // Clear all global state keys
+    const globalStateKeys = [
+      'codeblooded.hasSeenHorrorWarning',
+      'codeblooded.verboseLogging',
+      'codeblooded.audioEnabled',
+      'codeblooded.animationsEnabled',
+      'codeblooded.workspaceTint',
+      'codeblooded.threshold',
+      'codeblooded.tutorialCompleted',
+      'easterEggState'
+    ];
+    
+    for (const key of globalStateKeys) {
+      try {
+        await this.context.globalState.update(key, undefined);
+        console.log(`[ConfigurationManager] Cleared global state: ${key}`);
+      } catch (error) {
+        console.error(`[ConfigurationManager] Failed to clear global state ${key}:`, error);
+      }
+    }
+
     vscode.window.showInformationMessage(
-      '✓ codeblooded settings reset to defaults. Safe Mode is now enabled.'
+      '✓ codeblooded settings and state reset to defaults. Safe Mode is now enabled.'
     );
 
-    console.log('[ConfigurationManager] Settings reset to defaults');
+    console.log('[ConfigurationManager] Settings and global state reset to defaults');
   }
 
   /**
