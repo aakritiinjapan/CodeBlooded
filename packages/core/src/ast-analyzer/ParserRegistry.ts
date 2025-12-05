@@ -2,7 +2,7 @@
  * ParserRegistry - Plugin architecture for language parsers
  */
 
-import { Language, ParserPlugin, ErrorCode, CodeChromaError } from '../types';
+import { Language, ParserPlugin, ErrorCode, CodeBloodedError } from '../types';
 
 export class ParserRegistry {
   private parsers: Map<Language, ParserPlugin> = new Map();
@@ -26,7 +26,7 @@ export class ParserRegistry {
   getParser(language: Language): ParserPlugin {
     const parser = this.parsers.get(language);
     if (!parser) {
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         `No parser registered for language: ${language}`,
         ErrorCode.PARSE_ERROR,
         { language }

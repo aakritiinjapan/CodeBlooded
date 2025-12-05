@@ -17,6 +17,14 @@ export class EditorEffectsManager implements vscode.Disposable {
   private bloodDripDecoration: vscode.TextEditorDecorationType | undefined;
   private spiderWebDecoration: vscode.TextEditorDecorationType | undefined;
   private fogDecoration: vscode.TextEditorDecorationType | undefined;
+  private themeCompatibilityManager: any; // Reference to ThemeCompatibilityManager
+
+  /**
+   * Set theme compatibility manager reference
+   */
+  public setThemeCompatibilityManager(themeCompatibilityManager: any): void {
+    this.themeCompatibilityManager = themeCompatibilityManager;
+  }
 
   /**
    * Show horror effects in the editor
@@ -103,8 +111,17 @@ export class EditorEffectsManager implements vscode.Disposable {
 
     // Apply fog effect (dark transparent overlay)
     if (effects.fog) {
+      // Get theme-adjusted shadow color
+      const adjustments = this.themeCompatibilityManager 
+        ? this.themeCompatibilityManager.getHorrorColorAdjustments()
+        : { shadowColor: '#000000' };
+      
+      const shadowIntensity = this.themeCompatibilityManager
+        ? this.themeCompatibilityManager.getAdjustedShadowIntensity(intensity * 0.4)
+        : intensity * 0.4;
+      
       this.fogDecoration = vscode.window.createTextEditorDecorationType({
-        backgroundColor: `rgba(30, 0, 0, ${Math.min(0.3, intensity * 0.4)})`,
+        backgroundColor: `${adjustments.shadowColor}${Math.floor(Math.min(0.3, shadowIntensity) * 255).toString(16).padStart(2, '0')}`,
         isWholeLine: true,
       });
 
@@ -149,14 +166,26 @@ export class EditorEffectsManager implements vscode.Disposable {
    * Generate realistic SVG for blood drop icon
    */
   private getBloodDropSvg(): string {
+    // Get theme-adjusted colors
+    const adjustments = this.themeCompatibilityManager 
+      ? this.themeCompatibilityManager.getHorrorColorAdjustments()
+      : { bloodColor: '#8B0000', shadowColor: '#000000' };
+    
+    // Parse blood color to create gradient
+    const bloodColor = adjustments.bloodColor;
+    const bloodColorLight = this.lightenColor(bloodColor, 0.3);
+    const bloodColorMid = this.lightenColor(bloodColor, 0.15);
+    const bloodColorDark = bloodColor;
+    const shadowColor = adjustments.shadowColor;
+    
     const svg = `
       <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
         <!-- Realistic blood droplet shape -->
         <defs>
           <radialGradient id="bloodGradient" cx="40%" cy="30%">
-            <stop offset="0%" style="stop-color:#FF0000;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#CC0000;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#8B0000;stop-opacity:1" />
+            <stop offset="0%" style="stop-color:${bloodColorLight};stop-opacity:1" />
+            <stop offset="50%" style="stop-color:${bloodColorMid};stop-opacity:1" />
+            <stop offset="100%" style="stop-color:${bloodColorDark};stop-opacity:1" />
           </radialGradient>
           
           <!-- Shadow -->
@@ -174,9 +203,9 @@ export class EditorEffectsManager implements vscode.Disposable {
           
           <!-- Shine effect -->
           <radialGradient id="shine" cx="35%" cy="25%">
-            <stop offset="0%" style="stop-color:#FF6666;stop-opacity:0.8" />
-            <stop offset="50%" style="stop-color:#FF0000;stop-opacity:0.3" />
-            <stop offset="100%" style="stop-color:#8B0000;stop-opacity:0" />
+            <stop offset="0%" style="stop-color:${bloodColorLight};stop-opacity:0.8" />
+            <stop offset="50%" style="stop-color:${bloodColorMid};stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:${bloodColorDark};stop-opacity:0" />
           </radialGradient>
         </defs>
         
@@ -184,17 +213,33 @@ export class EditorEffectsManager implements vscode.Disposable {
         <path d="M 8,3 C 8,3 5,6 5,9 C 5,11.5 6.5,13 8,13 C 9.5,13 11,11.5 11,9 C 11,6 8,3 8,3 Z" 
               fill="url(#bloodGradient)" 
               filter="url(#dropShadow)"
-              stroke="#660000" 
+              stroke="${bloodColorDark}" 
               stroke-width="0.3"/>
         
         <!-- Shine/highlight -->
         <ellipse cx="7" cy="6" rx="1.5" ry="2" fill="url(#shine)" opacity="0.6"/>
         
         <!-- Small drip at bottom -->
-        <circle cx="8" cy="13.5" r="0.8" fill="#8B0000" opacity="0.9"/>
+        <circle cx="8" cy="13.5" r="0.8" fill="${bloodColorDark}" opacity="0.9"/>
       </svg>
     `;
     return Buffer.from(svg).toString('base64');
+  }
+
+  /**
+   * Lighten a hex color by a percentage
+   */
+  private lightenColor(color: string, percent: number): string {
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    
+    const newR = Math.min(255, Math.floor(r + (255 - r) * percent));
+    const newG = Math.min(255, Math.floor(g + (255 - g) * percent));
+    const newB = Math.min(255, Math.floor(b + (255 - b) * percent));
+    
+    return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
   }
 
   dispose(): void {

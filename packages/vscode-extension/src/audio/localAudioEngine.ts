@@ -20,12 +20,12 @@ export class LocalAudioEngine implements vscode.Disposable {
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   async initialize(): Promise<void> {
-    console.log('[CodeChroma Audio] Initializing local audio engine...');
+    console.log('[codeblooded Audio] Initializing local audio engine...');
     try {
       await this.ensureWebview();
-      console.log('[CodeChroma Audio] Local audio engine initialized successfully');
+      console.log('[codeblooded Audio] Local audio engine initialized successfully');
     } catch (error) {
-      console.error('[CodeChroma Audio] Initialization failed:', error);
+      console.error('[codeblooded Audio] Initialization failed:', error);
       throw error; // Re-throw to see the error in extension.ts
     }
   }
@@ -34,29 +34,29 @@ export class LocalAudioEngine implements vscode.Disposable {
    * Set ambient theme based on code complexity
    */
   async setAmbientTheme(theme: AmbientTheme): Promise<void> {
-    console.log('[CodeChroma Audio] setAmbientTheme called:', theme, 'current:', this.currentTheme, 'enabled:', this.enabled);
+    console.log('[codeblooded Audio] setAmbientTheme called:', theme, 'current:', this.currentTheme, 'enabled:', this.enabled);
     
     if (this.currentTheme === theme) {
-      console.log('[CodeChroma Audio] Theme unchanged, skipping');
+      console.log('[codeblooded Audio] Theme unchanged, skipping');
       return;
     }
 
     if (!this.enabled) {
-      console.log('[CodeChroma Audio] Audio disabled, skipping ambient');
+      console.log('[codeblooded Audio] Audio disabled, skipping ambient');
       return;
     }
 
     this.currentTheme = theme;
-    console.log('[CodeChroma Audio] Changing ambient to:', theme);
+    console.log('[codeblooded Audio] Changing ambient to:', theme);
 
     try {
       await this.ensureWebview();
       
       const audioUri = this.getAmbientAudioUri(theme);
-      console.log('[CodeChroma Audio] Sending ambient URI to webview:', audioUri.toString());
+      console.log('[codeblooded Audio] Sending ambient URI to webview:', audioUri.toString());
       this.postMessage({ type: 'setAmbient', audioUri: audioUri.toString() });
     } catch (error) {
-      console.error('[CodeChroma Audio] Failed to set ambient:', error);
+      console.error('[codeblooded Audio] Failed to set ambient:', error);
       throw error;
     }
   }
@@ -65,20 +65,42 @@ export class LocalAudioEngine implements vscode.Disposable {
    * Play popup horror sound
    */
   async playPopupSound(severity: PopupSeverity): Promise<void> {
-    console.log('[CodeChroma Audio] playPopupSound called:', severity, 'enabled:', this.enabled);
+    console.log('[codeblooded Audio] playPopupSound called:', severity, 'enabled:', this.enabled);
     
     if (!this.enabled) {
-      console.log('[CodeChroma Audio] Audio disabled, skipping popup sound');
+      console.log('[codeblooded Audio] Audio disabled, skipping popup sound');
       return;
     }
 
     try {
       await this.ensureWebview();
       const audioUri = this.getPopupAudioUri(severity);
-      console.log('[CodeChroma Audio] Sending popup URI to webview:', audioUri.toString());
+      console.log('[codeblooded Audio] Sending popup URI to webview:', audioUri.toString());
       this.postMessage({ type: 'playPopup', audioUri: audioUri.toString() });
     } catch (error) {
-      console.error('[CodeChroma Audio] Failed to play popup:', error);
+      console.error('[codeblooded Audio] Failed to play popup:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Play variant-specific audio file
+   */
+  async playVariantAudio(audioFileName: string): Promise<void> {
+    console.log('[codeblooded Audio] playVariantAudio called:', audioFileName, 'enabled:', this.enabled);
+    
+    if (!this.enabled) {
+      console.log('[codeblooded Audio] Audio disabled, skipping variant audio');
+      return;
+    }
+
+    try {
+      await this.ensureWebview();
+      const audioUri = this.getVariantAudioUri(audioFileName);
+      console.log('[codeblooded Audio] Sending variant audio URI to webview:', audioUri.toString());
+      this.postMessage({ type: 'playPopup', audioUri: audioUri.toString() });
+    } catch (error) {
+      console.error('[codeblooded Audio] Failed to play variant audio:', error);
       throw error;
     }
   }
@@ -94,6 +116,10 @@ export class LocalAudioEngine implements vscode.Disposable {
 
   stopPopup(): void {
     this.postMessage({ type: 'stopPopup' });
+  }
+
+  fadeOutPopup(duration: number): void {
+    this.postMessage({ type: 'fadeOutPopup', duration });
   }
 
   resumeAmbient(): void {
@@ -148,10 +174,20 @@ export class LocalAudioEngine implements vscode.Disposable {
   }
 
   private getPopupAudioUri(severity: PopupSeverity): vscode.Uri {
-    const fileName = severity === 'critical' ? 'critical.mp3' : `${severity}.wav`;
+    // Use warning.wav for both warning and error (ghost popup)
+    // Use critical.mp3 for critical (scary lady popup)
+    const fileName = severity === 'critical' ? 'critical.mp3' : 'warning.wav';
     return this.panel!.webview.asWebviewUri(
       vscode.Uri.file(
         path.join(this.context.extensionPath, 'media', 'audio', 'popups', fileName)
+      )
+    );
+  }
+
+  private getVariantAudioUri(audioFileName: string): vscode.Uri {
+    return this.panel!.webview.asWebviewUri(
+      vscode.Uri.file(
+        path.join(this.context.extensionPath, 'media', 'audio', 'popups', audioFileName)
       )
     );
   }
@@ -165,14 +201,14 @@ export class LocalAudioEngine implements vscode.Disposable {
       this.readyResolver = resolve;
 
       const timeout = setTimeout(() => {
-        console.error('[CodeChroma Audio] Timeout');
+        console.error('[codeblooded Audio] Timeout');
         reject(new Error('Audio initialization timeout'));
       }, 8000);
 
       // Create webview in current window (no split)
       this.panel = vscode.window.createWebviewPanel(
-        'codechromaLocalAudio',
-        '🔊 CodeChroma Audio',
+        'codebloodedLocalAudio',
+        '🔊 codeblooded Audio',
         vscode.ViewColumn.Active, // Use active column, no split
         {
           enableScripts: true,
@@ -186,7 +222,7 @@ export class LocalAudioEngine implements vscode.Disposable {
       // Show notification with enable button
       setTimeout(() => {
         vscode.window.showInformationMessage(
-          '🎵 CodeChroma Audio Ready! Click "Enable Audio" button in the panel on the right to activate horror sounds.',
+          '🎵 codeblooded Audio Ready! Click "Enable Audio" button in the panel on the right to activate horror sounds.',
           'Got it'
         );
       }, 500);
@@ -194,7 +230,7 @@ export class LocalAudioEngine implements vscode.Disposable {
       // Keep the message listener active for logging
       this.panel.webview.onDidReceiveMessage((message: any) => {
         if (message.type === 'ready') {
-          console.log('[CodeChroma Audio] Webview ready');
+          console.log('[codeblooded Audio] Webview ready');
           clearTimeout(timeout);
           // Add a small delay to ensure message handler is fully set up
           setTimeout(() => {
@@ -203,9 +239,9 @@ export class LocalAudioEngine implements vscode.Disposable {
             this.readyResolver = undefined;
           }, 150);
         } else if (message.type === 'log') {
-          console.log(`[CodeChroma Audio] ${message.message}`);
+          console.log(`[codeblooded Audio] ${message.message}`);
         } else if (message.type === 'audioUnlocked') {
-          console.log('[CodeChroma Audio] Audio unlocked successfully - switching back to previous editor');
+          console.log('[codeblooded Audio] Audio unlocked successfully - switching back to previous editor');
           // Switch back to the previous editor tab (don't close audio panel!)
           setTimeout(() => {
             vscode.commands.executeCommand('workbench.action.previousEditor');
@@ -238,7 +274,7 @@ export class LocalAudioEngine implements vscode.Disposable {
     }
 
     this.panel.webview.postMessage(message).then(undefined, (error) => {
-      console.warn('[CodeChroma Audio] Failed to send message', error);
+      console.warn('[codeblooded Audio] Failed to send message', error);
     });
   }
 
@@ -316,7 +352,7 @@ export class LocalAudioEngine implements vscode.Disposable {
   </style>
 </head>
 <body>
-  <div class="title">👻 CodeChroma Horror Audio 👻</div>
+  <div class="title">👻 codeblooded Horror Audio 👻</div>
   <div class="status">⚠️ Browser security requires one click to enable audio playback ⚠️</div>
   <button id="enableBtn">🔊 CLICK HERE TO ENABLE AUDIO 🔊</button>
   <div class="status" id="statusText">Once enabled, audio will play automatically as you code!</div>
@@ -534,6 +570,33 @@ export class LocalAudioEngine implements vscode.Disposable {
             vscode.postMessage({ type: 'log', message: '✅ Popup audio stopped and reset to 0' });
           } else {
             vscode.postMessage({ type: 'log', message: '⚠️ No popup audio object to stop' });
+          }
+          break;
+          
+        case 'fadeOutPopup':
+          vscode.postMessage({ type: 'log', message: 'fadeOutPopup called with duration: ' + message.duration });
+          if (popupAudio && !popupAudio.paused) {
+            const fadeDuration = message.duration || 1000;
+            const startVolume = popupAudio.volume;
+            const startTime = Date.now();
+            
+            const fadeInterval = setInterval(() => {
+              const elapsed = Date.now() - startTime;
+              const progress = elapsed / fadeDuration;
+              
+              if (progress >= 1) {
+                popupAudio.volume = 0;
+                popupAudio.pause();
+                popupAudio.currentTime = 0;
+                popupAudio.volume = globalVolume; // Restore volume for next popup
+                clearInterval(fadeInterval);
+                vscode.postMessage({ type: 'log', message: '✅ Popup audio faded out and stopped' });
+              } else {
+                popupAudio.volume = startVolume * (1 - progress);
+              }
+            }, 50); // Update every 50ms for smooth fade
+          } else {
+            vscode.postMessage({ type: 'log', message: '⚠️ No popup audio playing to fade out' });
           }
           break;
           

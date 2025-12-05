@@ -30,15 +30,13 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@codechroma/core": ["packages/core/src"],
-      "@codechroma/core/*": ["packages/core/src/*"]
+      "@codeblooded/core": ["packages/core/src"],
+      "@codeblooded/core/*": ["packages/core/src/*"]
     },
     "experimentalDecorators": true
   },
   "references": [
     { "path": "./packages/core" },
-    { "path": "./packages/lsp-server" },
-    { "path": "./packages/cli-analyzer" },
     { "path": "./packages/vscode-extension" }
   ],
   "exclude": ["node_modules", "dist", "**/dist"],

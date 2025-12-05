@@ -1,6 +1,6 @@
 """
 Python file with intentional syntax errors
-for testing CodeChroma error detection
+for testing codeblooded error detection
 """
 
 def missing_colon(x, y)  # ERROR: Missing colon

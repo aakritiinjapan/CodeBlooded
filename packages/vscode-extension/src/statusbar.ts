@@ -17,7 +17,7 @@ export class StatusBarManager {
       vscode.StatusBarAlignment.Left,
       100
     );
-    this.healthScoreItem.text = '$(pulse) CodeChroma: --';
+    this.healthScoreItem.text = '$(pulse) codeblooded: --';
     this.healthScoreItem.tooltip = 'Code health score';
 
     // Create audio state status bar item (right side)
@@ -25,7 +25,7 @@ export class StatusBarManager {
       vscode.StatusBarAlignment.Right,
       100
     );
-    this.audioStateItem.command = 'codechroma.toggleAudio';
+    this.audioStateItem.command = 'codeblooded.toggleAudio';
     this.updateAudioState(true); // Default enabled
   }
 
@@ -37,7 +37,7 @@ export class StatusBarManager {
     const icon = this.getHealthIcon(score);
     const color = this.getHealthColor(score);
 
-    this.healthScoreItem.text = `${icon} CodeChroma: ${score.toFixed(0)} (${grade})`;
+    this.healthScoreItem.text = `${icon} codeblooded: ${score.toFixed(0)} (${grade})`;
     this.healthScoreItem.tooltip = `Code Health Score: ${score.toFixed(1)}/100\nGrade: ${grade}\n\nClick to view details`;
     this.healthScoreItem.backgroundColor = score < 50 
       ? new vscode.ThemeColor('statusBarItem.errorBackground')

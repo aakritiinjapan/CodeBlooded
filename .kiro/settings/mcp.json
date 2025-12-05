@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "horror-audio-generator": {
+      "command": "node",
+      "args": ["./mcp-servers/audio-generator.js"],
+      "env": {
+        "AUDIO_SAMPLE_RATE": "44100",
+        "AUDIO_BIT_DEPTH": "16"
+      },
+      "disabled": true,
+      "autoApprove": [],
+      "disabledTools": [],
+      "description": "Generates horror-themed audio effects for jumpscares and ambient sounds"
+    },
+    "horror-image-processor": {
+      "command": "node",
+      "args": ["./mcp-servers/image-processor.js"],
+      "env": {
+        "IMAGE_CACHE_DIR": "${TEMP}/codeblooded-images"
+      },
+      "disabled": true,
+      "autoApprove": [],
+      "disabledTools": [],
+      "description": "Processes and distorts images for jumpscare popups and visual effects"
+    }
+  },
+  "globalSettings": {
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "logLevel": "info"
+  }
+}

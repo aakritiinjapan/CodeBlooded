@@ -1,21 +1,21 @@
 /**
  * Configuration Management
  * 
- * Handles loading, validation, and management of CodeChroma configuration
+ * Handles loading, validation, and management of codeblooded configuration
  */
 
 import {
-  CodeChromaConfig,
+  CodeBloodedConfig,
   Language,
   WaveformType,
   ErrorCode,
-  CodeChromaError,
+  CodeBloodedError,
 } from '../types';
 
 /**
  * Default configuration values
  */
-export const DEFAULT_CONFIG: CodeChromaConfig = {
+export const DEFAULT_CONFIG: CodeBloodedConfig = {
   audio: {
     enabled: true,
     volume: 0.5,
@@ -103,7 +103,7 @@ function getNestedValue(obj: any, path: string): any {
 /**
  * Validate configuration against schema
  */
-export function validateConfig(config: Partial<CodeChromaConfig>): {
+export function validateConfig(config: Partial<CodeBloodedConfig>): {
   valid: boolean;
   errors: string[];
 } {
@@ -148,8 +148,8 @@ export function validateConfig(config: Partial<CodeChromaConfig>): {
  * Merge partial configuration with defaults
  */
 export function mergeConfig(
-  partial: Partial<CodeChromaConfig>
-): CodeChromaConfig {
+  partial: Partial<CodeBloodedConfig>
+): CodeBloodedConfig {
   return {
     audio: {
       ...DEFAULT_CONFIG.audio,
@@ -170,15 +170,15 @@ export function mergeConfig(
  * Load configuration from JSON object
  */
 export function loadConfig(
-  configData: Partial<CodeChromaConfig>
-): CodeChromaConfig {
+  configData: Partial<CodeBloodedConfig>
+): CodeBloodedConfig {
   // Merge with defaults
   const config = mergeConfig(configData);
 
   // Validate
   const validation = validateConfig(config);
   if (!validation.valid) {
-    throw new CodeChromaError(
+    throw new CodeBloodedError(
       `Invalid configuration: ${validation.errors.join(', ')}`,
       ErrorCode.PARSE_ERROR,
       { errors: validation.errors }
@@ -191,15 +191,15 @@ export function loadConfig(
 /**
  * Load configuration from JSON string
  */
-export function loadConfigFromJSON(json: string): CodeChromaConfig {
+export function loadConfigFromJSON(json: string): CodeBloodedConfig {
   try {
     const configData = JSON.parse(json);
     return loadConfig(configData);
   } catch (error) {
-    if (error instanceof CodeChromaError) {
+    if (error instanceof CodeBloodedError) {
       throw error;
     }
-    throw new CodeChromaError(
+    throw new CodeBloodedError(
       'Failed to parse configuration JSON',
       ErrorCode.PARSE_ERROR,
       { originalError: error }
@@ -212,17 +212,17 @@ export function loadConfigFromJSON(json: string): CodeChromaConfig {
  */
 export async function loadConfigFromFile(
   filePath: string
-): Promise<CodeChromaConfig> {
+): Promise<CodeBloodedConfig> {
   try {
     // Dynamic import to support both Node.js and browser environments
     const fs = await import('fs/promises');
     const content = await fs.readFile(filePath, 'utf-8');
     return loadConfigFromJSON(content);
   } catch (error) {
-    if (error instanceof CodeChromaError) {
+    if (error instanceof CodeBloodedError) {
       throw error;
     }
-    throw new CodeChromaError(
+    throw new CodeBloodedError(
       `Failed to load configuration from file: ${filePath}`,
       ErrorCode.FILE_SYSTEM_ERROR,
       { originalError: error, filePath }
@@ -233,11 +233,11 @@ export async function loadConfigFromFile(
 /**
  * Save configuration to JSON string
  */
-export function saveConfigToJSON(config: CodeChromaConfig): string {
+export function saveConfigToJSON(config: CodeBloodedConfig): string {
   try {
     return JSON.stringify(config, null, 2);
   } catch (error) {
-    throw new CodeChromaError(
+    throw new CodeBloodedError(
       'Failed to serialize configuration to JSON',
       ErrorCode.PARSE_ERROR,
       { originalError: error }
@@ -249,7 +249,7 @@ export function saveConfigToJSON(config: CodeChromaConfig): string {
  * Save configuration to file (Node.js environment)
  */
 export async function saveConfigToFile(
-  config: CodeChromaConfig,
+  config: CodeBloodedConfig,
   filePath: string
 ): Promise<void> {
   try {
@@ -257,10 +257,10 @@ export async function saveConfigToFile(
     const fs = await import('fs/promises');
     await fs.writeFile(filePath, json, 'utf-8');
   } catch (error) {
-    if (error instanceof CodeChromaError) {
+    if (error instanceof CodeBloodedError) {
       throw error;
     }
-    throw new CodeChromaError(
+    throw new CodeBloodedError(
       `Failed to save configuration to file: ${filePath}`,
       ErrorCode.FILE_SYSTEM_ERROR,
       { originalError: error, filePath }
@@ -272,28 +272,28 @@ export async function saveConfigToFile(
  * Configuration Manager class for managing runtime configuration
  */
 export class ConfigManager {
-  private config: CodeChromaConfig;
+  private config: CodeBloodedConfig;
 
-  constructor(initialConfig?: Partial<CodeChromaConfig>) {
+  constructor(initialConfig?: Partial<CodeBloodedConfig>) {
     this.config = initialConfig ? loadConfig(initialConfig) : DEFAULT_CONFIG;
   }
 
   /**
    * Get current configuration
    */
-  getConfig(): CodeChromaConfig {
+  getConfig(): CodeBloodedConfig {
     return { ...this.config };
   }
 
   /**
    * Update configuration
    */
-  updateConfig(partial: Partial<CodeChromaConfig>): void {
+  updateConfig(partial: Partial<CodeBloodedConfig>): void {
     const newConfig = mergeConfig({ ...this.config, ...partial });
     const validation = validateConfig(newConfig);
 
     if (!validation.valid) {
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         `Invalid configuration update: ${validation.errors.join(', ')}`,
         ErrorCode.PARSE_ERROR,
         { errors: validation.errors }
@@ -327,18 +327,18 @@ export class ConfigManager {
   /**
    * Get specific configuration value
    */
-  get<K extends keyof CodeChromaConfig>(key: K): CodeChromaConfig[K] {
+  get<K extends keyof CodeBloodedConfig>(key: K): CodeBloodedConfig[K] {
     return this.config[key];
   }
 
   /**
    * Set specific configuration value
    */
-  set<K extends keyof CodeChromaConfig>(
+  set<K extends keyof CodeBloodedConfig>(
     key: K,
-    value: CodeChromaConfig[K]
+    value: CodeBloodedConfig[K]
   ): void {
-    const partial = { [key]: value } as Partial<CodeChromaConfig>;
+    const partial = { [key]: value } as Partial<CodeBloodedConfig>;
     this.updateConfig(partial);
   }
 }

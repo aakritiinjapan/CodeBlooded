@@ -1,5 +1,5 @@
 """
-Python Example for CodeChroma Testing
+Python Example for codeblooded Testing
 Tests complexity analysis and syntax error detection
 """
 

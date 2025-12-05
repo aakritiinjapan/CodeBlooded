@@ -4,7 +4,7 @@
  * Provides error recovery strategies, logging, and error management
  */
 
-import { ErrorCode, CodeChromaError } from '../types';
+import { ErrorCode, CodeBloodedError } from '../types';
 
 /**
  * Error severity levels
@@ -21,7 +21,7 @@ export enum ErrorSeverity {
  */
 export interface ErrorLogEntry {
   timestamp: Date;
-  error: CodeChromaError;
+  error: CodeBloodedError;
   severity: ErrorSeverity;
   context?: any;
   stackTrace?: string;
@@ -31,8 +31,8 @@ export interface ErrorLogEntry {
  * Error recovery strategy
  */
 export interface ErrorRecoveryStrategy {
-  canRecover: (error: CodeChromaError) => boolean;
-  recover: (error: CodeChromaError) => Promise<any> | any;
+  canRecover: (error: CodeBloodedError) => boolean;
+  recover: (error: CodeBloodedError) => Promise<any> | any;
   description: string;
 }
 
@@ -104,7 +104,7 @@ export class ConsoleErrorLogger implements ErrorLogger {
   log(entry: ErrorLogEntry): void {
     this.errors.push(entry);
 
-    const prefix = `[CodeChroma ${entry.severity.toUpperCase()}]`;
+    const prefix = `[codeblooded ${entry.severity.toUpperCase()}]`;
     const message = `${prefix} ${entry.error.message}`;
 
     switch (entry.severity) {
@@ -137,7 +137,7 @@ export class ConsoleErrorLogger implements ErrorLogger {
 /**
  * Determine error severity based on error code
  */
-export function getErrorSeverity(error: CodeChromaError): ErrorSeverity {
+export function getErrorSeverity(error: CodeBloodedError): ErrorSeverity {
   switch (error.code) {
     case ErrorCode.PARSE_ERROR:
       return ErrorSeverity.MEDIUM;
@@ -228,7 +228,7 @@ export class ErrorHandler {
   /**
    * Handle an error with logging and recovery
    */
-  async handle(error: CodeChromaError, context?: any): Promise<any> {
+  async handle(error: CodeBloodedError, context?: any): Promise<any> {
     // Log the error
     const severity = getErrorSeverity(error);
     const entry: ErrorLogEntry = {
@@ -311,7 +311,7 @@ export function setGlobalErrorHandler(handler: ErrorHandler): void {
  * Convenience function to handle errors using the global handler
  */
 export async function handleError(
-  error: CodeChromaError,
+  error: CodeBloodedError,
   context?: any
 ): Promise<any> {
   return getGlobalErrorHandler().handle(error, context);
@@ -328,34 +328,34 @@ export function withErrorHandling<T extends (...args: any[]) => any>(
     try {
       return await fn(...args);
     } catch (error) {
-      if (error instanceof CodeChromaError) {
+      if (error instanceof CodeBloodedError) {
         return handleError(error, context);
       }
-      // Convert unknown errors to CodeChromaError
-      const codeChromaError = new CodeChromaError(
+      // Convert unknown errors to CodeBloodedError
+      const wrappedError = new CodeBloodedError(
         error instanceof Error ? error.message : String(error),
         ErrorCode.ANALYSIS_ERROR,
         { originalError: error, ...context }
       );
-      return handleError(codeChromaError, context);
+      return handleError(wrappedError, context);
     }
   }) as T;
 }
 
 /**
- * Create a CodeChromaError from an unknown error
+ * Create a CodeBloodedError from an unknown error
  */
 export function createError(
   error: unknown,
   code: ErrorCode,
   context?: any
-): CodeChromaError {
-  if (error instanceof CodeChromaError) {
+): CodeBloodedError {
+  if (error instanceof CodeBloodedError) {
     return error;
   }
 
   const message = error instanceof Error ? error.message : String(error);
-  return new CodeChromaError(message, code, {
+  return new CodeBloodedError(message, code, {
     originalError: error,
     ...context,
   });
@@ -364,7 +364,7 @@ export function createError(
 /**
  * Check if an error is recoverable
  */
-export function isRecoverable(error: CodeChromaError): boolean {
+export function isRecoverable(error: CodeBloodedError): boolean {
   return DEFAULT_RECOVERY_STRATEGIES.some((strategy) =>
     strategy.canRecover(error)
   );
@@ -373,7 +373,7 @@ export function isRecoverable(error: CodeChromaError): boolean {
 /**
  * Format error for display
  */
-export function formatError(error: CodeChromaError): string {
+export function formatError(error: CodeBloodedError): string {
   const severity = getErrorSeverity(error);
   const prefix = `[${severity.toUpperCase()}]`;
   let message = `${prefix} ${error.message}`;

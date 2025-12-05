@@ -5,7 +5,7 @@
  */
 
 import * as vscode from 'vscode';
-import { ComplexityLevel, THEME_COLORS } from '@codechroma/core';
+import { ComplexityLevel, THEME_COLORS } from '@codeblooded/core';
 
 export class DecorationManager {
   private decorationTypes: Map<ComplexityLevel, vscode.TextEditorDecorationType>;
@@ -17,46 +17,64 @@ export class DecorationManager {
 
   /**
    * Initialize decoration types for each complexity level
+   * Developer-friendly colors: Blue → Purple → Yellow → Orange
    */
   private initializeDecorationTypes() {
-    // Low complexity (1-5) - All Midnight Blue
+    // Low complexity (1-5) - Dodger Blue - calm and safe
     this.decorationTypes.set(ComplexityLevel.Low, vscode.window.createTextEditorDecorationType({
-      backgroundColor: 'rgba(25, 25, 112, 0.2)',
-      border: '1px solid rgba(25, 25, 112, 0.6)',
-      borderRadius: '2px',
-      color: THEME_COLORS.LOW, // Text color matches theme
+      backgroundColor: 'rgba(30, 144, 255, 0.12)',
+      isWholeLine: true,
       overviewRulerColor: THEME_COLORS.LOW,
-      overviewRulerLane: vscode.OverviewRulerLane.Right
+      overviewRulerLane: vscode.OverviewRulerLane.Right,
+      // Use before content to create a left border effect
+      before: {
+        contentText: '',
+        width: '4px',
+        backgroundColor: 'rgba(30, 144, 255, 0.9)',
+        margin: '0 8px 0 0'
+      }
     }));
 
-    // Medium complexity (6-10) - All Toxic Purple (removed emoji - using popup instead)
+    // Medium complexity (6-10) - Medium Purple - attention needed
     this.decorationTypes.set(ComplexityLevel.Medium, vscode.window.createTextEditorDecorationType({
-      backgroundColor: 'rgba(148, 0, 211, 0.2)',
-      border: '1px solid rgba(148, 0, 211, 0.6)',
-      borderRadius: '2px',
-      color: THEME_COLORS.MEDIUM, // Text color matches theme
+      backgroundColor: 'rgba(147, 112, 219, 0.18)',
+      isWholeLine: true,
       overviewRulerColor: THEME_COLORS.MEDIUM,
-      overviewRulerLane: vscode.OverviewRulerLane.Right
+      overviewRulerLane: vscode.OverviewRulerLane.Right,
+      before: {
+        contentText: '',
+        width: '4px',
+        backgroundColor: 'rgba(147, 112, 219, 1)',
+        margin: '0 8px 0 0'
+      }
     }));
 
-    // High complexity (11-15) - All Blood Orange (removed emoji - using popup instead)
+    // High complexity (11-15) - Goldenrod - softer warning
     this.decorationTypes.set(ComplexityLevel.High, vscode.window.createTextEditorDecorationType({
-      backgroundColor: 'rgba(204, 85, 0, 0.25)',
-      border: '1px solid rgba(204, 85, 0, 0.7)',
-      borderRadius: '2px',
-      color: THEME_COLORS.HIGH, // Text color matches theme
+      backgroundColor: 'rgba(218, 165, 32, 0.18)',
+      isWholeLine: true,
       overviewRulerColor: THEME_COLORS.HIGH,
-      overviewRulerLane: vscode.OverviewRulerLane.Right
+      overviewRulerLane: vscode.OverviewRulerLane.Right,
+      before: {
+        contentText: '',
+        width: '5px',
+        backgroundColor: 'rgba(218, 165, 32, 1)',
+        margin: '0 8px 0 0'
+      }
     }));
 
-    // Critical complexity (16+) - All Crimson Red (removed emoji - using popup instead)
+    // Critical complexity (16+) - Dark Orange - urgent action needed
     this.decorationTypes.set(ComplexityLevel.Critical, vscode.window.createTextEditorDecorationType({
-      backgroundColor: 'rgba(220, 20, 60, 0.3)',
-      border: '2px solid rgba(220, 20, 60, 0.8)',
-      borderRadius: '2px',
-      color: THEME_COLORS.CRITICAL, // Text color matches theme
+      backgroundColor: 'rgba(255, 140, 0, 0.25)',
+      isWholeLine: true,
       overviewRulerColor: THEME_COLORS.CRITICAL,
-      overviewRulerLane: vscode.OverviewRulerLane.Right
+      overviewRulerLane: vscode.OverviewRulerLane.Right,
+      before: {
+        contentText: '',
+        width: '6px',
+        backgroundColor: 'rgba(255, 140, 0, 1)',
+        margin: '0 8px 0 0'
+      }
     }));
   }
 
@@ -68,8 +86,11 @@ export class DecorationManager {
     this.clearDecorations(editor);
 
     if (!analysisResult || !analysisResult.functions) {
+      console.log('[codeblooded Decorations] No functions to decorate');
       return;
     }
+
+    console.log(`[codeblooded Decorations] Applying decorations for ${analysisResult.functions.length} functions`);
 
     // Group functions by complexity level
     const decorationsByLevel = new Map<ComplexityLevel, vscode.DecorationOptions[]>();
@@ -88,6 +109,8 @@ export class DecorationManager {
       const endPos = new vscode.Position(func.endLine - 1, Number.MAX_SAFE_INTEGER);
       const range = new vscode.Range(startPos, endPos);
 
+      console.log(`[codeblooded Decorations] ${func.name}: complexity=${complexity}, level=${level}, lines ${func.startLine}-${func.endLine}`);
+
       // Create decoration with hover message
       const decoration: vscode.DecorationOptions = {
         range,
@@ -100,7 +123,8 @@ export class DecorationManager {
     // Apply decorations for each level
     for (const [level, decorations] of decorationsByLevel) {
       const decorationType = this.decorationTypes.get(level);
-      if (decorationType) {
+      if (decorationType && decorations.length > 0) {
+        console.log(`[codeblooded Decorations] Applying ${decorations.length} ${level} decorations`);
         editor.setDecorations(decorationType, decorations);
       }
     }
@@ -138,7 +162,7 @@ export class DecorationManager {
     const level = this.classifyComplexity(complexity);
     
     const message = new vscode.MarkdownString();
-    message.appendMarkdown(`### 🎭 CodeChroma Analysis\n\n`);
+    message.appendMarkdown(`### 🎭 codeblooded Analysis\n\n`);
     message.appendMarkdown(`**Function:** \`${func.name}\`\n\n`);
     message.appendMarkdown(`**Complexity:** ${complexity} (${level})\n\n`);
     message.appendMarkdown(`**Lines of Code:** ${func.linesOfCode}\n\n`);
@@ -151,7 +175,7 @@ export class DecorationManager {
     switch (level) {
       case ComplexityLevel.Low:
         message.appendMarkdown(`✅ **Low complexity** - Easy to maintain\n\n`);
-        message.appendMarkdown(`This function is simple and clear. Great work! 🎉`);
+        message.appendMarkdown(`This function is simple and clear... *for now* 👁️`);
         break;
         
       case ComplexityLevel.Medium:
@@ -205,6 +229,7 @@ export class DecorationManager {
     }
 
     message.isTrusted = true;
+    message.supportHtml = true;
     return message;
   }
 

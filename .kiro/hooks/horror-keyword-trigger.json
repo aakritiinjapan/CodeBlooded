@@ -1,0 +1,15 @@
+{
+  "name": "Horror Keyword Trigger",
+  "description": "Triggers horror effects when user types specific keywords like 'kill', 'dead', 'error'",
+  "event": "postToolUse",
+  "matcher": {
+    "tool": "@builtin/write",
+    "filePattern": "**/*.{ts,tsx,js,jsx}"
+  },
+  "command": "node",
+  "args": ["scripts/check-horror-keywords.js"],
+  "timeout_ms": 5000,
+  "cache_ttl_seconds": 0,
+  "critical": false,
+  "enabled": true
+}

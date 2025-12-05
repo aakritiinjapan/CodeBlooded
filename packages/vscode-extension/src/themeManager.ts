@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { VisualMapping } from '@codechroma/core';
+import { VisualMapping } from '@codeblooded/core';
 
 /**
- * Manages dynamic workbench tinting based on CodeChroma complexity levels.
+ * Manages dynamic workbench tinting based on codeblooded complexity levels.
  */
 export class ThemeManager implements vscode.Disposable {
   private readonly workbenchConfig = vscode.workspace.getConfiguration('workbench');
@@ -31,12 +31,18 @@ export class ThemeManager implements vscode.Disposable {
 
   updateTheme(mapping: VisualMapping): void {
     this.lastMapping = mapping;
-    console.log('CodeChroma: Theme update', { enabled: this.enabled, mapping });
+    console.log('codeblooded: Theme update requested', { 
+      enabled: this.enabled, 
+      color: mapping.color,
+      backgroundColor: mapping.backgroundColor 
+    });
     
     if (!this.enabled) {
+      console.log('codeblooded: Theme manager disabled, skipping apply');
       return;
     }
 
+    console.log('codeblooded: Calling applyMapping now');
     this.applyMapping(mapping);
   }
 
@@ -48,34 +54,121 @@ export class ThemeManager implements vscode.Disposable {
 
   private applyMapping(mapping: VisualMapping): void {
     const overlay = this.buildColorOverlay(mapping);
-    const merged = {
-      ...(ThemeManager.cloneColorCustomizations(this.originalColors) ?? {}),
-      ...overlay,
-    };
+    
+    console.log('codeblooded: Applying color overlay:', {
+      accent: mapping.color,
+      statusBarBackground: overlay['statusBar.background']
+    });
 
-    void this.workbenchConfig.update('colorCustomizations', merged, vscode.ConfigurationTarget.Global);
+    // Get fresh config reference
+    const freshConfig = vscode.workspace.getConfiguration('workbench');
+    
+    // Get current color customizations at each level
+    const inspection = freshConfig.inspect<Record<string, string>>('colorCustomizations');
+    
+    // We need to update both workspace AND global to ensure our colors take effect
+    // Get the current workspace value and merge
+    const workspaceColors = inspection?.workspaceValue || {};
+    const globalColors = inspection?.globalValue || {};
+    
+    console.log('codeblooded: Current workspace colors:', Object.keys(workspaceColors));
+    console.log('codeblooded: Current global colors:', Object.keys(globalColors));
+    
+    // Merge our overlay with existing workspace colors
+    const mergedWorkspace = {
+      ...workspaceColors,
+      ...overlay
+    };
+    
+    // Merge our overlay with existing global colors
+    const mergedGlobal = {
+      ...globalColors,
+      ...overlay
+    };
+    
+    console.log('codeblooded: Applying to both Workspace and Global...');
+    
+    // Update workspace settings
+    freshConfig.update('colorCustomizations', mergedWorkspace, vscode.ConfigurationTarget.Workspace).then(
+      () => {
+        console.log('codeblooded: Workspace colors updated');
+      },
+      (err: any) => {
+        console.log('codeblooded: Workspace update error:', err?.message);
+      }
+    );
+    
+    // Also update global settings to ensure it takes effect
+    freshConfig.update('colorCustomizations', mergedGlobal, vscode.ConfigurationTarget.Global).then(
+      () => {
+        console.log('codeblooded: Global colors updated');
+        // Verify after a short delay
+        setTimeout(() => {
+          const verify = vscode.workspace.getConfiguration('workbench');
+          const colors = verify.get<Record<string, string>>('colorCustomizations');
+          console.log('codeblooded: VERIFIED statusBar.background =', colors?.['statusBar.background']);
+        }, 200);
+      },
+      (err: any) => {
+        console.log('codeblooded: Global update error:', err?.message);
+      }
+    );
   }
 
   private restoreOriginalColors(): void {
-    void this.workbenchConfig.update('colorCustomizations', this.originalColors ?? {}, vscode.ConfigurationTarget.Global);
+    console.log('codeblooded: Restoring original colors (clearing our customizations)');
+    this.clearColorCustomizations();
+  }
+
+  /**
+   * Clear all color customizations set by this extension.
+   * Call this on activation to ensure a clean slate.
+   */
+  public clearColorCustomizations(): void {
+    const freshConfig = vscode.workspace.getConfiguration('workbench');
+    
+    // Get current colors and remove only the ones we set
+    const keysToRemove = [
+      'statusBar.background',
+      'statusBar.foreground', 
+      'statusBar.debuggingBackground',
+      'statusBar.noFolderBackground',
+      'activityBar.background',
+      'activityBar.foreground',
+      'titleBar.activeBackground',
+      'titleBar.inactiveBackground',
+    ];
+    
+    // Clear from workspace settings
+    const inspection = freshConfig.inspect<Record<string, string>>('colorCustomizations');
+    const workspaceColors = { ...(inspection?.workspaceValue || {}) };
+    const globalColors = { ...(inspection?.globalValue || {}) };
+    
+    // Remove our keys
+    for (const key of keysToRemove) {
+      delete workspaceColors[key];
+      delete globalColors[key];
+    }
+    
+    console.log('codeblooded: Clearing color customizations from workspace and global');
+    
+    // Update with cleaned colors (empty object if no other customizations)
+    const cleanedWorkspace = Object.keys(workspaceColors).length > 0 ? workspaceColors : undefined;
+    const cleanedGlobal = Object.keys(globalColors).length > 0 ? globalColors : undefined;
+    
+    void freshConfig.update('colorCustomizations', cleanedWorkspace, vscode.ConfigurationTarget.Workspace);
+    void freshConfig.update('colorCustomizations', cleanedGlobal, vscode.ConfigurationTarget.Global);
   }
 
   private buildColorOverlay(mapping: VisualMapping): Record<string, string> {
     const accent = mapping.color ?? '#DC143C';
-    const background = mapping.backgroundColor ?? '#1C1C1C';
-    const shadow = this.darken(background, 0.1);
-    const deeperShadow = this.darken(background, 0.2);
     const accentDarker = this.darken(accent, 0.15);
 
+    console.log('codeblooded: Building overlay with accent:', accent);
+
+    // ONLY change the outer edges - status bar, title bar, activity bar
+    // Leave editor, terminal, sidebar, panel, etc. as default VS Code colors
     return {
-      'editor.background': background,
-      // Don't color the current line - only mark specific code with decorations
-      'editor.lineHighlightBackground': '#00000000', // Fully transparent
-      'editor.lineHighlightBorder': '#00000000', // No border
-      'editor.selectionBackground': this.withAlpha(accent, 0.25),
-      'editorCursor.foreground': '#FFFFFF',
-      'editorIndentGuide.background': this.withAlpha('#FFFFFF', 0.05),
-      'editorGutter.background': background,
       'statusBar.background': accent,
       'statusBar.foreground': '#FFFFFF',
       'statusBar.debuggingBackground': accentDarker,
@@ -84,13 +177,6 @@ export class ThemeManager implements vscode.Disposable {
       'activityBar.foreground': '#FFFFFF',
       'titleBar.activeBackground': accent,
       'titleBar.inactiveBackground': accentDarker,
-      'sideBar.background': shadow,
-      'sideBarSectionHeader.background': deeperShadow,
-      'panel.background': shadow,
-      'tab.activeBackground': background,
-      'tab.inactiveBackground': deeperShadow,
-      'tab.activeForeground': '#FFFFFF',
-      'tab.inactiveForeground': this.withAlpha('#FFFFFF', 0.65),
     };
   }
 

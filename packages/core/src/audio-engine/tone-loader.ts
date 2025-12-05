@@ -18,7 +18,7 @@ export async function loadTone(): Promise<typeof import('tone') | null> {
       const module = await dynamicImport<typeof import('tone')>('tone');
       return module;
     } catch (error) {
-      console.warn('CodeChroma: Tone.js could not be loaded', error);
+      console.warn('codeblooded: Tone.js could not be loaded', error);
       return null;
     }
   })();

@@ -1,7 +1,7 @@
 /**
  * This file intentionally contains syntax errors
  * Used to test error handling in the parser
- * CodeChroma should gracefully handle these errors and report them
+ * codeblooded should gracefully handle these errors and report them
  */
 
 // ERROR 1: Missing closing brace

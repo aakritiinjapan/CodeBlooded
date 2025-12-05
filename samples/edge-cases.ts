@@ -1,5 +1,5 @@
 /**
- * Edge cases for testing CodeChroma parser and analyzer
+ * Edge cases for testing codeblooded parser and analyzer
  * These files test various edge conditions and special scenarios
  */
 

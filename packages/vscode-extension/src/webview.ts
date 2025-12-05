@@ -5,11 +5,12 @@
  */
 
 import * as vscode from 'vscode';
-import { generateGraphData } from '@codechroma/core';
+import { generateGraphData } from '@codeblooded/core';
+
 
 export class WebviewManager {
   private panel: vscode.WebviewPanel | undefined;
-  private context: vscode.ExtensionContext;
+   private context: vscode.ExtensionContext;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -26,8 +27,8 @@ export class WebviewManager {
 
     // Create new webview panel
     this.panel = vscode.window.createWebviewPanel(
-      'codechromaGraph',
-      'CodeChroma AST Graph',
+      'codebloodedGraph',
+      'codeblooded AST Graph',
       vscode.ViewColumn.Beside,
       {
         enableScripts: true,
@@ -80,7 +81,7 @@ export class WebviewManager {
       });
     } catch (error) {
       console.error('Failed to update graph:', error);
-      vscode.window.showErrorMessage('CodeChroma: Failed to update graph visualization');
+      vscode.window.showErrorMessage('codeblooded: Failed to update graph visualization');
     }
   }
 
@@ -93,7 +94,7 @@ export class WebviewManager {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeChroma AST Graph</title>
+  <title>codeblooded AST Graph</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body {

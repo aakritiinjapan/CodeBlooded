@@ -1,5 +1,5 @@
 /**
- * Core type definitions for CodeChroma
+ * Core type definitions for codeblooded
  */
 
 // Language support
@@ -207,7 +207,7 @@ export interface AudioContextWrapper {
 }
 
 // Configuration types
-export interface CodeChromaConfig {
+export interface CodeBloodedConfig {
   audio: {
     enabled: boolean;
     volume: number;
@@ -232,13 +232,13 @@ export enum ErrorCode {
   FILE_SYSTEM_ERROR = 'FILE_SYSTEM_ERROR',
 }
 
-export class CodeChromaError extends Error {
+export class CodeBloodedError extends Error {
   constructor(
     message: string,
     public code: ErrorCode,
     public context?: any
   ) {
     super(message);
-    this.name = 'CodeChromaError';
+    this.name = 'CodeBloodedError';
   }
 }

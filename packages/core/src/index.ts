@@ -1,5 +1,5 @@
 /**
- * CodeChroma Core Package
+ * codeblooded Core Package
  *
  * Multi-sensory code analysis framework providing AST parsing,
  * complexity metrics, audio synthesis, and visualization generation.
@@ -104,7 +104,7 @@ export type {
 // ============================================================================
 
 /**
- * CodeChroma version
+ * codeblooded version
  */
 export const VERSION = '0.1.0';
 
@@ -131,14 +131,14 @@ export const AUDIO_FREQUENCIES = {
 } as const;
 
 /**
- * Horror theme colors
+ * Complexity theme colors (developer-friendly)
  */
 export const THEME_COLORS = {
-  LOW: '#191970',        // Midnight Blue
-  MEDIUM: '#9400D3',     // Toxic Purple
-  HIGH: '#CC5500',       // Blood Orange
-  CRITICAL: '#DC143C',   // Crimson Red
-  BACKGROUND: '#1C1C1C', // Eerie Black
+  LOW: '#1E90FF',        // Dodger Blue - calm and safe
+  MEDIUM: '#9370DB',     // Medium Purple - attention needed
+  HIGH: '#DAA520',       // Goldenrod - softer warning (not harsh yellow)
+  CRITICAL: '#FF8C00',   // Dark Orange - urgent action needed
+  BACKGROUND: '#1C1C1C', // Dark background
 } as const;
 
 /**

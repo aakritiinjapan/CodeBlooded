@@ -9,15 +9,479 @@ import * as vscode from 'vscode';
 
 export type PopupSeverity = 'none' | 'info' | 'warning' | 'error' | 'critical';
 
+export interface JumpscareVariant {
+  id: string;
+  name: string;
+  weight: number;
+  duration: number;
+  htmlGenerator: (errorMessage?: string) => string;
+  audioFile: string;
+  cooldownMultiplier: number;
+}
+
 export class HorrorPopupManager implements vscode.Disposable {
   private panel: vscode.WebviewPanel | undefined;
   private lastPopupTime: number = 0;
   private readonly POPUP_COOLDOWN = 5000; // 5 seconds between popups to avoid spam
+  private currentCooldown: number = this.POPUP_COOLDOWN;
   private context: vscode.ExtensionContext;
   private onPopupClosed?: () => void; // Callback when popup is closed (for audio cleanup)
+  private audioEngine?: { playVariantAudio(audioId: string): Promise<void>; fadeOutPopup(duration: number): Promise<void>; stopPopup(): void };
+  private safetyManager?: { trackFlashEvent(eventId: string): boolean };
+  private themeCompatibilityManager?: { getHorrorColorAdjustments(): any; getThemeAdjustedFilter(): string };
+  private enabled: boolean = true;
+
+  private variants: JumpscareVariant[] = [];
+  private variantHistory: string[] = [];
+  private readonly MAX_HISTORY_SIZE = 3;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
+    this.initializeVariants();
+  }
+
+  async initialize(): Promise<void> {
+    console.log('[HorrorPopupManager] Initialized');
+  }
+
+  isEnabled(): boolean {
+    return this.enabled;
+  }
+
+  setEnabled(enabled: boolean): void {
+    this.enabled = enabled;
+
+    if (!enabled && this.panel) {
+      this.panel.dispose();
+      this.panel = undefined;
+    }
+  }
+
+  public setAudioEngine(audioEngine: any): void {
+    this.audioEngine = audioEngine;
+  }
+
+  public setSafetyManager(safetyManager: any): void {
+    this.safetyManager = safetyManager;
+  }
+
+  public setThemeCompatibilityManager(themeCompatibilityManager: any): void {
+    this.themeCompatibilityManager = themeCompatibilityManager;
+  }
+
+  public async showRandomJumpscare(): Promise<void> {
+    if (!this.enabled) {
+      return;
+    }
+
+    if (this.safetyManager && !this.safetyManager.trackFlashEvent('jumpscare')) {
+      return;
+    }
+
+    const now = Date.now();
+    if (now - this.lastPopupTime < this.POPUP_COOLDOWN) {
+      return;
+    }
+
+    const variant = this.selectVariant();
+    if (!variant) {
+      return;
+    }
+
+    this.recordVariant(variant.id);
+    this.lastPopupTime = now;
+    this.currentCooldown = Math.max(this.POPUP_COOLDOWN, this.POPUP_COOLDOWN * variant.cooldownMultiplier);
+
+    if (this.audioEngine) {
+      try {
+        await this.audioEngine.playVariantAudio(variant.audioFile);
+        await new Promise(resolve => setTimeout(resolve, 150));
+      } catch (error) {
+        console.error('[HorrorPopupManager] Failed to play variant audio:', error);
+      }
+    }
+
+    await this.showVariantPopup(variant);
+  }
+
+  private async showVariantPopup(variant: JumpscareVariant, errorMessage?: string): Promise<void> {
+    const activeEditor = vscode.window.activeTextEditor;
+    const activeDocument = activeEditor?.document;
+
+    if (this.panel) {
+      this.panel.dispose();
+    }
+
+    this.panel = vscode.window.createWebviewPanel(
+      'horrorPopup',
+      'codeblooded Horror',
+      vscode.ViewColumn.Active,
+      {
+        enableScripts: true,
+        retainContextWhenHidden: false
+      }
+    );
+
+    this.panel.onDidDispose(() => {
+      if (this.audioEngine) {
+        this.audioEngine.stopPopup();
+      }
+
+      if (this.onPopupClosed) {
+        this.onPopupClosed();
+      }
+
+      this.panel = undefined;
+    });
+
+    const videoUri = variant.id === 'realistic-horror-face'
+      ? this.panel.webview.asWebviewUri(
+          vscode.Uri.joinPath(this.context.extensionUri, 'media', 'videos', 'jumpscare-silent.mp4')
+        ).toString()
+      : undefined;
+
+    this.panel.webview.html = this.getVariantHTML(variant, errorMessage, videoUri);
+
+    const fadeOutDelay = Math.max(variant.duration - 1000, 500);
+    if (this.audioEngine) {
+      setTimeout(() => {
+        this.audioEngine?.fadeOutPopup(1000).catch(console.error);
+      }, fadeOutDelay);
+    }
+
+    setTimeout(async () => {
+      if (this.panel) {
+        try {
+          this.panel.dispose();
+        } catch (error) {
+          console.error('[HorrorPopupManager] Error disposing variant popup:', error);
+        }
+        this.panel = undefined;
+      }
+
+      if (activeDocument) {
+        try {
+          await vscode.window.showTextDocument(activeDocument, {
+            viewColumn: activeEditor?.viewColumn,
+            preserveFocus: false,
+            preview: false
+          });
+        } catch (error) {
+          console.error('[HorrorPopupManager] Error restoring editor focus:', error);
+        }
+      }
+    }, variant.duration);
+  }
+
+  private initializeVariants(): void {
+    this.variants = [
+      {
+        id: 'realistic-horror-face',
+        name: 'Scary Lady',
+        weight: 2.0,
+        duration: 5000,
+        htmlGenerator: () => this.getRealisticHorrorFaceHTML(),
+        audioFile: 'critical.mp3',
+        cooldownMultiplier: 1.5
+      },
+      {
+        id: 'quick-ghost',
+        name: 'Cute Ghost',
+        weight: 1.5,
+        duration: 3000,
+        htmlGenerator: () => this.getQuickGhostHTML(),
+        audioFile: 'warning.wav',
+        cooldownMultiplier: 0.8
+      }
+    ];
+  }
+
+  private recordVariant(variantId: string): void {
+    this.variantHistory.push(variantId);
+    if (this.variantHistory.length > this.MAX_HISTORY_SIZE) {
+      this.variantHistory.shift();
+    }
+  }
+
+  private selectVariant(): JumpscareVariant | null {
+    const available = this.variants.filter(variant => !this.variantHistory.includes(variant.id));
+    const pool = available.length > 0 ? available : this.variants;
+    return this.weightedRandomSelection(pool);
+  }
+
+  private weightedRandomSelection(variants: JumpscareVariant[]): JumpscareVariant | null {
+    if (variants.length === 0) {
+      return null;
+    }
+
+    const totalWeight = variants.reduce((sum, v) => sum + v.weight, 0);
+    let threshold = Math.random() * totalWeight;
+
+    for (const variant of variants) {
+      threshold -= variant.weight;
+      if (threshold <= 0) {
+        return variant;
+      }
+    }
+
+    return variants[variants.length - 1];
+  }
+
+  private getVariantHTML(variant: JumpscareVariant, errorMessage?: string, videoUri?: string): string {
+    let horrorContent = variant.htmlGenerator(errorMessage);
+
+    if (videoUri) {
+      horrorContent = horrorContent.replace('{{VIDEO_URI}}', videoUri);
+    }
+
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: data:; media-src https: data: blob: vscode-resource:; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
+  <style>
+    ${this.getSharedStyles()}
+    ${this.getVariantStyles(variant.id)}
+  </style>
+</head>
+<body>
+  ${horrorContent}
+  <script>
+    const duration = ${variant.duration};
+    setTimeout(() => {
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.2s';
+      setTimeout(() => {
+        document.body.innerHTML = '';
+      }, 200);
+    }, duration);
+  </script>
+</body>
+</html>`;
+  }
+
+  private getSharedStyles(): string {
+    const adjustments = this.themeCompatibilityManager
+      ? this.themeCompatibilityManager.getHorrorColorAdjustments()
+      : {
+          bloodColor: '#8B0000',
+          shadowColor: '#000000',
+          glitchColor: '#FF0000',
+          eyeColor: '#FFFFFF',
+          phantomTextColor: '#FF0000',
+          whisperColor: '#DC143C',
+          contrastMultiplier: 1.0
+        };
+
+    const filter = this.themeCompatibilityManager
+      ? this.themeCompatibilityManager.getThemeAdjustedFilter()
+      : 'none';
+
+    return `
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: ${adjustments.shadowColor};
+      position: relative;
+      filter: ${filter};
+    }
+
+    .horror-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    `;
+  }
+
+  private getVariantStyles(variantId: string): string {
+    switch (variantId) {
+      case 'realistic-horror-face':
+        return `
+        .jumpscare {
+          width: 100vw;
+          height: 100vh;
+          position: fixed;
+          top: 0;
+          left: 0;
+          background: #000;
+          overflow: hidden;
+        }
+
+        .jumpscare-bg {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: #000;
+          animation: extremeFlash 0.05s 30 forwards;
+        }
+
+        .horror-video-container {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+          overflow: hidden;
+          background: #000;
+        }
+
+        .horror-video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          filter: contrast(1.2) brightness(0.95) saturate(1.1);
+        }
+
+        .blood-overlay-critical {
+          position: absolute;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background:
+            radial-gradient(circle at 50% 50%,
+              rgba(139, 0, 0, 0.8) 0%,
+              rgba(100, 0, 0, 0.6) 30%,
+              transparent 70%);
+          animation: bloodPulseCritical 0.1s infinite;
+          pointer-events: none;
+          z-index: 5;
+        }
+
+        .error-text-critical {
+          position: absolute;
+          bottom: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: #ff0000;
+          font-size: 18px;
+          font-family: 'Courier New', monospace;
+          opacity: 0.8;
+          z-index: 20;
+          text-align: center;
+          text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+          animation: textFlicker 0.2s 23 forwards;
+        }
+
+        @keyframes bloodPulseCritical {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 0.9; }
+        }
+
+        @keyframes textFlicker {
+          0%, 100% { opacity: 0.8; }
+          50% { opacity: 0.3; }
+        }
+
+        @keyframes extremeFlash {
+          0% { background: #000; }
+          20% { background: #500; }
+          40% { background: #000; }
+          60% { background: #400; }
+          80% { background: #000; }
+          100% { background: #200; }
+        }
+        `;
+      case 'quick-ghost':
+      default:
+        return `
+        .ghost {
+          width: 200px;
+          height: 250px;
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 50% 50% 0 0;
+          position: relative;
+          animation: ghostFloat 0.8s ease-out;
+          box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+        }
+
+        .ghost::before, .ghost::after {
+          content: '';
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          background: #000;
+          border-radius: 50%;
+          top: 80px;
+          animation: ghostBlink 1.5s infinite;
+        }
+
+        .ghost::before { left: 50px; }
+        .ghost::after { right: 50px; }
+
+        @keyframes ghostFloat {
+          0% {
+            transform: translateY(150vh) scale(0.5);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+        }
+
+        @keyframes ghostBlink {
+          0%, 45%, 55%, 100% { height: 30px; }
+          50% { height: 2px; }
+        }
+        `;
+    }
+  }
+
+  private getRealisticHorrorFaceHTML(): string {
+    return `
+      <div class="jumpscare">
+        <div class="jumpscare-bg"></div>
+        <div class="blood-overlay-critical"></div>
+        <div class="horror-video-container">
+          <video 
+            id="horror-video"
+            class="horror-video" 
+            src="{{VIDEO_URI}}" 
+            autoplay 
+            muted
+            playsinline
+            preload="auto"
+          ></video>
+        </div>
+        <div class="error-text-critical">FATAL ERROR</div>
+      </div>
+      <script>
+        (function() {
+          const video = document.getElementById('horror-video');
+          if (video) {
+            video.addEventListener('error', () => {
+              console.error('[Horror Popup] failed to load jumpscare video');
+            });
+            video.load();
+          }
+        })();
+      </script>
+    `;
+  }
+
+  private getQuickGhostHTML(): string {
+    return `
+      <div class="horror-overlay">
+        <div class="ghost"></div>
+      </div>
+    `;
   }
 
   dispose(): void {
@@ -37,23 +501,34 @@ export class HorrorPopupManager implements vscode.Disposable {
    * Show horror popup based on severity
    */
   public async showPopup(severity: PopupSeverity, errorMessage?: string): Promise<void> {
-    console.log('[CodeChroma Horror] showPopup called:', { severity, errorMessage });
+    console.log('[codeblooded Horror] showPopup called:', { severity, errorMessage });
     
+    if (!this.enabled) {
+      console.log('[codeblooded Horror] Horror popups disabled, skipping');
+      return;
+    }
+
+    if (this.safetyManager && !this.safetyManager.trackFlashEvent(`popup-${severity}`)) {
+      console.log('[codeblooded Horror] Flash frequency limit exceeded, skipping popup');
+      return;
+    }
+
     // Don't show if on cooldown
     const now = Date.now();
-    if (now - this.lastPopupTime < this.POPUP_COOLDOWN) {
-      console.log('[CodeChroma Horror] On cooldown, skipping popup');
+    if (now - this.lastPopupTime < this.currentCooldown) {
+      console.log('[codeblooded Horror] On cooldown, skipping popup');
       return;
     }
     this.lastPopupTime = now;
+    this.currentCooldown = this.POPUP_COOLDOWN;
 
     // Don't show for info or none
     if (severity === 'none' || severity === 'info') {
-      console.log('[CodeChroma Horror] Severity too low, skipping popup');
+      console.log('[codeblooded Horror] Severity too low, skipping popup');
       return;
     }
 
-    console.log('[CodeChroma Horror] Creating popup panel...');
+    console.log('[codeblooded Horror] Creating popup panel...');
 
     // Save the currently active editor to restore focus later
     const activeEditor = vscode.window.activeTextEditor;
@@ -67,7 +542,7 @@ export class HorrorPopupManager implements vscode.Disposable {
     // Create full-screen transparent webview panel
     this.panel = vscode.window.createWebviewPanel(
       'horrorPopup',
-      'CodeChroma Horror',
+      'codeblooded Horror',
       vscode.ViewColumn.Active,
       {
         enableScripts: true,
@@ -77,18 +552,18 @@ export class HorrorPopupManager implements vscode.Disposable {
 
     // Listen for panel disposal to clean up reference and stop audio
     this.panel.onDidDispose(() => {
-      console.log('[CodeChroma Horror] Panel disposed (user closed or auto-closed)');
+      console.log('[codeblooded Horror] Panel disposed (user closed or auto-closed)');
       
       // Call cleanup callback to stop audio
       if (this.onPopupClosed) {
-        console.log('[CodeChroma Horror] Calling audio cleanup callback');
+        console.log('[codeblooded Horror] Calling audio cleanup callback');
         this.onPopupClosed();
       }
       
       this.panel = undefined;
     });
 
-    console.log('[CodeChroma Horror] Panel created, setting HTML...');
+    console.log('[codeblooded Horror] Panel created, setting HTML...');
 
     // Get video URI for critical severity
     const mediaUri = severity === 'critical' 
@@ -97,23 +572,23 @@ export class HorrorPopupManager implements vscode.Disposable {
         ).toString()
       : '';
 
-    console.log('[CodeChroma Horror] Video URI:', mediaUri);
+    console.log('[codeblooded Horror] Video URI:', mediaUri);
 
     // Make it transparent and overlay
     this.panel.webview.html = this.getHorrorHTML(severity, errorMessage, mediaUri);
 
-    console.log('[CodeChroma Horror] HTML set, popup should be visible');
+    console.log('[codeblooded Horror] HTML set, popup should be visible');
 
     // Auto-close after animation and restore focus to original editor
     const duration = this.getPopupDuration(severity);
     setTimeout(async () => {
-      console.log('[CodeChroma Horror] Auto-closing popup after', duration, 'ms');
+      console.log('[codeblooded Horror] Auto-closing popup after', duration, 'ms');
       
       if (this.panel) {
         try {
           this.panel.dispose();
         } catch (e) {
-          console.error('[CodeChroma Horror] Error disposing panel:', e);
+          console.error('[codeblooded Horror] Error disposing panel:', e);
         }
         this.panel = undefined;
       }
@@ -123,7 +598,7 @@ export class HorrorPopupManager implements vscode.Disposable {
 
       // Restore focus to the original editor
       if (activeDocument) {
-        console.log('[CodeChroma Horror] Restoring focus to:', activeDocument.fileName);
+        console.log('[codeblooded Horror] Restoring focus to:', activeDocument.fileName);
         try {
           await vscode.window.showTextDocument(activeDocument, {
             viewColumn: activeEditor?.viewColumn,
@@ -131,7 +606,7 @@ export class HorrorPopupManager implements vscode.Disposable {
             preview: false
           });
         } catch (e) {
-          console.error('[CodeChroma Horror] Error restoring focus:', e);
+          console.error('[codeblooded Horror] Error restoring focus:', e);
         }
       }
     }, duration);
@@ -1215,21 +1690,11 @@ export class HorrorPopupManager implements vscode.Disposable {
   private getHorrorContent(severity: PopupSeverity, errorMessage?: string, videoUri?: string): string {
     switch (severity) {
       case 'warning':
-        // Quick ghost for warnings
+      case 'error':
+        // Quick ghost for warnings and errors
         return `
           <div class="horror-overlay">
             <div class="ghost"></div>
-          </div>
-        `;
-
-      case 'error':
-        // Instant glitchy skull for errors
-        return `
-          <div class="horror-overlay">
-            <div class="red-flash"></div>
-            <div class="glitch-face">
-              <div class="face-emoji">💀</div>
-            </div>
             ${errorMessage ? `<div class="error-message">${this.escapeHtml(errorMessage)}</div>` : ''}
           </div>
         `;

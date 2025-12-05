@@ -12,7 +12,6 @@
  */
 export function validateComplexForm(formData: any): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
-  
   if (formData.personalInfo) {
     if (formData.personalInfo.firstName) {
       if (formData.personalInfo.firstName.length < 2) {

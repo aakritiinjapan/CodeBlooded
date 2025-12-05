@@ -51,7 +51,7 @@ module.exports = (env, argv) => {
     },
     optimization: {
       minimize: isProduction,
-      usedExports: true
+      usedExports: false
     },
     performance: {
       hints: isProduction ? 'warning' : false,

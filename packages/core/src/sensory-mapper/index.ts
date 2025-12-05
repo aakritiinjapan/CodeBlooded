@@ -102,37 +102,42 @@ export function mapToVisual(complexity: number): VisualMapping {
   const level = classifyComplexity(complexity);
   
   let color: string;
+  let backgroundColor: string;
   let opacity: number;
 
   switch (level) {
     case ComplexityLevel.Low:
-      // Midnight Blue
-      color = '#191970';
+      // Dodger Blue - calm and safe
+      color = '#1E90FF';
+      backgroundColor = '#1a1a2e'; // Slight blue tint
       opacity = 0.6;
       break;
 
     case ComplexityLevel.Medium:
-      // Toxic Purple
-      color = '#9400D3';
+      // Medium Purple - attention needed
+      color = '#9370DB';
+      backgroundColor = '#1f1a2e'; // Slight purple tint
       opacity = 0.7;
       break;
 
     case ComplexityLevel.High:
-      // Blood Orange
-      color = '#CC5500';
+      // Goldenrod - softer warning (not harsh yellow)
+      color = '#DAA520';
+      backgroundColor = '#2a2618'; // Slight golden/amber tint
       opacity = 0.8;
       break;
 
     case ComplexityLevel.Critical:
-      // Crimson Red
-      color = '#DC143C';
+      // Dark Orange - urgent action needed
+      color = '#FF8C00';
+      backgroundColor = '#2a1f18'; // Slight orange tint
       opacity = 0.9;
       break;
   }
 
   return {
     color,
-    backgroundColor: '#1C1C1C', // Eerie Black
+    backgroundColor,
     textColor: '#FFFFFF',
     opacity,
   };

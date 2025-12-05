@@ -37,7 +37,7 @@ jobs:
         run: npm run build:vscode
       
       - name: Package VS Code extension
-        run: npm run package -w codechroma-vscode
+        run: npm run package -w codeblooded-vscode
       
       - name: Upload VS Code extension artifact
         uses: actions/upload-artifact@v4

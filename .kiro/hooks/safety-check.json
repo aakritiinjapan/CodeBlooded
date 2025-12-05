@@ -1,0 +1,11 @@
+{
+  "name": "Safety Property Checker",
+  "description": "Validates that horror effects respect safety constraints (flash frequency, state restoration, panic button)",
+  "event": "stop",
+  "command": "node",
+  "args": ["scripts/validate-safety-properties.js"],
+  "timeout_ms": 10000,
+  "cache_ttl_seconds": 0,
+  "critical": false,
+  "enabled": true
+}

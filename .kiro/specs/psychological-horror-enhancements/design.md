@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design document outlines the architecture and implementation approach for transforming CodeChroma into a psychological horror coding experience. The system introduces unpredictable, randomized horror events while maintaining code safety, user accessibility, and VS Code compatibility.
+This design document outlines the architecture and implementation approach for transforming codeblooded into a psychological horror coding experience. The system introduces unpredictable, randomized horror events while maintaining code safety, user accessibility, and VS Code compatibility.
 
 ## Architecture
 
@@ -41,7 +41,7 @@ This design document outlines the architecture and implementation approach for t
 
 **Responsibilities**:
 - Display photosensitivity warnings on first activation
-- Implement panic button (Ctrl+Shift+Escape)
+- Implement panic button (Ctrl+Alt+S)
 - Monitor accessibility settings (Reduce Motion)
 - Detect screen sharing and auto-disable effects
 - Manage safe mode state
@@ -676,7 +676,7 @@ interface HorrorConfig {
   // Accessibility
   respectReduceMotion: boolean;
   maxFlashFrequency: number;      // Flashes per second
-  panicButtonKey: string;         // Default: 'Ctrl+Shift+Escape'
+  panicButtonKey: string;         // Default: 'Ctrl+Alt+S'
   
   // Advanced
   jumpscareCooldownMin: number;   // Seconds
@@ -734,7 +734,7 @@ async function safePhantomEvent(fn: () => Promise<void>): Promise<void> {
     
     // Notify user
     vscode.window.showWarningMessage(
-      'CodeChroma: Phantom events disabled due to error. Your code is safe.'
+      'codeblooded: Phantom events disabled due to error. Your code is safe.'
     );
   }
 }

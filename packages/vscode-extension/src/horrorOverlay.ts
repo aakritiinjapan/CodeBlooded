@@ -52,8 +52,8 @@ export class HorrorOverlayManager implements vscode.Disposable {
    */
   private createPanel(): void {
     this.panel = vscode.window.createWebviewPanel(
-      'codechromaHorrorOverlay',
-      'CodeChroma Horror Effects',
+      'codebloodedHorrorOverlay',
+      'codeblooded Horror Effects',
       { viewColumn: vscode.ViewColumn.One, preserveFocus: true },
       {
         enableScripts: true,

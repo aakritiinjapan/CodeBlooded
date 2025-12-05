@@ -1,19 +1,19 @@
-# @codechroma/core
+# @codeblooded/core
 
-> Core analysis engine for CodeChroma - AST parsing, sensory mapping, audio synthesis, and visualization
+> Core analysis engine for codeblooded - AST parsing, sensory mapping, audio synthesis, and visualization
 
 The core package provides the foundational components for analyzing code complexity and translating it into multi-sensory feedback. It handles AST parsing, metric extraction, audio-visual mapping, and graph generation.
 
 ## Installation
 
 ```bash
-npm install @codechroma/core
+npm install @codeblooded/core
 ```
 
 ## Quick Start
 
 ```typescript
-import { ASTAnalyzer, SensoryMapper, AudioEngine, VisualizationEngine } from '@codechroma/core';
+import { ASTAnalyzer, SensoryMapper, AudioEngine, VisualizationEngine } from '@codeblooded/core';
 
 // 1. Parse and analyze code
 const analyzer = new ASTAnalyzer();
@@ -324,7 +324,7 @@ interface GraphMetadata {
 
 ### Cyclomatic Complexity
 
-CodeChroma calculates cyclomatic complexity by counting decision points in the code:
+codeblooded calculates cyclomatic complexity by counting decision points in the code:
 
 **Decision Points:**
 - `if` statements
@@ -420,7 +420,7 @@ Normalized to 0-100 scale.
 ### Custom Parser Registration
 
 ```typescript
-import { ParserRegistry, ParserPlugin } from '@codechroma/core';
+import { ParserRegistry, ParserPlugin } from '@codeblooded/core';
 
 const pythonParser: ParserPlugin = {
   language: 'python',
@@ -438,9 +438,9 @@ registry.register(pythonParser);
 ### Configuration
 
 ```typescript
-import { CodeChromaConfig } from '@codechroma/core';
+import { CodeBloodedConfig } from '@codeblooded/core';
 
-const config: CodeChromaConfig = {
+const config: CodeBloodedConfig = {
   audio: {
     enabled: true,
     volume: 0.7,
@@ -462,7 +462,7 @@ const config: CodeChromaConfig = {
 The health score aggregates complexity metrics into a single 0-100 score:
 
 ```typescript
-import { calculateHealthScore } from '@codechroma/core';
+import { calculateHealthScore } from '@codeblooded/core';
 
 const healthScore = calculateHealthScore(analysis);
 // Returns: 0-100 (higher is better)
@@ -477,12 +477,12 @@ const healthScore = calculateHealthScore(analysis);
 ## Error Handling
 
 ```typescript
-import { CodeChromaError, ErrorCode } from '@codechroma/core';
+import { codebloodedError, ErrorCode } from '@codeblooded/core';
 
 try {
   const result = await analyzer.parse(code, 'typescript');
 } catch (error) {
-  if (error instanceof CodeChromaError) {
+  if (error instanceof codebloodedError) {
     switch (error.code) {
       case ErrorCode.PARSE_ERROR:
         console.error('Failed to parse code:', error.message);
@@ -532,7 +532,7 @@ import type {
   VisualMapping,
   ThemeMapping,
   GraphData
-} from '@codechroma/core';
+} from '@codeblooded/core';
 ```
 
 ## License
@@ -541,12 +541,12 @@ MIT
 
 ## Related Packages
 
-- [@codechroma/cli](../cli-analyzer/README.md) - Command-line analyzer
-- [codechroma-vscode](../vscode-extension/README.md) - VS Code extension
-- [@codechroma/lsp-server](../lsp-server/README.md) - LSP server
+- [@codeblooded/cli](../cli-analyzer/README.md) - Command-line analyzer
+- [codeblooded-vscode](../vscode-extension/README.md) - VS Code extension
+- [@codeblooded/lsp-server](../lsp-server/README.md) - LSP server
 
 ## Support
 
-- [GitHub Issues](https://github.com/yourusername/codechroma/issues)
-- [Documentation](https://codechroma.dev)
-- [Discord Community](https://discord.gg/codechroma)
+- [GitHub Issues](https://github.com/yourusername/codeblooded/issues)
+- [Documentation](https://codeblooded.dev)
+- [Discord Community](https://discord.gg/codeblooded)

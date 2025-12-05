@@ -1,7 +1,7 @@
 {
-  "name": "@codechroma/core",
+  "name": "@codeblooded/core",
   "version": "0.1.0",
-  "description": "Core analysis engine for CodeChroma - AST parsing, sensory mapping, audio synthesis, and visualization",
+  "description": "Core analysis engine for codeblooded - AST parsing, sensory mapping, audio synthesis, and visualization",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -32,13 +32,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/codechroma/codechroma.git",
+    "url": "https://github.com/codeblooded/codeblooded.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/codechroma/codechroma/issues"
+    "url": "https://github.com/codeblooded/codeblooded/issues"
   },
-  "homepage": "https://github.com/codechroma/codechroma#readme",
+  "homepage": "https://github.com/codeblooded/codeblooded#readme",
   "publishConfig": {
     "access": "public"
   },

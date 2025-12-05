@@ -17,8 +17,8 @@ module.exports = {
     },
   },
   moduleNameMapper: {
-    '^@codechroma/core$': '<rootDir>/packages/core/src',
-    '^@codechroma/core/(.*)$': '<rootDir>/packages/core/src/$1',
+    '^@codeblooded/core$': '<rootDir>/packages/core/src',
+    '^@codeblooded/core/(.*)$': '<rootDir>/packages/core/src/$1',
   },
   transform: {
     '^.+\\.ts$': 'ts-jest',

@@ -11,13 +11,13 @@ const path = require('path');
 const packagePath = path.join(__dirname, '..', 'package.json');
 const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
-console.log('🎃 CodeChroma Publishing Validator\n');
+console.log('🎃 codeblooded Publishing Validator\n');
 
 const errors = [];
 const warnings = [];
 
 // Required fields
-if (!pkg.publisher || pkg.publisher === 'codechroma') {
+if (!pkg.publisher || pkg.publisher === 'codeblooded') {
   errors.push('❌ Publisher ID not set. Update "publisher" in package.json with your actual publisher ID.');
 }
 

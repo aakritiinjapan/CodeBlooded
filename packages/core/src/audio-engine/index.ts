@@ -1,5 +1,5 @@
 /**
- * Audio Engine for CodeChroma
+ * Audio Engine for codeblooded
  * 
  * Provides Web Audio API wrapper with oscillator pooling and tone synthesis
  */
@@ -10,7 +10,7 @@ import {
   AudioEngineConfig,
   WaveformType,
   ErrorCode,
-  CodeChromaError,
+  CodeBloodedError,
 } from '../types';
 import { EffectsProcessor } from './effects';
 import { execFile } from 'node:child_process';
@@ -25,7 +25,7 @@ function tryRequire<T = unknown>(moduleId: string): T | undefined {
     }
   } catch (error) {
     // Ignore resolution failures; we'll report a warning when audio is requested.
-    console.warn(`CodeChroma: Optional dependency '${moduleId}' not available`, error);
+    console.warn(`codeblooded: Optional dependency '${moduleId}' not available`, error);
   }
   return undefined;
 }
@@ -90,7 +90,7 @@ export class AudioEngine {
         this.toneInitialized = true;
       }
     } catch (toneError) {
-      console.warn('CodeChroma: Tone.js unavailable, continuing without advanced effects', toneError);
+      console.warn('codeblooded: Tone.js unavailable, continuing without advanced effects', toneError);
     }
 
     if (this.audioUnsupported) {
@@ -101,7 +101,7 @@ export class AudioEngine {
       const AudioContextConstructor = this.getAudioContextConstructor();
       if (!AudioContextConstructor) {
         this.markAudioUnsupported(
-          new CodeChromaError(
+          new CodeBloodedError(
             'Web Audio API is not available in this environment',
             ErrorCode.AUDIO_ERROR
           )
@@ -187,7 +187,7 @@ export class AudioEngine {
     waveform: WaveformType
   ): OscillatorNode {
     if (!this.audioContext || !this.masterGain) {
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         'Audio context not initialized',
         ErrorCode.AUDIO_ERROR
       );
@@ -292,7 +292,7 @@ export class AudioEngine {
           return;
         }
 
-        throw new CodeChromaError(
+        throw new CodeBloodedError(
           'Audio context not initialized',
           ErrorCode.AUDIO_ERROR,
           {
@@ -328,7 +328,7 @@ export class AudioEngine {
 
           return;
         } catch (effectError) {
-          console.warn('CodeChroma: Falling back to direct oscillator playback', effectError);
+          console.warn('codeblooded: Falling back to direct oscillator playback', effectError);
         }
       }
 
@@ -373,10 +373,10 @@ export class AudioEngine {
         this.currentPlayback = null;
       };
     } catch (error) {
-      if (error instanceof CodeChromaError) {
+      if (error instanceof CodeBloodedError) {
         throw error;
       }
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         'Failed to play audio',
         ErrorCode.AUDIO_ERROR,
         { originalError: error, mapping }
@@ -416,7 +416,7 @@ export class AudioEngine {
           return;
         }
 
-        throw new CodeChromaError(
+        throw new CodeBloodedError(
           'Audio context not initialized',
           ErrorCode.AUDIO_ERROR,
           {
@@ -474,10 +474,10 @@ export class AudioEngine {
         stop: () => oscillators.forEach((osc) => this.stopOscillator(osc)),
       };
     } catch (error) {
-      if (error instanceof CodeChromaError) {
+      if (error instanceof CodeBloodedError) {
         throw error;
       }
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         'Failed to play chord',
         ErrorCode.AUDIO_ERROR,
         { originalError: error, frequencies, waveform, duration }
@@ -540,7 +540,7 @@ export class AudioEngine {
 
   private markAudioUnsupported(error: unknown): void {
     if (!this.audioUnsupported) {
-      console.warn('CodeChroma: Web Audio unavailable, enabling fallback audio', error);
+      console.warn('codeblooded: Web Audio unavailable, enabling fallback audio', error);
     }
     this.audioUnsupported = true;
     this.initializationError = error;
@@ -581,7 +581,7 @@ export class AudioEngine {
       await new Promise<void>((resolve) => setTimeout(resolve, duration));
       return true;
     } catch (error) {
-      console.warn('CodeChroma: Fallback audio playback failed', error);
+      console.warn('codeblooded: Fallback audio playback failed', error);
       return false;
     }
   }

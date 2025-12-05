@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This specification defines enhancements to transform CodeChroma from a complexity-feedback system into a true psychological horror coding experience. The focus shifts from predictable error-based responses to unpredictable, randomized horror events that create genuine unease and tension while coding.
+This specification defines enhancements to transform codeblooded from a complexity-feedback system into a true psychological horror coding experience. The focus shifts from predictable error-based responses to unpredictable, randomized horror events that create genuine unease and tension while coding.
 
 ### Safety and Ethics Statement
 
@@ -36,7 +36,7 @@ This extension is **NOT recommended** for users with:
 
 ### Requirement 1: Random Jumpscare System
 
-**User Story:** As a developer using CodeChroma, I want to experience unpredictable horror jumpscares while coding, so that the experience feels genuinely unsettling rather than just error feedback.
+**User Story:** As a developer using codeblooded, I want to experience unpredictable horror jumpscares while coding, so that the experience feels genuinely unsettling rather than just error feedback.
 
 #### Acceptance Criteria
 
@@ -65,7 +65,7 @@ This extension is **NOT recommended** for users with:
 
 ### Requirement 3: Screen Distortion Effects
 
-**User Story:** As a developer coding with CodeChroma, I want subtle screen distortions during high complexity, so that the environment feels increasingly unstable and unsettling.
+**User Story:** As a developer coding with codeblooded, I want subtle screen distortions during high complexity, so that the environment feels increasingly unstable and unsettling.
 
 #### Acceptance Criteria
 
@@ -149,7 +149,7 @@ This extension is **NOT recommended** for users with:
 
 ### Requirement 10: User Configuration Controls
 
-**User Story:** As a developer using CodeChroma, I want to control horror intensity and enable/disable specific effects, so that I can customize the experience to my comfort level.
+**User Story:** As a developer using codeblooded, I want to control horror intensity and enable/disable specific effects, so that I can customize the experience to my comfort level.
 
 #### Acceptance Criteria
 
@@ -226,7 +226,7 @@ This extension is **NOT recommended** for users with:
 
 ### Requirement 16: Extension Onboarding and Communication
 
-**User Story:** As a new user of CodeChroma, I want clear information about what the extension does, so that I can make an informed decision about enabling horror features.
+**User Story:** As a new user of codeblooded, I want clear information about what the extension does, so that I can make an informed decision about enabling horror features.
 
 #### Acceptance Criteria
 

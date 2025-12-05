@@ -68,11 +68,11 @@ export class DiagnosticManager implements vscode.Disposable {
         this.lastSummary.errorCount === summary.errorCount &&
         this.lastSummary.warningCount === summary.warningCount &&
         this.lastSummary.infoCount === summary.infoCount) {
-      console.log('[CodeChroma Diagnostics] No change, skipping emit');
+      console.log('[codeblooded Diagnostics] No change, skipping emit');
       return;
     }
     
-    console.log('[CodeChroma Diagnostics] Changed:', summary);
+    console.log('[codeblooded Diagnostics] Changed:', summary);
     this.lastSummary = summary;
     this.onDidChangeDiagnosticsEmitter.fire(summary);
   }

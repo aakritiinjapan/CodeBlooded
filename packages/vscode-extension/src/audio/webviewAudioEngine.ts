@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { AudioMapping } from '@codechroma/core';
+import { AudioMapping } from '@codeblooded/core';
 
 interface ReadyMessage {
   type: 'ready';
@@ -34,30 +34,30 @@ export class WebviewAudioEngine implements vscode.Disposable {
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   async initialize(): Promise<void> {
-    console.log('[CodeChroma Debug] Initializing audio engine...');
+    console.log('[codeblooded Debug] Initializing audio engine...');
     try {
       await this.ensureWebview();
-      console.log('[CodeChroma Debug] Audio engine initialized successfully');
+      console.log('[codeblooded Debug] Audio engine initialized successfully');
     } catch (error) {
-      console.error('[CodeChroma Debug] Audio engine initialization failed:', error);
+      console.error('[codeblooded Debug] Audio engine initialization failed:', error);
       // Don't re-throw - allow extension to continue with visual-only mode
     }
   }
 
   async play(mapping: AudioMapping): Promise<void> {
-    console.log('[CodeChroma Debug] Audio play requested', { enabled: this.enabled, mapping });
+    console.log('[codeblooded Debug] Audio play requested', { enabled: this.enabled, mapping });
     
     if (!this.enabled) {
-      console.log('[CodeChroma Debug] Audio disabled, skipping playback');
+      console.log('[codeblooded Debug] Audio disabled, skipping playback');
       return;
     }
 
     try {
       await this.ensureWebview();
-      console.log('[CodeChroma Debug] Playing audio for complexity:', mapping.frequency);
+      console.log('[codeblooded Debug] Playing audio for complexity:', mapping.frequency);
       this.postMessage({ type: 'play', mapping });
     } catch (error) {
-      console.error('[CodeChroma Debug] Audio playback failed:', error);
+      console.error('[codeblooded Debug] Audio playback failed:', error);
       // Try to reinitialize for next time
       this.dispose();
     }
@@ -126,16 +126,16 @@ export class WebviewAudioEngine implements vscode.Disposable {
 
       // Add timeout to prevent hanging extension host
       const timeout = setTimeout(() => {
-        console.error('[CodeChroma Debug] Audio bridge initialization timeout (8s)');
+        console.error('[codeblooded Debug] Audio bridge initialization timeout (8s)');
         reject(new Error('Audio bridge initialization timeout'));
       }, 8000);
 
-      console.log('[CodeChroma Debug] Creating webview for audio engine...');
+      console.log('[codeblooded Debug] Creating webview for audio engine...');
       
       const column = vscode.window.activeTextEditor?.viewColumn ?? vscode.ViewColumn.Two;
       this.panel = vscode.window.createWebviewPanel(
-        'codechromaAudioBridge',
-        'CodeChroma Audio Bridge',
+        'codebloodedAudioBridge',
+        'codeblooded Audio Bridge',
         { viewColumn: column, preserveFocus: true },
         {
           enableScripts: true,
@@ -143,14 +143,14 @@ export class WebviewAudioEngine implements vscode.Disposable {
         }
       );
 
-      console.log('[CodeChroma Debug] Webview created for audio engine');
+      console.log('[codeblooded Debug] Webview created for audio engine');
       
       this.panel.iconPath = undefined;
       this.panel.webview.html = this.getHtml(this.panel.webview);
 
       const disposable = this.panel.webview.onDidReceiveMessage((message: WebviewToExtensionMessage) => {
         if (message.type === 'ready') {
-          console.log('[CodeChroma Debug] Audio webview reported ready');
+          console.log('[codeblooded Debug] Audio webview reported ready');
           clearTimeout(timeout);
           this.applyInitialState();
           this.readyResolver?.();
@@ -162,7 +162,7 @@ export class WebviewAudioEngine implements vscode.Disposable {
       });
 
       this.panel.onDidDispose(() => {
-        console.log('[CodeChroma Debug] Audio webview disposed');
+        console.log('[codeblooded Debug] Audio webview disposed');
         clearTimeout(timeout);
         this.panel = undefined;
         this.readyPromise = undefined;
@@ -186,7 +186,7 @@ export class WebviewAudioEngine implements vscode.Disposable {
     }
 
     this.panel.webview.postMessage(message).then(undefined, (error) => {
-      console.warn('CodeChroma: Failed to send audio message', error);
+      console.warn('codeblooded: Failed to send audio message', error);
     });
   }
 
@@ -194,11 +194,11 @@ export class WebviewAudioEngine implements vscode.Disposable {
     switch (message.type) {
       case 'log':
         if (message.level === 'error') {
-          console.error(`CodeChroma Audio: ${message.message}`, message.detail);
+          console.error(`codeblooded Audio: ${message.message}`, message.detail);
         } else if (message.level === 'warn') {
-          console.warn(`CodeChroma Audio: ${message.message}`, message.detail);
+          console.warn(`codeblooded Audio: ${message.message}`, message.detail);
         } else {
-          console.log(`CodeChroma Audio: ${message.message}`);
+          console.log(`codeblooded Audio: ${message.message}`);
         }
         break;
       default:
@@ -216,7 +216,7 @@ export class WebviewAudioEngine implements vscode.Disposable {
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy" content="${csp}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CodeChroma Audio Bridge</title>
+  <title>codeblooded Audio Bridge</title>
   <style nonce="${nonce}">
     body {
       background: #1a1a1a;
@@ -255,7 +255,7 @@ export class WebviewAudioEngine implements vscode.Disposable {
   </style>
 </head>
 <body>
-  <div class="status">🎵 CodeChroma Audio Bridge</div>
+  <div class="status">🎵 codeblooded Audio Bridge</div>
   <div id="logs"></div>
   <script nonce="${nonce}">
     const vscode = acquireVsCodeApi();

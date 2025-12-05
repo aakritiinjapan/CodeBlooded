@@ -39,18 +39,18 @@ jobs:
       - name: Build all packages
         run: npm run build:all
       
-      - name: Publish @codechroma/core
-        run: npm publish -w @codechroma/core
+      - name: Publish @codeblooded/core
+        run: npm publish -w @codeblooded/core
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
-      - name: Publish @codechroma/lsp-server
-        run: npm publish -w @codechroma/lsp-server
+      - name: Publish @codeblooded/lsp-server
+        run: npm publish -w @codeblooded/lsp-server
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
-      - name: Publish @codechroma/cli
-        run: npm publish -w @codechroma/cli
+      - name: Publish @codeblooded/cli
+        run: npm publish -w @codeblooded/cli
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   
@@ -79,12 +79,12 @@ jobs:
         run: npm run build:vscode
       
       - name: Publish to VS Code Marketplace
-        run: npm run publish -w codechroma-vscode
+        run: npm run publish -w codeblooded-vscode
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
       
       - name: Package extension
-        run: npm run package -w codechroma-vscode
+        run: npm run package -w codeblooded-vscode
       
       - name: Upload to GitHub Release
         if: github.event_name == 'release'
@@ -94,5 +94,5 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: packages/vscode-extension/*.vsix
-          asset_name: codechroma-vscode-${{ github.event.release.tag_name }}.vsix
+          asset_name: codeblooded-vscode-${{ github.event.release.tag_name }}.vsix
           asset_content_type: application/zip

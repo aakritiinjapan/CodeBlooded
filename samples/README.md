@@ -1,6 +1,6 @@
-# CodeChroma Sample Files
+# codeblooded Sample Files
 
-This directory contains sample code files for testing and demonstrating CodeChroma's analysis capabilities. Each file is designed to showcase different complexity levels and edge cases.
+This directory contains sample code files for testing and demonstrating codeblooded's analysis capabilities. Each file is designed to showcase different complexity levels and edge cases.
 
 ## File Overview
 
@@ -74,7 +74,7 @@ Intentional syntax errors for testing error handling.
 - Invalid type annotations
 - Unclosed comments
 
-**Note**: This file will fail to parse. CodeChroma should handle these errors gracefully and report them to the user.
+**Note**: This file will fail to parse. codeblooded should handle these errors gracefully and report them to the user.
 
 #### `empty-file.ts`
 Minimal file with only comments.
@@ -86,31 +86,31 @@ Minimal file with only comments.
 ### VS Code Extension
 
 1. Open any sample file in VS Code
-2. CodeChroma will automatically analyze it
+2. codeblooded will automatically analyze it
 3. Observe the color-coded highlighting
 4. Listen to the audio feedback (if enabled)
-5. Run `CodeChroma: Show AST Graph` to see the visualization
+5. Run `codeblooded: Show AST Graph` to see the visualization
 
 ### CLI Analyzer
 
 ```bash
 # Analyze single file
-codechroma analyze samples/low-complexity.ts
+codeblooded analyze samples/low-complexity.ts
 
 # Analyze all samples
-codechroma analyze samples --recursive
+codeblooded analyze samples --recursive
 
 # Generate HTML report
-codechroma analyze samples -r --output samples-report.html
+codeblooded analyze samples -r --output samples-report.html
 
 # Export audio signatures
-codechroma analyze samples -r --export-audio --audio-path ./audio-samples
+codeblooded analyze samples -r --export-audio --audio-path ./audio-samples
 ```
 
 ### Core Library
 
 ```typescript
-import { ASTAnalyzer, SensoryMapper } from '@codechroma/core';
+import { ASTAnalyzer, SensoryMapper } from '@codeblooded/core';
 import { readFileSync } from 'fs';
 
 const analyzer = new ASTAnalyzer();
@@ -170,7 +170,7 @@ When exporting audio signatures, each file will produce a unique WAV file:
 
 ## Testing Checklist
 
-Use these samples to verify CodeChroma functionality:
+Use these samples to verify codeblooded functionality:
 
 - [ ] All TypeScript files parse successfully (except `syntax-errors.ts`)
 - [ ] JavaScript files parse successfully
@@ -194,8 +194,8 @@ When adding new sample files:
 2. Add expected cyclomatic complexity in comments
 3. Use descriptive function names
 4. Update this README with the new file
-5. Test with all CodeChroma packages (core, VS Code, CLI, LSP)
+5. Test with all codeblooded packages (core, VS Code, CLI, LSP)
 
 ## License
 
-These sample files are part of the CodeChroma project and are licensed under MIT.
+These sample files are part of the codeblooded project and are licensed under MIT.

@@ -306,7 +306,7 @@ export class D3Renderer {
   private createTooltip(container: HTMLElement): void {
     this.tooltip = d3.select(container)
       .append('div')
-      .attr('class', 'codechroma-tooltip')
+      .attr('class', 'codeblooded-tooltip')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
       .style('background-color', 'rgba(0, 0, 0, 0.9)')

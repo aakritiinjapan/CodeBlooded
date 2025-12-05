@@ -1,0 +1,40 @@
+import { AudioMapping, AudioEngineConfig, WaveformType } from '../types';
+export declare class AudioEngine {
+    private config;
+    private audioContext;
+    private masterGain;
+    private oscillatorPool;
+    private activeOscillators;
+    private toneInitialized;
+    private currentPlayback;
+    private effectsProcessor;
+    private audioContextCtor;
+    private toneModule;
+    private toneLoadFailed;
+    private audioUnsupported;
+    private fallbackEnabled;
+    private initializationError;
+    constructor(config?: Partial<AudioEngineConfig>);
+    initialize(): Promise<void>;
+    private getAudioContextConstructor;
+    private ensureToneModule;
+    private createOscillator;
+    private getOscillator;
+    private stopOscillator;
+    private cleanupOscillators;
+    play(mapping: AudioMapping): Promise<void>;
+    playChord(frequencies: number[], waveform: WaveformType, duration: number): Promise<void>;
+    playTritone(baseFrequency?: number, duration?: number): Promise<void>;
+    playGothicChord(rootFrequency?: number, duration?: number): Promise<void>;
+    private canUseFallbackAudio;
+    private markAudioUnsupported;
+    private playFallbackMapping;
+    stop(): void;
+    setVolume(volume: number): void;
+    isEnabled(): boolean;
+    enable(): void;
+    disable(): void;
+    dispose(): void;
+}
+export { EffectsProcessor } from './effects';
+//# sourceMappingURL=index.d.ts.map

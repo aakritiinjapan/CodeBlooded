@@ -1,6 +1,6 @@
 # GitHub Actions Workflows
 
-This directory contains CI/CD workflows for the CodeChroma monorepo.
+This directory contains CI/CD workflows for the codeblooded monorepo.
 
 ## Workflows
 
@@ -25,7 +25,7 @@ Runs on pushes to `main` branch and version tags.
 Runs on GitHub releases or manual workflow dispatch.
 
 **Actions:**
-- Publishes npm packages (@codechroma/core, @codechroma/lsp-server, @codechroma/cli)
+- Publishes npm packages (@codeblooded/core, @codeblooded/lsp-server, @codeblooded/cli)
 - Publishes VS Code extension to marketplace
 - Attaches extension to GitHub release
 

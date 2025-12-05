@@ -1,6 +1,6 @@
 import { VERSION, Language, ComplexityLevel, WaveformType } from '../index';
 
-describe('CodeChroma Core', () => {
+describe('codeblooded Core', () => {
   it('should export version', () => {
     expect(VERSION).toBe('0.1.0');
   });

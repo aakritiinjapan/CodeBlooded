@@ -7,7 +7,7 @@ import {
   ParseResult,
   AnalysisResult,
   ErrorCode,
-  CodeChromaError,
+  CodeBloodedError,
 } from '../types';
 import { ParserRegistry } from './ParserRegistry';
 import { TypeScriptParser } from './TypeScriptParser';
@@ -42,7 +42,7 @@ export class ASTAnalyzer {
     const language = this.registry.detectLanguage(filePath);
 
     if (language === Language.Unknown) {
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         `Unsupported file type: ${filePath}`,
         ErrorCode.PARSE_ERROR,
         { filePath }
@@ -89,7 +89,7 @@ export class ASTAnalyzer {
         dependencies,
       };
     } catch (error: any) {
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         `Analysis failed: ${error.message}`,
         ErrorCode.ANALYSIS_ERROR,
         { filePath, originalError: error }

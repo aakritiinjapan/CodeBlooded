@@ -2,7 +2,7 @@
  * TypeScriptParser - Parser plugin for TypeScript and TSX files
  */
 
-import { Language, ParserPlugin, ErrorCode, CodeChromaError } from '../types';
+import { Language, ParserPlugin, ErrorCode, CodeBloodedError } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const tsParser = require('@typescript-eslint/parser');
@@ -31,7 +31,7 @@ export class TypeScriptParser implements ParserPlugin {
 
       return ast;
     } catch (error: any) {
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         `Failed to parse TypeScript file: ${error.message}`,
         ErrorCode.PARSE_ERROR,
         { filePath, originalError: error }

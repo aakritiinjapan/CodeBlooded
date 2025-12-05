@@ -1,10 +1,10 @@
-# CodeChroma for VS Code 🎨🔊
+# codeblooded for VS Code 🎨🔊
 
 > Multi-sensory code analysis with horror-themed audio-visual feedback
 
 ## ⚠️ IMPORTANT SAFETY WARNING ⚠️
 
-**CodeChroma contains psychological horror features including:**
+**codeblooded contains psychological horror features including:**
 - Flashing lights and rapid visual changes
 - Jump scares with disturbing imagery  
 - Unsettling audio effects
@@ -17,7 +17,7 @@
 - Preference for calm coding environments
 
 **SAFETY FEATURES:**
-- **Panic Button**: Press `Ctrl+Shift+Escape` (or `Cmd+Shift+Escape` on Mac) to instantly disable all horror effects
+- **Panic Button**: Press `Ctrl+Alt+S` (or `Cmd+Alt+S` on Mac) to instantly disable all horror effects
 - **Safe Mode**: Horror features are DISABLED by default - you must explicitly opt-in
 - **Accessibility**: Automatically respects "Reduce Motion" and other accessibility settings
 - **First-Run Warning**: You'll see a detailed warning before any horror features activate
@@ -26,7 +26,7 @@ See [SAFETY_FEATURES.md](./SAFETY_FEATURES.md) for complete safety documentation
 
 ---
 
-Transform your coding experience with real-time complexity feedback. CodeChroma analyzes your code as you type and provides immersive audio-visual cues - from calm deep hums for clean code to harsh distorted tones and crimson warnings for complex functions.
+Transform your coding experience with real-time complexity feedback. codeblooded analyzes your code as you type and provides immersive audio-visual cues - from calm deep hums for clean code to harsh distorted tones and crimson warnings for complex functions.
 
 ## Features
 
@@ -84,12 +84,12 @@ Embrace the spooky aesthetic:
 
 1. Open VS Code
 2. Press `Ctrl+P` (Windows/Linux) or `Cmd+P` (Mac)
-3. Type: `ext install codechroma.codechroma-vscode`
+3. Type: `ext install codeblooded.codeblooded-vscode`
 4. Press Enter
 
 ### From VSIX File
 
-1. Download the `.vsix` file from [releases](https://github.com/yourusername/codechroma/releases)
+1. Download the `.vsix` file from [releases](https://github.com/yourusername/codeblooded/releases)
 2. Open VS Code
 3. Go to Extensions view (`Ctrl+Shift+X`)
 4. Click `...` menu → `Install from VSIX...`
@@ -105,11 +105,11 @@ Embrace the spooky aesthetic:
    - Decorations appear after 1 second of inactivity
 
 3. **View the AST graph**
-   - Run command: `CodeChroma: Show AST Graph`
+   - Run command: `codeblooded: Show AST Graph`
    - Or click the graph icon in the status bar
 
 4. **Toggle audio**
-   - Run command: `CodeChroma: Toggle Audio Feedback`
+   - Run command: `codeblooded: Toggle Audio Feedback`
    - Or click the audio icon in the status bar
 
 ## Commands
@@ -118,85 +118,85 @@ Access commands via Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
 
 | Command | Description | Keyboard Shortcut |
 |---------|-------------|-------------------|
-| `CodeChroma: Panic Button` | **EMERGENCY**: Instantly disable all horror effects | `Ctrl+Shift+Escape` |
-| `CodeChroma: Toggle Safe Mode` | Enable/disable horror features | - |
-| `CodeChroma: Toggle Audio Feedback` | Enable/disable audio playback | - |
-| `CodeChroma: Show AST Graph` | Open interactive graph visualization | - |
+| `codeblooded: Panic Button` | **EMERGENCY**: Instantly disable all horror effects | `Ctrl+Alt+S` |
+| `codeblooded: Toggle Safe Mode` | Enable/disable horror features | - |
+| `codeblooded: Toggle Audio Feedback` | Enable/disable audio playback | - |
+| `codeblooded: Show AST Graph` | Open interactive graph visualization | - |
 
 ## Configuration
 
-Configure CodeChroma via VS Code settings (`Ctrl+,` or `Cmd+,`):
+Configure codeblooded via VS Code settings (`Ctrl+,` or `Cmd+,`):
 
 ### Safety Settings
 
 ```json
 {
-  "codechroma.horror.enabled": false,
-  "codechroma.horror.intensity": 50,
-  "codechroma.safety.screenSharingMode": false,
-  "codechroma.safety.respectReduceMotion": true
+  "codeblooded.horror.enabled": false,
+  "codeblooded.horror.intensity": 50,
+  "codeblooded.safety.screenSharingMode": false,
+  "codeblooded.safety.respectReduceMotion": true
 }
 ```
 
-- **`codechroma.horror.enabled`** (boolean, default: `false`)
+- **`codeblooded.horror.enabled`** (boolean, default: `false`)
   - ⚠️ Enable psychological horror features (jumpscares, random events)
   - **DISABLED by default for safety**
 
-- **`codechroma.horror.intensity`** (number, default: `50`)
+- **`codeblooded.horror.intensity`** (number, default: `50`)
   - Horror intensity level (0-100)
   - Higher values = more frequent and intense effects
 
-- **`codechroma.safety.screenSharingMode`** (boolean, default: `false`)
+- **`codeblooded.safety.screenSharingMode`** (boolean, default: `false`)
   - Enable when screen sharing to auto-disable horror effects
 
-- **`codechroma.safety.respectReduceMotion`** (boolean, default: `true`)
+- **`codeblooded.safety.respectReduceMotion`** (boolean, default: `true`)
   - Respect system "Reduce Motion" accessibility setting
 
 ### Audio Settings
 
 ```json
 {
-  "codechroma.audio.enabled": true,
-  "codechroma.audio.volume": 0.5
+  "codeblooded.audio.enabled": true,
+  "codeblooded.audio.volume": 0.5
 }
 ```
 
-- **`codechroma.audio.enabled`** (boolean, default: `true`)
+- **`codeblooded.audio.enabled`** (boolean, default: `true`)
   - Enable or disable audio feedback globally
 
-- **`codechroma.audio.volume`** (number, default: `0.5`)
+- **`codeblooded.audio.volume`** (number, default: `0.5`)
   - Master volume level (0.0 - 1.0)
 
 ### Visual Settings
 
 ```json
 {
-  "codechroma.visual.animations": true,
-  "codechroma.visual.workspaceTint": true
+  "codeblooded.visual.animations": true,
+  "codeblooded.visual.workspaceTint": true
 }
 ```
 
-- **`codechroma.visual.animations`** (boolean, default: `true`)
+- **`codeblooded.visual.animations`** (boolean, default: `true`)
   - Enable or disable horror-themed animations (cobwebs, blood drips, fog)
 
-- **`codechroma.visual.workspaceTint`** (boolean, default: `true`)
+- **`codeblooded.visual.workspaceTint`** (boolean, default: `true`)
   - Tint the entire workbench with horror palette as complexity increases
 
 ### Analysis Settings
 
 ```json
 {
-  "codechroma.analysis.threshold": 10
+  "codeblooded.analysis.threshold": 10
 }
 ```
 
-- **`codechroma.analysis.threshold`** (number, default: `10`)
+- **`codeblooded.analysis.threshold`** (number, default: `10`)
   - Complexity threshold for warnings
   - Functions above this value trigger warnings
 
 ## Status Bar
 
-CodeChroma adds two status bar items:
+codeblooded adds two status bar items:
 
 ### Health Score Indicator
 - **Location**: Left side of status bar
@@ -245,7 +245,7 @@ Sensory Mapping → Audio Synthesis + Visual Decorations
 
 ### Complexity Calculation
 
-CodeChroma calculates **cyclomatic complexity** by counting decision points:
+codeblooded calculates **cyclomatic complexity** by counting decision points:
 
 ```typescript
 function example(a, b) {
@@ -306,7 +306,7 @@ Additional language support coming soon!
 
 ### Performance Tips
 
-1. **Disable animations** for large files: Set `codechroma.visual.animations` to `false`
+1. **Disable animations** for large files: Set `codeblooded.visual.animations` to `false`
 2. **Adjust debounce**: Extension waits 1 second after typing before analyzing
 3. **Disable audio** in noisy environments: Use toggle command or status bar icon
 
@@ -347,14 +347,14 @@ Additional language support coming soon!
 **Issue**: VS Code becomes slow or unresponsive
 
 **Solutions**:
-1. Disable animations: Set `codechroma.visual.animations` to `false`
-2. Increase threshold: Set `codechroma.analysis.threshold` higher to reduce warnings
+1. Disable animations: Set `codeblooded.visual.animations` to `false`
+2. Increase threshold: Set `codeblooded.analysis.threshold` higher to reduce warnings
 3. Close graph webview: Visualization can be resource-intensive
 4. Analyze smaller files: Split large files into smaller modules
 
 ## Privacy
 
-CodeChroma runs entirely locally. No code or data is sent to external servers.
+codeblooded runs entirely locally. No code or data is sent to external servers.
 
 - **No telemetry**: We don't collect usage data
 - **No network requests**: All analysis happens on your machine
@@ -366,7 +366,7 @@ CodeChroma runs entirely locally. No code or data is sent to external servers.
 - Very large files (>5000 lines) may experience slower analysis
 - Graph rendering with >200 nodes can be slow
 
-See [GitHub Issues](https://github.com/yourusername/codechroma/issues) for full list.
+See [GitHub Issues](https://github.com/yourusername/codeblooded/issues) for full list.
 
 ## Roadmap
 
@@ -383,9 +383,9 @@ Contributions welcome! See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelin
 
 ## Feedback
 
-- **Bug Reports**: [GitHub Issues](https://github.com/yourusername/codechroma/issues)
-- **Feature Requests**: [GitHub Discussions](https://github.com/yourusername/codechroma/discussions)
-- **Questions**: [Discord Community](https://discord.gg/codechroma)
+- **Bug Reports**: [GitHub Issues](https://github.com/yourusername/codeblooded/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/yourusername/codeblooded/discussions)
+- **Questions**: [Discord Community](https://discord.gg/codeblooded)
 
 ## License
 
@@ -393,12 +393,12 @@ MIT - see [LICENSE](../../LICENSE) for details
 
 ## Related
 
-- [@codechroma/core](../core/README.md) - Core analysis engine
-- [@codechroma/cli](../cli-analyzer/README.md) - Command-line tool
-- [@codechroma/lsp-server](../lsp-server/README.md) - LSP server
+- [@codeblooded/core](../core/README.md) - Core analysis engine
+- [@codeblooded/cli](../cli-analyzer/README.md) - Command-line tool
+- [@codeblooded/lsp-server](../lsp-server/README.md) - LSP server
 
 ---
 
-**Made with 🎃 by the CodeChroma team**
+**Made with 🎃 by the codeblooded team**
 
 *Embrace the horror of complex code*

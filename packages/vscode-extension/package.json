@@ -1,18 +1,18 @@
 {
-  "name": "codechroma-vscode",
-  "displayName": "CodeChroma - Kiroween",
-  "description": "Multi-sensory code analysis with horror-themed audio-visual feedback",
+  "name": "codeblooded-vscode",
+  "displayName": "codeblooded - Kiroween",
+  "description": "⚠️ Multi-sensory code analysis with OPTIONAL psychological horror features (jumpscares, screen effects). Photosensitivity warning! Panic button: Ctrl+Alt+S",
   "version": "0.1.0",
   "publisher": "AakritiHGupta",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aakritiinjapan/codechroma.git",
+    "url": "https://github.com/aakritiinjapan/codeblooded.git",
     "directory": "packages/vscode-extension"
   },
   "bugs": {
-    "url": "https://github.com/aakritiinjapan/codechroma/issues"
+    "url": "https://github.com/aakritiinjapan/codeblooded/issues"
   },
-  "homepage": "https://github.com/aakritiinjapan/codechroma#readme",
+  "homepage": "https://github.com/aakritiinjapan/codeblooded#readme",
   "license": "MIT",
   "engines": {
     "vscode": "^1.80.0"
@@ -33,112 +33,314 @@
     "onLanguage:typescript",
     "onLanguage:javascript",
     "onLanguage:typescriptreact",
-    "onLanguage:javascriptreact"
+    "onLanguage:javascriptreact",
+    "onLanguage:python",
+    "onLanguage:java",
+    "onLanguage:csharp",
+    "onLanguage:go",
+    "onLanguage:rust",
+    "onLanguage:cpp",
+    "onLanguage:c",
+    "onLanguage:php",
+    "onLanguage:ruby",
+    "onLanguage:swift",
+    "onLanguage:kotlin",
+    "onLanguage:scala",
+    "onLanguage:html",
+    "onLanguage:css",
+    "onLanguage:scss",
+    "onLanguage:less",
+    "onLanguage:json",
+    "onLanguage:yaml",
+    "onLanguage:xml",
+    "onLanguage:markdown",
+    "onLanguage:sql",
+    "onLanguage:shellscript",
+    "onLanguage:powershell",
+    "onLanguage:dart",
+    "onLanguage:lua",
+    "onLanguage:perl",
+    "onLanguage:r",
+    "onLanguage:vue",
+    "onLanguage:svelte"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "codechroma.toggleAudio",
-        "title": "CodeChroma: Toggle Audio Feedback"
+        "command": "codeblooded.toggleAudio",
+        "title": "codeblooded: Toggle Audio Feedback"
       },
       {
-        "command": "codechroma.showGraph",
-        "title": "CodeChroma: Show AST Graph"
+        "command": "codeblooded.showGraph",
+        "title": "codeblooded: Show AST Graph"
       },
       {
-        "command": "codechroma.resetTheme",
-        "title": "CodeChroma: Reset Theme"
+        "command": "codeblooded.resetTheme",
+        "title": "codeblooded: Reset Theme"
       },
       {
-        "command": "codechroma.testAudio",
-        "title": "CodeChroma: Test Audio"
+        "command": "codeblooded.testAudio",
+        "title": "codeblooded: Test Audio"
       },
       {
-        "command": "codechroma.showDebugInfo",
-        "title": "CodeChroma: Show Debug Info"
+        "command": "codeblooded.showDebugInfo",
+        "title": "codeblooded: Show Debug Info"
       },
       {
-        "command": "codechroma.forceUpdate",
-        "title": "CodeChroma: Force Update Theme & Audio"
+        "command": "codeblooded.forceUpdate",
+        "title": "codeblooded: Force Update Theme & Audio"
       },
       {
-        "command": "codechroma.showAudioBridge",
-        "title": "CodeChroma: Show Audio Bridge (Debug)"
+        "command": "codeblooded.showAudioBridge",
+        "title": "codeblooded: Show Audio Bridge (Debug)"
       },
       {
-        "command": "codechroma.testHorrorPopup",
-        "title": "CodeChroma: Test Horror Popup (Preview)"
+        "command": "codeblooded.testHorrorPopup",
+        "title": "codeblooded: Test Horror Popup (Preview)"
       },
       {
-        "command": "codechroma.panicButton",
-        "title": "CodeChroma: Panic Button (Disable All Horror)"
+        "command": "codeblooded.panicButton",
+        "title": "codeblooded: Panic Button (Disable All Horror)"
       },
       {
-        "command": "codechroma.toggleSafeMode",
-        "title": "CodeChroma: Toggle Safe Mode"
+        "command": "codeblooded.toggleSafeMode",
+        "title": "codeblooded: Toggle Safe Mode"
+      },
+      {
+        "command": "codeblooded.toggleScreenSharing",
+        "title": "codeblooded: Toggle Screen Sharing Mode"
+      },
+      {
+        "command": "codeblooded.toggleFocusMode",
+        "title": "codeblooded: Toggle Focus Mode"
+      },
+      {
+        "command": "codeblooded.testScreenDistortion",
+        "title": "codeblooded: Test Screen Distortion Effects"
+      },
+      {
+        "command": "codeblooded.testEntityPresence",
+        "title": "codeblooded: Test Entity Presence (Watching Eyes)"
+      },
+      {
+        "command": "codeblooded.testPhantomTyping",
+        "title": "codeblooded: Test Phantom Typing"
+      },
+      {
+        "command": "codeblooded.emergencyRestore",
+        "title": "codeblooded: Emergency Restore (Clear All Phantom Effects)"
+      },
+      {
+        "command": "codeblooded.testWhisperingVariables",
+        "title": "codeblooded: Test Whispering Variables"
+      },
+      {
+        "command": "codeblooded.testContextTrigger",
+        "title": "codeblooded: Test Context-Aware Triggers"
+      },
+      {
+        "command": "codeblooded.testEasterEggs",
+        "title": "codeblooded: Test Easter Eggs"
+      },
+      {
+        "command": "codeblooded.showHorrorControls",
+        "title": "codeblooded: Show Horror Controls"
+      },
+      {
+        "command": "codeblooded.testHorrorEffects",
+        "title": "codeblooded: Test Horror Effects (Preview)"
+      },
+      {
+        "command": "codeblooded.testAllEffects",
+        "title": "codeblooded: Test ALL Effects (Sequence)"
+      },
+      {
+        "command": "codeblooded.viewEasterEggs",
+        "title": "codeblooded: View Easter Eggs (Spoilers)"
+      },
+      {
+        "command": "codeblooded.resetHorrorWarning",
+        "title": "codeblooded Horror: Reset & Show Warning Again"
+      },
+      {
+        "command": "codeblooded.resetHorrorSettings",
+        "title": "codeblooded: Reset Horror Settings to Defaults"
+      },
+      {
+        "command": "codeblooded.showFirstRunTutorial",
+        "title": "codeblooded: Show First-Run Tutorial"
+      },
+      {
+        "command": "codeblooded.showHorrorEngineState",
+        "title": "codeblooded: Show Horror Engine State (Debug)"
+      },
+      {
+        "command": "codeblooded.showResourceStatistics",
+        "title": "codeblooded: Show Resource Statistics (Debug)"
+      },
+      {
+        "command": "codeblooded.showPerformanceProfile",
+        "title": "codeblooded: Show Performance Profile (Debug)"
+      },
+      {
+        "command": "codeblooded.showEventProbability",
+        "title": "codeblooded: Show Event Probability Calculator"
+      },
+      {
+        "command": "codeblooded.toggleVerboseLogging",
+        "title": "codeblooded: Toggle Verbose Logging"
       }
     ],
     "configuration": {
-      "title": "CodeChroma",
+      "title": "codeblooded",
       "properties": {
-        "codechroma.audio.enabled": {
+        "codeblooded.audio.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Enable audio feedback for code complexity"
         },
-        "codechroma.audio.volume": {
+        "codeblooded.audio.volume": {
           "type": "number",
           "default": 0.5,
           "minimum": 0,
           "maximum": 1,
           "description": "Audio volume (0-1)"
         },
-        "codechroma.visual.animations": {
+        "codeblooded.visual.animations": {
           "type": "boolean",
           "default": true,
           "description": "Enable horror-themed animations"
         },
-        "codechroma.visual.workspaceTint": {
+        "codeblooded.visual.workspaceTint": {
           "type": "boolean",
           "default": true,
-          "description": "Tint the entire workbench with CodeChroma's horror palette as complexity increases"
+          "description": "Tint the entire workbench with codeblooded's horror palette as complexity increases"
         },
-        "codechroma.analysis.threshold": {
+        "codeblooded.analysis.threshold": {
           "type": "number",
           "default": 10,
           "description": "Complexity threshold for warnings"
         },
-        "codechroma.horror.enabled": {
+        "codeblooded.horror.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "⚠️ Enable psychological horror features (jumpscares, random events). NOT recommended for users with photosensitivity, anxiety, or heart conditions."
+          "markdownDescription": "⚠️ **Enable psychological horror features** (jumpscares, random events). \n\n**NOT recommended** for users with photosensitivity, anxiety, or heart conditions.\n\nUse **Panic Button** (`Ctrl+Alt+S`) to instantly disable all effects.",
+          "order": 0
         },
-        "codechroma.horror.intensity": {
+        "codeblooded.horror.intensity": {
           "type": "number",
           "default": 50,
           "minimum": 0,
           "maximum": 100,
-          "description": "Horror intensity level (0-100). Higher values = more frequent and intense effects."
+          "markdownDescription": "Horror intensity level (0-100). Higher values = more frequent and intense effects.\n\n- **0-30**: Minimal horror, rare events\n- **31-60**: Moderate horror, occasional events\n- **61-100**: Maximum horror, frequent events\n\n⚠️ **Warning**: Intensity above 70 may include rapid animations and frequent jumpscares.",
+          "order": 1
         },
-        "codechroma.safety.screenSharingMode": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable this when screen sharing to automatically disable horror effects"
-        },
-        "codechroma.safety.respectReduceMotion": {
+        "codeblooded.horror.safeMode": {
           "type": "boolean",
           "default": true,
-          "description": "Respect system 'Reduce Motion' accessibility setting"
+          "markdownDescription": "🛡️ **Safe Mode** - Disables all horror effects instantly.\n\nWhen enabled:\n- All jumpscares disabled\n- All screen effects disabled\n- All phantom events disabled\n- All entity presence disabled\n\nUse this as a quick way to disable everything without changing individual settings.",
+          "order": 2
+        },
+        "codeblooded.horror.enableJumpscares": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable random jumpscare popups with disturbing imagery and audio",
+          "order": 10
+        },
+        "codeblooded.horror.enableScreenEffects": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable screen distortion effects (shake, glitch, VHS, chromatic aberration)",
+          "order": 11
+        },
+        "codeblooded.horror.enablePhantomEvents": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable phantom typing and whispering variables effects",
+          "order": 12
+        },
+        "codeblooded.horror.enableEntityPresence": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable entity presence indicators (watching eyes in gutter)",
+          "order": 13
+        },
+        "codeblooded.horror.enableEasterEggs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable hidden easter eggs and secret horror elements",
+          "order": 14
+        },
+        "codeblooded.safety.screenSharingMode": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable this when **screen sharing** to automatically disable horror effects.\n\nPrevents jumpscares and disturbing content from appearing during presentations or pair programming.",
+          "order": 20
+        },
+        "codeblooded.safety.focusMode": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable this when you need to **focus** without distractions.\n\nPauses all horror effects during deep work sessions.\n\n💡 **Tip**: Use VS Code's Zen Mode (`Ctrl+K Z`) for distraction-free coding.",
+          "order": 21
+        },
+        "codeblooded.safety.respectReduceMotion": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Respect system **'Reduce Motion'** accessibility setting.\n\nWhen enabled, disables:\n- Screen shake effects\n- Rapid animations\n- Fast flashing effects",
+          "order": 22
+        },
+        "codeblooded.safety.maxFlashFrequency": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 10,
+          "markdownDescription": "Maximum flashes per second (photosensitivity safety).\n\n**Default: 3** (recommended for safety)\n\n⚠️ Values above 3 may trigger seizures in photosensitive individuals.",
+          "order": 23
+        },
+        "codeblooded.safety.panicButtonKey": {
+          "type": "string",
+          "default": "ctrl+alt+s",
+          "enum": [
+            "ctrl+alt+s",
+            "ctrl+alt+escape",
+            "ctrl+shift+p",
+            "f12"
+          ],
+          "markdownDescription": "Keyboard shortcut for **Panic Button** (instant disable).\n\nPress this key combination to immediately disable all horror effects.\n\n**Default**: `Ctrl+Alt+S`",
+          "order": 24
+        },
+        "codeblooded.advanced.jumpscareCooldownMin": {
+          "type": "number",
+          "default": 30,
+          "minimum": 10,
+          "maximum": 300,
+          "markdownDescription": "Minimum cooldown between jumpscares (seconds).\n\n**Default: 30 seconds**\n\nLower values = more frequent jumpscares (not recommended below 20).",
+          "order": 30
+        },
+        "codeblooded.advanced.jumpscareCooldownMax": {
+          "type": "number",
+          "default": 120,
+          "minimum": 30,
+          "maximum": 600,
+          "markdownDescription": "Maximum cooldown between jumpscares (seconds).\n\n**Default: 120 seconds**\n\nMust be greater than minimum cooldown.",
+          "order": 31
+        },
+        "codeblooded.advanced.escalationRate": {
+          "type": "number",
+          "default": 5,
+          "minimum": 0,
+          "maximum": 20,
+          "markdownDescription": "Horror intensity increase per 2 minutes of coding.\n\n**Default: 5%** every 2 minutes\n\n- **0**: No escalation (constant intensity)\n- **5**: Gradual escalation (recommended)\n- **10+**: Rapid escalation (intense experience)",
+          "order": 32
         }
       }
     },
     "keybindings": [
       {
-        "command": "codechroma.panicButton",
-        "key": "ctrl+shift+escape",
-        "mac": "cmd+shift+escape",
-        "when": "editorTextFocus"
+        "command": "codeblooded.panicButton",
+        "key": "ctrl+alt+s",
+        "mac": "cmd+alt+s"
       }
     ]
   },
@@ -155,7 +357,7 @@
     "clean": "rimraf dist out *.vsix"
   },
   "dependencies": {
-    "@codechroma/core": "^0.1.0"
+    "@codeblooded/core": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

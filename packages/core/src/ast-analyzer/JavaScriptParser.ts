@@ -3,7 +3,7 @@
  */
 
 import * as esprima from 'esprima';
-import { Language, ParserPlugin, ErrorCode, CodeChromaError } from '../types';
+import { Language, ParserPlugin, ErrorCode, CodeBloodedError } from '../types';
 
 export class JavaScriptParser implements ParserPlugin {
   language = Language.JavaScript;
@@ -23,7 +23,7 @@ export class JavaScriptParser implements ParserPlugin {
 
       return ast;
     } catch (error: any) {
-      throw new CodeChromaError(
+      throw new CodeBloodedError(
         `Failed to parse JavaScript file: ${error.message}`,
         ErrorCode.PARSE_ERROR,
         { filePath, originalError: error }
