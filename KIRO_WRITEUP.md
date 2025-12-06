@@ -258,6 +258,108 @@ The combination of vibe coding for exploration, spec-driven development for stru
 
 If you're building something complex, don't just use one Kiro feature—use them all together. That's where the real magic happens.
 
+## Technology Stack
+
+Building CodeBlooded required a diverse set of technologies, each chosen for specific capabilities:
+
+### Core Languages & Runtime
+- **TypeScript 5.2** - Primary language for type safety and developer experience
+- **Node.js 18+** - Runtime environment for all packages
+- **JavaScript** - For dynamic webview content and audio synthesis
+
+### Code Analysis & Parsing
+- **@typescript-eslint/parser 6.0** - AST parsing for TypeScript/TSX files
+- **esprima 4.0** - JavaScript/JSX AST parsing
+- **filbert 0.1** - Python code parsing support
+
+### Audio Synthesis & Processing
+- **Tone.js 14.7** - Advanced audio synthesis library for horror sound effects
+- **Web Audio API** - Browser-based audio processing
+- **speaker 0.3** - Node.js audio output for CLI tool
+
+### Visualization & Graphics
+- **D3.js 7.8** - Force-directed graph visualizations of code structure
+- **SVG** - Vector graphics for cobweb overlays, skull icons, and horror effects
+- **CSS3 Animations** - Screen shake, glitch effects, blood drips, VHS distortion
+
+### VS Code Extension Development
+- **VS Code Extension API 1.80+** - Core extension framework
+- **Webview API** - For jumpscare popups and graph visualizations
+- **Decoration API** - Color-coded highlighting and entity presence indicators
+- **Configuration API** - User settings and preferences
+- **Keybinding API** - Panic button and command shortcuts
+
+### Build Tools & Bundling
+- **Webpack 5** - Module bundling for VS Code extension
+- **ts-loader 9.4** - TypeScript compilation in Webpack
+- **npm workspaces** - Monorepo management
+- **vsce 2.22** - VS Code extension packaging and publishing
+
+### Testing & Quality
+- **Jest 29.6** - Unit testing framework
+- **ts-jest 29.1** - TypeScript support for Jest
+- **Property-Based Testing** - Custom implementation for safety properties
+- **ESLint 8.47** - Code linting with TypeScript support
+- **Prettier 3.0** - Code formatting
+
+### Development Tools
+- **TypeScript Compiler (tsc)** - Type checking and compilation
+- **rimraf 5.0** - Cross-platform file cleanup
+- **Git** - Version control
+- **GitHub** - Repository hosting and collaboration
+
+### Project Architecture
+- **Monorepo Structure** - Organized with npm workspaces
+  - `@codeblooded/core` - Shared analysis engine
+  - `codeblooded-vscode` - VS Code extension
+  - `cli-analyzer` - Command-line tool (planned)
+  - `lsp-server` - Language Server Protocol (planned)
+
+### APIs & Protocols
+- **Language Server Protocol (LSP)** - For editor-agnostic integration (planned)
+- **VS Code Extension API** - Commands, decorations, webviews, status bar
+- **Web Audio API** - Real-time audio synthesis and effects
+- **File System API** - Code file reading and analysis
+
+### Safety & Accessibility
+- **System Accessibility APIs** - Reduce Motion detection
+- **Screen Sharing Detection** - Automatic horror effect disabling
+- **Flash Frequency Limiting** - Photosensitivity protection (max 3Hz)
+- **State Management** - Safe phantom event restoration
+
+### Configuration & Storage
+- **VS Code Settings API** - User preferences persistence
+- **JSON** - Configuration files and data serialization
+- **Local Storage** - Extension state and easter egg tracking
+
+### Documentation & Specs
+- **Markdown** - README, specs, and documentation
+- **EARS (Easy Approach to Requirements Syntax)** - Formal requirements specification
+- **Mermaid** - Architecture diagrams (in design docs)
+
+### Kiro-Specific Technologies
+- **Kiro Spec-Driven Development** - Requirements, design, and task management
+- **Kiro Steering Docs** - Safety standards and agent personality
+- **Kiro Agent Hooks** - Automated workflow validation
+  - Horror keyword detection hook
+  - Safety property validation hook
+
+### Why These Technologies?
+
+**TypeScript** was essential for maintaining code quality in a complex project with multiple horror effects that needed to be safe and reliable.
+
+**Tone.js** provided the advanced audio synthesis capabilities needed for horror-themed sound design (tritone intervals, distortion effects, gothic organ chords).
+
+**D3.js** enabled the interactive force-directed graphs that visualize code structure with horror aesthetics (cobwebs, skulls, fog effects).
+
+**VS Code Extension API** gave us the platform to create an immersive coding experience with real-time feedback, decorations, and webview-based horror effects.
+
+**Jest + Property-Based Testing** ensured safety properties were maintained (flash frequency limits, state restoration, panic button functionality).
+
+**Webpack** bundled everything into a single extension file, making distribution and installation seamless.
+
+The combination of these technologies created a robust, safe, and genuinely engaging horror-themed code analysis tool that respects user safety while delivering an unforgettable experience.
+
 ---
 
 *CodeBlooded is available on the VS Code Marketplace. Try it if you dare. 🎃*

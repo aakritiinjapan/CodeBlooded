@@ -1,8 +1,8 @@
-# codeblooded 🎨🔊
+# CodeBlooded 🩸👁️
 
-> Multi-sensory code analysis framework with horror-themed audio-visual feedback
+> **Where code complexity meets psychological terror**
 
-codeblooded transforms code complexity metrics into an immersive sensory experience. As you write code, it analyzes complexity in real-time and provides audio-visual feedback through horror-themed colors, sounds, and animations. High complexity triggers ominous tones and crimson warnings, while clean code hums with calm, deep frequencies.
+CodeBlooded is a VS Code extension that transforms code quality analysis into an immersive horror experience. Write clean code to maintain calm—but let complexity creep in, and face the consequences. Real-time AST analysis triggers escalating horror effects: eerie audio, blood drips, phantom typing, watching eyes, and unpredictable jumpscares. It's code review meets haunted house.
 
 ---
 
@@ -61,103 +61,91 @@ When you first enable horror features:
 
 ## 🎯 Features
 
-### Core Analysis Features
+### 🔍 Code Analysis (Safe Mode - Default)
 
-- **Real-time AST Analysis**: Parse TypeScript and JavaScript files, extract cyclomatic complexity, LOC metrics, and dependency graphs
-- **Audio Feedback**: Frequency-mapped tones that change based on code complexity (220Hz-880Hz+)
-- **Visual Feedback**: Horror-themed color coding (Midnight Blue → Toxic Purple → Blood Orange → Crimson Red)
-- **Interactive Graphs**: D3.js force-directed visualizations of code structure with cobwebs, skulls, and fog effects
-- **Multi-Platform**: VS Code extension, CLI tool, and LSP server for IDE-agnostic integration
-- **CI/CD Ready**: Batch analysis with threshold checking and multiple export formats
+- **Multi-Language Support**: TypeScript, JavaScript, Python, Java, C#, Go, Rust, C/C++, PHP, Ruby, Swift, Kotlin, Scala
+- **Real-time Complexity Analysis**: AST-based cyclomatic complexity calculation with instant visual feedback
+- **Color-Coded Decorations**: Function complexity indicators (🟦 Low → 🟪 Medium → 🟧 High → 🔴 Critical)
+- **Status Bar Health Score**: Live workspace complexity tracking
+- **Window Border Tinting**: Subtle color changes based on code health
 
-### 🎃 Optional Horror Features (Opt-In)
+### 🎃 Horror Mode (Opt-In)
 
-**⚠️ Warning: These features contain disturbing content. See safety warnings above.**
+**⚠️ Warning: Disturbing content. Horror features disabled by default. See safety warnings above.**
 
-- **Random Jumpscare System**: Unpredictable horror popups with 5+ unique variants and synchronized audio
-- **Screen Distortion Effects**: Shake, glitch, VHS artifacts, and chromatic aberration during high complexity
-- **Progressive Escalation**: Horror intensity gradually increases over coding sessions (20% → 100%)
-- **Entity Presence**: Subtle "watching eyes" indicators that move and avoid your cursor
-- **Phantom Typing**: Brief character insertions that appear and disappear (safely reversible)
-- **Whispering Variables**: Variable names temporarily overlay with creepy alternatives
-- **Context-Aware Triggers**: Special effects triggered by typing horror keywords ("kill", "dead", "error")
-- **Time Dilation**: UI animations speed up or slow down during high intensity
-- **Hidden Easter Eggs**: Secret horror elements to discover through exploration
-- **Granular Controls**: Customize intensity (0-100) and enable/disable individual effect categories
+- **🎵 Adaptive Horror Audio**: Ambient soundscapes (calm → warning → danger → critical) with variant popup sounds
+- **💀 Random Jumpscare System**: 5+ unique popup variants with disturbing imagery and synchronized audio
+- **📺 Screen Distortion Effects**: Shake, glitch, VHS artifacts, chromatic aberration, and screen splits
+- **📈 Progressive Intensity Escalation**: Horror gradually intensifies over coding sessions (20% → 100%)
+- **👁️ Entity Presence System**: Watching eyes that spawn, move, and avoid your cursor
+- **⌨️ Phantom Typing**: Brief character insertions that safely appear and disappear
+- **🔤 Whispering Variables**: Variable names temporarily morph into creepy alternatives
+- **🔮 Context-Aware Triggers**: Special effects when typing horror keywords ("kill", "dead", "error", "die")
+- **⏱️ Time Dilation**: Editor animations speed up or slow down at high intensity
+- **💧 Blood Drip Effects**: Visual blood drips cascade down your editor on every keystroke
+- **💓 Heartbeat Pulse**: Status bar pulses like a heartbeat during high-stress coding
+- **🎯 Hidden Easter Eggs**: Secret horror events discoverable through exploration (midnight coding, specific keywords)
+- **🎚️ Granular Controls**: Adjust intensity (0-100), enable/disable individual effect categories
 
 ## 🏗️ Architecture
 
-codeblooded is organized as a monorepo with shared core functionality:
+CodeBlooded is a monorepo with a shared core library and VS Code extension:
 
 ```
 codeblooded/
 ├── packages/
 │   ├── core/              # Shared analysis engine
-│   ├── vscode-extension/  # VS Code integration
-│   ├── cli-analyzer/      # Command-line tool
-│   └── lsp-server/        # Language Server Protocol
+│   └── vscode-extension/  # VS Code integration
 ```
 
-### Component Overview
+### Components
 
-- **@codeblooded/core**: AST parsing, complexity calculation, sensory mapping, audio synthesis, and visualization
-- **codeblooded-vscode**: Real-time feedback extension for VS Code
-- **@codeblooded/cli**: Batch analyzer for CI/CD pipelines
-- **@codeblooded/lsp-server**: LSP implementation for editor-agnostic support
+- **@codeblooded/core**: AST parsing, complexity calculation, multi-language support, sensory mapping
+- **codeblooded-vscode**: VS Code extension with horror effects, audio engine, visual feedback
 
 ## 🚀 Quick Start
 
-### VS Code Extension
+### Installation
 
 1. Install from VS Code Marketplace:
    ```
-   ext install codeblooded.codeblooded-vscode
+   ext install AakritiHGupta.codeblooded-vscode
    ```
+   Or search for "codeblooded" in VS Code Extensions
 
-2. Open a TypeScript or JavaScript file
+2. **First Run**: You'll see a warning dialog about photosensitivity and horror content
+   - Choose **"Stay in Safe Mode"** for complexity analysis only
+   - Choose **"Enable Horror Features"** to opt into the full experience
+   - You can always toggle later with `Ctrl+Shift+P` → "codeblooded: Toggle Safe Mode"
 
-3. Start coding - audio and visual feedback activates automatically
+3. Open any supported file (TypeScript, JavaScript, Python, Java, C#, Go, Rust, C/C++, PHP, Ruby, Swift, Kotlin, Scala)
 
-4. **Optional**: Enable horror features in settings (`codeblooded.horror.enabled`)
-   - ⚠️ **Read safety warnings above before enabling**
-   - Horror features are **disabled by default** (Safe Mode)
-   - Press `Ctrl+Alt+S` for instant panic button
+4. Start coding - complexity decorations appear automatically in Safe Mode
 
-5. Essential commands:
-   - `codeblooded: Toggle Audio Feedback` - Enable/disable audio
-   - `codeblooded: Show AST Graph` - Open interactive visualization
-   - `codeblooded: Panic Button` - **Instantly disable all horror effects**
-   - `codeblooded: Toggle Safe Mode` - Quick enable/disable horror features
-   - `codeblooded: Show Horror Controls` - View all horror settings and controls
+### Essential Commands
 
-### CLI Analyzer
+Press `Ctrl+Shift+P` (Command Palette) and type "codeblooded":
 
-1. Install globally:
-   ```bash
-   npm install -g @codeblooded/cli
-   ```
+**Safety Controls:**
+- `codeblooded: Panic Button` (or `Ctrl+Alt+S`) - **Instantly disable all horror effects**
+- `codeblooded: Toggle Safe Mode` - Switch between Safe Mode and Horror Mode
+- `codeblooded: Show Horror Controls` - View all settings and controls
 
-2. Analyze a file or directory:
-   ```bash
-   # Single file
-   codeblooded analyze ./src/index.ts
+**Audio:**
+- `codeblooded: Toggle Audio Feedback` - Enable/disable audio (Horror Mode only)
 
-   # Recursive directory analysis
-   codeblooded analyze ./src --recursive
+**Testing (Horror Mode):**
+- `codeblooded: Test Horror Popup` - Preview a random jumpscare
+- `codeblooded: Test Screen Distortion` - Try different distortion effects
+- `codeblooded: Test Entity Presence` - Spawn watching eyes
+- `codeblooded: Test Phantom Typing` - See phantom typing effect
+- `codeblooded: Test All Effects` - Comprehensive effects showcase
 
-   # Generate HTML report
-   codeblooded analyze ./src -r --output report.html
+**Configuration:**
+- `codeblooded: Reset Horror Settings` - Reset all settings and clear saved state
+- `codeblooded: Reset Horror Warning` - Re-show first-run warning
 
-   # CI/CD mode with threshold
-   codeblooded analyze ./src -r --threshold 10 --format json
-   ```
-
-3. Export audio signatures:
-   ```bash
-   codeblooded analyze ./src -r --export-audio --audio-path ./audio
-   ```
-
-## 📦 Installation
+## 📦 Development Setup
 
 ### For Development
 
@@ -172,54 +160,60 @@ codeblooded/
    npm install
    ```
 
-3. Build all packages:
+3. Build the core package:
    ```bash
+   cd packages/core
    npm run build
    ```
 
-4. Run tests:
+4. Build the VS Code extension:
    ```bash
-   npm test
+   cd packages/vscode-extension
+   npm run compile
+   # Or for production build
+   npm run build
    ```
 
-### Individual Packages
-
-Install specific packages as needed:
-
-```bash
-# Core library (for programmatic use)
-npm install @codeblooded/core
-
-# CLI tool
-npm install -g @codeblooded/cli
-
-# LSP server
-npm install -g @codeblooded/lsp-server
-```
+5. Run the extension in development:
+   - Open `packages/vscode-extension` in VS Code
+   - Press `F5` to launch Extension Development Host
+   - Or use `Run > Start Debugging`
 
 ## 🎨 Complexity Mapping
 
-codeblooded maps cyclomatic complexity to sensory outputs:
+CodeBlooded maps cyclomatic complexity to visual and audio feedback:
 
-| Complexity | Level | Frequency | Color | Waveform | Theme |
-|------------|-------|-----------|-------|----------|-------|
-| 1-5 | Low | 220-330Hz | Midnight Blue (#191970) | Sine | Deep hum |
-| 6-10 | Medium | 330-523Hz | Toxic Purple (#9400D3) | Triangle | Eerie notes |
-| 11-15 | High | 523-880Hz | Blood Orange (#CC5500) | Sawtooth | Sharp tones |
-| 16+ | Critical | 880Hz+ | Crimson Red (#DC143C) | Square | Harsh distortion |
+### Visual Indicators (Safe Mode & Horror Mode)
 
-### Special Audio Cues
+| Complexity | Level | Color | Decoration | Window Tint |
+|------------|-------|-------|------------|-------------|
+| 1-5 | 🟦 Low | Midnight Blue (#191970) | Calm marker | Blue tint |
+| 6-10 | 🟪 Medium | Toxic Purple (#9400D3) | Warning marker | Purple tint |
+| 11-15 | 🟧 High | Blood Orange (#CC5500) | Danger marker | Orange tint |
+| 16+ | 🔴 Critical | Crimson Red (#DC143C) | Critical marker | Red tint |
 
-- **Errors**: Tritone interval (augmented 4th) - the "devil's interval"
-- **Success**: Gothic organ chord progression
-- **Effects**: Reverb, tremolo, and distortion based on complexity
+### Audio Themes (Horror Mode Only)
+
+| Theme | Trigger | Description |
+|-------|---------|-------------|
+| **Calm** | Low complexity, no errors | Ambient deep tones |
+| **Warning** | Medium complexity or warnings | Unsettling undertones |
+| **Danger** | High complexity or errors | Ominous crescendo |
+| **Critical** | Critical complexity or many errors | Harsh, distorted soundscape |
+
+### Horror Effect Intensity
+
+- **Base**: 20% (minimum horror probability)
+- **Escalation**: +5% every 5 minutes
+- **Maximum**: 100% (guaranteed high-intensity effects)
+- **Reset**: Returns to base on workspace change or manual reset
 
 ## 📚 Documentation
 
-- [Core Package](./packages/core/README.md) - API reference and usage examples
-- [VS Code Extension](./packages/vscode-extension/README.md) - Features and commands
-- [CLI Analyzer](./packages/cli-analyzer/README.md) - Command reference and CI/CD integration
-- [LSP Server](./packages/lsp-server/README.md) - Editor integration guide
+- [VS Code Extension README](./packages/vscode-extension/README.md) - Full feature list and commands
+- [VS Code Marketplace Page](https://marketplace.visualstudio.com/items?itemName=AakritiHGupta.codeblooded-vscode) - Install and reviews
+- [Core Package](./packages/core/README.md) - AST analysis engine API
+- [Easter Eggs Guide](./EASTER_EGGS.md) - Hidden horror discoveries
 
 ## 🛠️ Development
 
@@ -228,74 +222,91 @@ codeblooded maps cyclomatic complexity to sensory outputs:
 ```
 codeblooded/
 ├── packages/
-│   ├── core/
+│   ├── core/                          # Analysis Engine
 │   │   ├── src/
-│   │   │   ├── ast-analyzer/      # AST parsing and metrics
-│   │   │   ├── sensory-mapper/    # Complexity → audio/visual
-│   │   │   ├── audio-engine/      # Web Audio API synthesis
-│   │   │   ├── visualization/     # D3.js graph generation
-│   │   │   └── types/             # TypeScript interfaces
+│   │   │   ├── ast-analyzer/          # AST parsing (TS/JS/Python + C-style)
+│   │   │   │   ├── ASTAnalyzer.ts     # Main coordinator
+│   │   │   │   ├── TypeScriptParser.ts
+│   │   │   │   ├── JavaScriptParser.ts
+│   │   │   │   ├── PythonParser.ts
+│   │   │   │   ├── CStyleParser.ts    # Java, C#, Go, Rust, C/C++, etc.
+│   │   │   │   ├── ComplexityCalculator.ts
+│   │   │   │   └── MetricsExtractor.ts
+│   │   │   ├── audio-engine/          # Horror audio synthesis
+│   │   │   ├── sensory-mapper/        # Complexity → visual/audio mapping
+│   │   │   └── types/                 # Shared TypeScript types
 │   │   └── package.json
-│   ├── vscode-extension/
-│   │   ├── src/
-│   │   │   ├── extension.ts       # Extension entry point
-│   │   │   ├── decorations.ts     # Color-coded highlighting
-│   │   │   ├── statusbar.ts       # Health score display
-│   │   │   └── webview/           # Graph visualization UI
-│   │   └── package.json
-│   ├── cli-analyzer/
-│   │   ├── src/
-│   │   │   ├── cli.ts             # Command-line interface
-│   │   │   ├── reporter.ts        # HTML/JSON report generation
-│   │   │   └── exporter.ts        # Audio signature export
-│   │   └── package.json
-│   └── lsp-server/
+│   │
+│   └── vscode-extension/              # VS Code Integration
 │       ├── src/
-│       │   ├── server.ts          # LSP server implementation
-│       │   ├── handlers/          # LSP message handlers
-│       │   └── diagnostics.ts     # Diagnostic generation
+│       │   ├── extension.ts           # Extension entry point
+│       │   ├── complexityAnalysisManager.ts  # Safe Mode analysis
+│       │   ├── decorations.ts         # Function complexity markers
+│       │   ├── themeManager.ts        # Window border tinting
+│       │   ├── statusbar.ts           # Health score display
+│       │   ├── diagnosticManager.ts   # Error/warning tracking
+│       │   │
+│       │   # Horror System
+│       │   ├── horrorEngine.ts        # Central horror coordinator
+│       │   ├── safetyManager.ts       # Panic button, safe mode
+│       │   ├── audio/
+│       │   │   ├── localAudioEngine.ts    # Browser audio via webview
+│       │   │   └── webviewAudioEngine.ts
+│       │   ├── horrorPopup.ts         # Jumpscare system
+│       │   ├── screenDistortionManager.ts # Glitch effects
+│       │   ├── entityPresenceManager.ts   # Watching eyes
+│       │   ├── phantomTypingManager.ts    # Phantom text
+│       │   ├── whisperingVariablesManager.ts
+│       │   ├── bloodDripManager.ts
+│       │   ├── heartbeatPulseManager.ts
+│       │   ├── contextTriggerManager.ts   # Keyword triggers
+│       │   ├── timeDilationManager.ts
+│       │   ├── easterEggManager.ts
+│       │   └── randomEventEngine.ts
+│       │
+│       ├── media/                     # Assets
+│       │   ├── audio/                 # Horror sound effects
+│       │   └── videos/                # Jumpscare videos
 │       └── package.json
-├── package.json                    # Root workspace config
-└── tsconfig.json                   # Base TypeScript config
+│
+├── samples/                           # Test files
+├── scripts/                           # Validation scripts
+├── package.json                       # Monorepo config
+└── tsconfig.json                      # Base TypeScript config
 ```
 
-### Build Scripts
+### Build & Development
 
 ```bash
-# Build all packages
+# Build core library
+cd packages/core
 npm run build
 
-# Watch mode for development
-npm run build -- --watch
+# Build VS Code extension (development)
+cd packages/vscode-extension
+npm run compile
 
-# Run tests
-npm test
+# Build VS Code extension (production)
+cd packages/vscode-extension
+npm run build              # Uses webpack
 
-# Lint code
-npm run lint
+# Package extension for marketplace
+cd packages/vscode-extension
+npx vsce package           # Creates .vsix file
 
-# Format code
-npm run format
-
-# Clean build artifacts
-npm run clean
+# Publish to marketplace
+npx vsce publish
 ```
 
 ### Testing
 
-```bash
-# Run all tests
-npm test
-
-# Run tests for specific package
-npm test --workspace=@codeblooded/core
-
-# Watch mode
-npm test -- --watch
-
-# Coverage report
-npm test -- --coverage
-```
+The extension includes sample files in the `samples/` directory for testing:
+- `low-complexity.ts` - Simple, clean code
+- `medium-complexity.ts` - Moderate complexity
+- `high-complexity.ts` - Complex nested logic
+- `critical-complexity.ts` - Extreme complexity
+- `python-example.py` - Python testing
+- `javascript-examples.js` - JavaScript testing
 
 ## 🤝 Contributing
 
@@ -318,38 +329,77 @@ Contributions are welcome! Please follow these guidelines:
 
 MIT License - see [LICENSE](LICENSE) file for details
 
-## 🎃 Why Horror Theme?
+## 🎃 Why Horror?
 
-Code complexity can be scary. codeblooded embraces this with a horror aesthetic that makes quality feedback memorable and engaging. High complexity triggers visceral responses - crimson warnings, distorted audio, skull icons - that motivate developers to refactor. It's code review meets haunted house.
+Code complexity can be genuinely scary—spaghetti logic, mounting technical debt, cascading errors. CodeBlooded embraces this with a horror aesthetic that makes quality feedback visceral and memorable. Clean code keeps things calm. But let complexity creep in, and face the consequences: blood drips, watching eyes, phantom typing, and jumpscares that make you *feel* the weight of your decisions.
 
-### Horror Features Philosophy
+### Design Philosophy
 
-The optional psychological horror features are designed as an **opt-in entertainment experience** for developers who enjoy horror games and want to add tension to their coding sessions. These features:
+The horror features are **opt-in entertainment** for developers who:
+- Enjoy horror games and want tension in their coding sessions
+- Respond better to memorable, emotional feedback than dry metrics
+- Want to gamify code quality improvement
+- Appreciate dark humor and unconventional dev tools
 
-- Create **genuine unease** through unpredictability and randomization
-- Build **progressive tension** that escalates over time
-- Provide **memorable feedback** that motivates code quality improvement
-- Include **robust safety controls** for user protection
-- Respect **accessibility needs** and user preferences
+Key principles:
+- **Unpredictability**: Randomized events create genuine surprise and tension
+- **Progressive Escalation**: Intensity builds over time, mimicking real horror game pacing
+- **Safety First**: Robust controls (`Ctrl+Alt+S` panic button, safe mode, accessibility compliance)
+- **Reversible**: All phantom effects are temporary; your code is never harmed
+- **Optional**: Disabled by default—works great as a standard complexity analyzer
 
-**Important**: Horror features are entirely optional and disabled by default. codeblooded works perfectly as a standard code analysis tool without any horror elements.
+**Bottom line**: Horror is optional. Safe Mode provides excellent code analysis without any scares.
 
 ## 🔗 Links
 
-- [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=codeblooded.codeblooded-vscode)
-- [npm - Core](https://www.npmjs.com/package/@codeblooded/core)
-- [npm - CLI](https://www.npmjs.com/package/@codeblooded/cli)
-- [npm - LSP Server](https://www.npmjs.com/package/@codeblooded/lsp-server)
-- [Documentation](https://codeblooded.dev)
-- [GitHub Issues](https://github.com/aakritiinjapan/codeblooded/issues)
+- **[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=AakritiHGupta.codeblooded-vscode)** - Install the extension
+- **[GitHub Repository](https://github.com/aakritiinjapan/codeblooded)** - Source code and issues
+- **[Easter Eggs Guide](./EASTER_EGGS.md)** - Hidden horror discoveries
+
+## ⚙️ Configuration
+
+Key settings (accessible via VS Code settings):
+
+```json
+{
+  // Safety & Core
+  "codeblooded.horror.safeMode": true,              // Disable horror, keep analysis
+  "codeblooded.horror.enabled": false,              // Enable horror features
+  "codeblooded.horror.intensity": 50,               // Horror intensity (0-100)
+  
+  // Horror Feature Toggles
+  "codeblooded.horror.enableJumpscares": true,
+  "codeblooded.horror.enableScreenEffects": true,
+  "codeblooded.horror.enablePhantomEvents": true,
+  "codeblooded.horror.enableEntityPresence": true,
+  "codeblooded.horror.enableEasterEggs": true,
+  
+  // Safety Controls
+  "codeblooded.safety.panicButtonKey": "ctrl+alt+s",
+  "codeblooded.safety.respectReduceMotion": true,
+  "codeblooded.safety.maxFlashFrequency": 3,
+  "codeblooded.safety.screenSharingMode": false,
+  
+  // Advanced
+  "codeblooded.advanced.jumpscareCooldownMin": 30,  // Seconds
+  "codeblooded.advanced.jumpscareCooldownMax": 120,
+  "codeblooded.advanced.escalationRate": 5          // % per 5 minutes
+}
+```
 
 ## 🙏 Acknowledgments
 
 - Built with [TypeScript](https://www.typescriptlang.org/)
-- Audio synthesis powered by [Tone.js](https://tonejs.github.io/)
-- Visualizations created with [D3.js](https://d3js.org/)
-- AST parsing via [@typescript-eslint/parser](https://typescript-eslint.io/) and [esprima](https://esprima.org/)
+- AST parsing via [@typescript-eslint/parser](https://typescript-eslint.io/), [esprima](https://esprima.org/), and [Pyright](https://github.com/microsoft/pyright)
+- Audio via Web Audio API
+- Horror audio assets from [Freesound.org](https://freesound.org/) (see [CREDITS.md](./packages/vscode-extension/media/CREDITS.md))
+
+## 📜 License
+
+MIT License - see [LICENSE](LICENSE) file for details
 
 ---
 
-**Made with 🎃 by the codeblooded team**
+**Made with 🩸 and 👁️ for Kiroween Hackathon 2024**
+
+*"Where code complexity meets psychological terror"*
